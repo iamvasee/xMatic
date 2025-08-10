@@ -10,6 +10,14 @@
 
 xMatic is a powerful Chrome extension that revolutionizes how you engage on Twitter/X. Using advanced AI technology, it generates contextual, meaningful replies that help you build genuine connections and grow your social media presence organically.
 
+## 📸 Screenshots
+
+<div align="center">
+  <img src="assets/screenshots/screenshot1.png" alt="Screenshot 1 - Main Interface" width="30%">
+  <img src="assets/screenshots/screenshot2.png" alt="Screenshot 2 - Features" width="30%">
+  <img src="assets/screenshots/screenshot3.png" alt="Screenshot 3 - Settings" width="30%">
+</div>
+
 ## 🎯 Why xMatic?
 
 In today's fast-paced social media landscape, meaningful engagement is crucial for growth. xMatic solves the challenge of consistently creating valuable responses by:
