@@ -1,0 +1,35 @@
+{
+  "name": "xmatic",
+  "version": "1.0.0",
+  "description": "AI-powered Twitter/X growth tool for generating engaging replies",
+  "main": "extension/manifest.json",
+  "scripts": {
+    "build": "echo 'Extension files are ready in the extension/ folder'",
+    "package": "cd extension && zip -r ../xMatic-v1.0.0.zip . -x '*.DS_Store'",
+    "dev": "echo 'Load the extension/ folder in Chrome Developer Mode'",
+    "lint": "echo 'No linting configured yet'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamvasee/xMatic.git"
+  },
+  "keywords": [
+    "chrome-extension",
+    "twitter",
+    "ai",
+    "social-media",
+    "growth",
+    "openai",
+    "gpt",
+    "automation"
+  ],
+  "author": "Vasee Karan <hello@iamvasee.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iamvasee/xMatic/issues"
+  },
+  "homepage": "https://github.com/iamvasee/xMatic#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

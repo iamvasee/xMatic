@@ -244,26 +244,57 @@ class TwitterGrowthTool {
         const threadMessages = [];
 
         try {
-            // Look for thread indicators
-            const threadContainer = tweetElement.closest('[data-testid="tweet"]')?.parentElement;
-            if (!threadContainer) return threadMessages;
+            console.log('TwitterGrowthTool: Starting comprehensive thread extraction');
+            
+            // Multiple strategies to find thread context
+            const strategies = [
+                // Strategy 1: Look for thread container
+                () => {
+                    const threadContainer = tweetElement.closest('[data-testid="tweet"]')?.parentElement?.parentElement;
+                    return threadContainer?.querySelectorAll('[data-testid="tweet"]') || [];
+                },
+                // Strategy 2: Look for conversation thread
+                () => {
+                    const conversationThread = document.querySelector('[data-testid="conversation-thread"]');
+                    return conversationThread?.querySelectorAll('[data-testid="tweet"]') || [];
+                },
+                // Strategy 3: Look for timeline items
+                () => {
+                    const timeline = document.querySelector('[data-testid="primaryColumn"] section[role="region"]');
+                    return timeline?.querySelectorAll('[data-testid="tweet"]') || [];
+                }
+            ];
 
-            // Find all tweets in the thread
-            const allTweets = threadContainer.querySelectorAll('[data-testid="tweet"]');
+            let allTweets = [];
+            for (const strategy of strategies) {
+                allTweets = strategy();
+                if (allTweets.length > 1) break; // Found a good thread
+            }
+
+            console.log(`TwitterGrowthTool: Found ${allTweets.length} tweets in thread`);
+
+            const currentTweetText = this.extractTweetText(tweetElement);
+            const currentAuthor = this.extractAuthorInfo(tweetElement);
 
             allTweets.forEach((tweet, index) => {
                 const text = this.extractTweetText(tweet);
                 const author = this.extractAuthorInfo(tweet);
 
-                if (text && text !== this.extractTweetText(tweetElement)) {
-                    threadMessages.push({
-                        order: index,
-                        text: text,
-                        author: author.displayName || author.username,
-                        isOriginalAuthor: author.username === this.extractAuthorInfo(tweetElement).username
-                    });
-                }
+                // Skip empty tweets and the current tweet we're replying to
+                if (!text || text === currentTweetText) return;
+
+                threadMessages.push({
+                    order: index,
+                    text: text,
+                    author: author.displayName || author.username || 'Unknown',
+                    isOriginalAuthor: author.username === currentAuthor.username,
+                    timestamp: this.extractTimestamp(tweet),
+                    isMainThread: this.isMainThreadTweet(tweet, currentAuthor.username)
+                });
             });
+
+            // Sort by order to maintain conversation flow
+            threadMessages.sort((a, b) => a.order - b.order);
 
             console.log('TwitterGrowthTool: Extracted thread messages:', threadMessages);
         } catch (error) {
@@ -271,6 +302,24 @@ class TwitterGrowthTool {
         }
 
         return threadMessages;
+    }
+
+    extractTimestamp(tweetElement) {
+        try {
+            const timeElement = tweetElement.querySelector('time');
+            return timeElement?.getAttribute('datetime') || '';
+        } catch (error) {
+            return '';
+        }
+    }
+
+    isMainThreadTweet(tweetElement, originalAuthor) {
+        try {
+            const author = this.extractAuthorInfo(tweetElement);
+            return author.username === originalAuthor;
+        } catch (error) {
+            return false;
+        }
     }
 
     extractRecentReplies(tweetElement) {
@@ -430,7 +479,7 @@ class TwitterGrowthTool {
 
             // Force Twitter to validate the input
             await this.forceTwitterValidation(composeBox);
-            
+
             console.log('TwitterGrowthTool: Successfully filled compose box');
 
         } catch (error) {
@@ -556,17 +605,20 @@ class TwitterGrowthTool {
 
 
     async generateReplyWithOpenAI(context) {
-        const systemPrompt = `You are a Twitter growth expert. Generate engaging replies that add value and encourage meaningful conversation. 
+        const systemPrompt = `PRIMARY INSTRUCTION - Your Response Style:
+${this.config.style || 'Be conversational, helpful, and authentic. Write engaging responses that add genuine value to discussions.'}
 
-Style guidelines: ${this.config.style || 'Be conversational, helpful, and authentic'}
+You are responding as someone with this exact style and mentality. This is your core personality and approach to every response.
 
-Rules:
-- Keep under 280 characters
-- Add genuine value to the conversation
-- Be respectful and professional
-- Use the thread context to avoid repeating points
+Secondary Guidelines:
+- You're helping with Twitter/X engagement and growth
+- Keep responses under 280 characters
+- Use the provided thread context to avoid repeating points
 - Consider the author's background when crafting your response
-- If replying to a high-engagement tweet, make your response stand out`;
+- Add genuine value to the conversation
+- NEVER use double quotes (") in your responses - use single quotes or no quotes instead
+
+Remember: Your PRIMARY focus is embodying the response style above. Everything else is secondary to matching that personality and approach.`;
 
         const contextPrompt = this.buildContextPrompt(context);
 
@@ -600,27 +652,47 @@ Rules:
     }
 
     buildContextPrompt(context) {
-        let prompt = `MAIN TWEET: "${context.mainTweet}"\n\n`;
+        let prompt = `CONVERSATION CONTEXT - READ THE ENTIRE THREAD BEFORE RESPONDING:\n\n`;
 
-        // Add author information
+        // Add author information first
         if (context.authorInfo.displayName || context.authorInfo.username) {
-            prompt += `AUTHOR: ${context.authorInfo.displayName || context.authorInfo.username}`;
+            prompt += `ORIGINAL AUTHOR: ${context.authorInfo.displayName || context.authorInfo.username}`;
             if (context.authorInfo.verified) prompt += ' (Verified)';
             prompt += '\n\n';
         }
 
-        // Add thread context
+        // Add the main tweet
+        prompt += `MAIN TWEET YOU'RE REPLYING TO:\n"${context.mainTweet}"\n\n`;
+
+        // Add comprehensive thread context - THIS IS CRITICAL
         if (context.threadMessages.length > 0) {
-            prompt += `THREAD CONTEXT:\n`;
-            context.threadMessages.forEach((msg, index) => {
-                prompt += `${index + 1}. ${msg.author}: "${msg.text}"\n`;
-            });
+            prompt += `FULL CONVERSATION THREAD (Read this carefully - your response must fit into this conversation flow):\n`;
+            
+            // Separate main thread from replies
+            const mainThreadTweets = context.threadMessages.filter(msg => msg.isMainThread);
+            const otherReplies = context.threadMessages.filter(msg => !msg.isMainThread);
+
+            if (mainThreadTweets.length > 0) {
+                prompt += `\nMAIN THREAD BY ${context.authorInfo.displayName || context.authorInfo.username}:\n`;
+                mainThreadTweets.forEach((msg, index) => {
+                    prompt += `${index + 1}. "${msg.text}"\n`;
+                });
+            }
+
+            if (otherReplies.length > 0) {
+                prompt += `\nOTHER REPLIES IN CONVERSATION:\n`;
+                otherReplies.forEach((msg, index) => {
+                    prompt += `${index + 1}. ${msg.author}: "${msg.text}"\n`;
+                });
+            }
             prompt += '\n';
+        } else {
+            prompt += `(This appears to be a standalone tweet with no thread context)\n\n`;
         }
 
-        // Add recent replies for context
+        // Add recent replies for additional context
         if (context.replies.length > 0) {
-            prompt += `RECENT REPLIES:\n`;
+            prompt += `RECENT COMMUNITY REPLIES:\n`;
             context.replies.forEach((reply, index) => {
                 prompt += `${index + 1}. ${reply.author}: "${reply.text}"\n`;
             });
@@ -629,12 +701,13 @@ Rules:
 
         // Add engagement metrics
         if (context.engagement.likes > 0 || context.engagement.retweets > 0) {
-            prompt += `ENGAGEMENT: ${context.engagement.likes} likes, ${context.engagement.retweets} retweets, ${context.engagement.replies} replies\n\n`;
+            prompt += `ENGAGEMENT LEVEL: ${context.engagement.likes} likes, ${context.engagement.retweets} retweets, ${context.engagement.replies} replies\n\n`;
         }
 
+        // Strong instruction about thread awareness
+        prompt += `CRITICAL: Your response must acknowledge and build upon the ENTIRE conversation above. Don't just respond to the main tweet - consider the full thread context, what's already been discussed, and add something new to the conversation that hasn't been covered yet.\n\n`;
 
-
-        prompt += `Generate a thoughtful, engaging reply that adds value to this conversation:`;
+        prompt += `Generate your response now:`;
 
         return prompt;
     }
@@ -739,10 +812,10 @@ Rules:
 
     async forceTwitterValidation(composeBox) {
         console.log('TwitterGrowthTool: Forcing Twitter validation');
-        
+
         // Focus the compose box
         composeBox.focus();
-        
+
         // Trigger a sequence of events that Twitter uses for validation
         const validationEvents = [
             // Input event with proper inputType
@@ -755,34 +828,34 @@ Rules:
             // Change event
             new Event('change', { bubbles: true }),
             // Composition events for React
-            new CompositionEvent('compositionend', { 
-                bubbles: true, 
-                data: composeBox.textContent 
+            new CompositionEvent('compositionend', {
+                bubbles: true,
+                data: composeBox.textContent
             }),
             // Keyboard event to simulate user interaction
-            new KeyboardEvent('keyup', { 
-                bubbles: true, 
+            new KeyboardEvent('keyup', {
+                bubbles: true,
                 key: 'End',
                 keyCode: 35
             })
         ];
-        
+
         // Dispatch validation events
         for (const event of validationEvents) {
             composeBox.dispatchEvent(event);
             await new Promise(resolve => setTimeout(resolve, 50));
         }
-        
+
         // Additional trick: simulate a tiny edit to trigger validation
         setTimeout(async () => {
             const originalText = composeBox.textContent;
-            
+
             // Add a space and remove it to trigger validation
             if (document.execCommand) {
                 document.execCommand('insertText', false, ' ');
                 await new Promise(resolve => setTimeout(resolve, 50));
                 document.execCommand('delete', false, null);
-                
+
                 // Trigger final input event
                 const finalEvent = new InputEvent('input', {
                     bubbles: true,
@@ -791,12 +864,12 @@ Rules:
                 });
                 composeBox.dispatchEvent(finalEvent);
             }
-            
+
             // Ensure text is still correct
             if (composeBox.textContent !== originalText) {
                 composeBox.textContent = originalText;
             }
-            
+
             console.log('TwitterGrowthTool: Validation sequence completed');
         }, 200);
     }

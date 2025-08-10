@@ -6,9 +6,7 @@
   "permissions": [
     "activeTab",
     "storage",
-    "scripting",
-    "https://api.openai.com/*",
-    "https://api.perplexity.ai/*"
+    "scripting"
   ],
   "host_permissions": [
     "https://twitter.com/*",
