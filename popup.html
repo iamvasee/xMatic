@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 400px;
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #09090b;
+      line-height: 1.5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 12px;
+      margin: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      margin-bottom: 32px;
+      border-bottom: 1px solid #e4e4e7;
+      padding-bottom: 16px;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .logo-image {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .tagline {
+      font-size: 14px;
+      color: #71717a;
+      font-weight: 400;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group:last-of-type {
+      margin-bottom: 32px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #09090b;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #e4e4e7;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #09090b;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #09090b;
+      box-shadow: 0 0 0 2px rgba(9, 9, 11, 0.1);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #a1a1aa;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.5;
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px 16px;
+      background: #09090b;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .button:hover {
+      background: #18181b;
+    }
+
+    .button:active {
+      background: #27272a;
+    }
+
+    .button:disabled {
+      background: #f4f4f5;
+      color: #a1a1aa;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.2s ease;
+    }
+
+    .status.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .status.success {
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .status.error {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    .footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #e4e4e7;
+    }
+
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .link {
+      color: #71717a;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .link:hover {
+      color: #09090b;
+    }
+
+    .version {
+      font-size: 12px;
+      color: #a1a1aa;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    /* Loading state */
+    .button.loading {
+      position: relative;
+      color: transparent;
+    }
+
+    .button.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      margin: -8px 0 0 -8px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Input validation states */
+    .form-group.error input,
+    .form-group.error textarea {
+      border-color: #dc2626;
+      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+    }
+
+    .form-group.error label {
+      color: #dc2626;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-container">
+        <img src="xMatic.png" alt="xMatic" class="logo-image">
+      </div>
+      <div class="tagline">AI-powered replies for X/Twitter</div>
+    </div>
+
+    <form id="configForm">
+      <div class="form-group" id="apiKeyGroup">
+        <label for="openaiKey">OpenAI API Key</label>
+        <input type="password" id="openaiKey" placeholder="sk-proj-..." autocomplete="off">
+      </div>
+
+      <div class="form-group" id="styleGroup">
+        <label for="style">Response Style</label>
+        <textarea id="style" rows="3"
+          placeholder="Be conversational and helpful. Add genuine value to discussions while keeping responses under 280 characters."></textarea>
+      </div>
+
+      <button type="submit" class="button" id="saveConfig">
+        Save Configuration
+      </button>
+    </form>
+
+    <div id="status" class="status"></div>
+
+    <div class="footer">
+      <div class="links">
+        <a href="https://iamvasee.com" target="_blank" class="link">Website</a>
+        <a href="https://github.com/iamvasee/xMatic" target="_blank" class="link">GitHub</a>
+        <a href="https://x.com/iamvasee" target="_blank" class="link">Twitter</a>
+      </div>
+      <div class="version">v1.0.0</div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "xMatic",
+  "version": "1.0",
+  "description": "Unleash AI chaos on X/Twitter - BYOK viral reply generator",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "https://api.openai.com/*",
+    "https://api.perplexity.ai/*"
+  ],
+  "host_permissions": [
+    "https://twitter.com/*",
+    "https://x.com/*",
+    "https://api.openai.com/*",
+    "https://api.perplexity.ai/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://twitter.com/*",
+        "https://x.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "xMatic - AI Twitter Growth Tool",
+    "default_icon": {
+      "16": "xmaticicon.png",
+      "32": "xmaticicon.png",
+      "48": "xmaticicon.png",
+      "128": "xmaticicon.png"
+    }
+  },
+  "icons": {
+    "16": "xmaticicon.png",
+    "32": "xmaticicon.png",
+    "48": "xmaticicon.png",
+    "128": "xmaticicon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
