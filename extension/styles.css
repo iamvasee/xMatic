@@ -1,45 +1,31 @@
-/* Twitter Growth Tool Styles */
-.ai-compose-btn {
-  transition: all 0.2s ease !important;
-  font-weight: 500;
-  pointer-events: auto;
-  user-select: none;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* xMatic - Simple Styles */
+
+.xmatic-ai-btn {
+    transition: all 0.2s ease !important;
+    font-weight: 500;
+    pointer-events: auto;
+    user-select: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.ai-compose-btn:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+.xmatic-ai-btn:hover {
+    background: #0d8bd9 !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
 }
 
-.ai-compose-btn:active {
-  transform: scale(0.95) !important;
+.xmatic-ai-btn:active {
+    transform: scale(0.95) !important;
 }
 
-/* Ensure AI buttons integrate well with Twitter's toolbar */
-.ai-enhanced {
-  display: flex;
-  align-items: center;
-}
-
-/* Loading animation for compose box */
-[data-testid="tweetTextarea_0"][placeholder*="Generating"] {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* Fix for compose box placeholder visibility */
+/* Ensure compose box works properly */
 [data-testid="tweetTextarea_0"] {
-  color: #0f1419 !important;
+    color: #0f1419 !important;
+    min-height: 20px;
 }
 
-/* Ensure reply button is clickable */
-[data-testid="reply"] {
-  pointer-events: auto !important;
-  z-index: 1 !important;
+/* Ensure reply buttons work */
+[data-testid="tweetButtonInline"],
+[data-testid="tweetButton"] {
+    pointer-events: auto !important;
 }
