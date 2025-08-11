@@ -6,17 +6,22 @@
     pointer-events: auto;
     -webkit-user-select: none; /* Safari 3+, Safari on iOS 3+ */
     user-select: none; /* Standard syntax */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: none !important;
 }
 
 .xmatic-ai-btn:hover {
-    background: #0d8bd9 !important;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+    background: #EFF5FD !important;
+    transform: none !important;
 }
 
 .xmatic-ai-btn:active {
-    transform: scale(0.95) !important;
+    transform: none !important;
+}
+
+/* Spinning animation for loading icon */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 /* Ensure compose box works properly */

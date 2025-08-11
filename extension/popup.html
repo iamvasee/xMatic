@@ -21,29 +21,26 @@
     }
 
     .container {
-      padding: 28px;
+      padding: 20px;
       background: #ffffff;
-      border-radius: 16px;
-      margin: 8px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05);
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      border: 1px solid #e4e4e7;
     }
 
     .header {
-      margin-bottom: 32px;
+      margin-bottom: 20px;
       border-bottom: 1px solid #e4e4e7;
-      padding-bottom: 20px;
+      padding-bottom: 12px;
       text-align: center;
     }
 
     .logo-container {
       display: flex;
       justify-content: center;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .logo-image {
-      height: 44px;
+      height: 36px;
       width: auto;
       object-fit: contain;
     }
@@ -56,17 +53,17 @@
     }
 
     .form-group {
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
 
     .form-group:last-of-type {
-      margin-bottom: 32px;
+      margin-bottom: 0;
     }
 
     label {
       display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
+      margin-bottom: 6px;
+      font-size: 13px;
       font-weight: 500;
       color: #09090b;
     }
@@ -74,9 +71,9 @@
     input,
     textarea {
       width: 100%;
-      padding: 12px 16px;
+      padding: 10px 12px;
       border: 1px solid #e4e4e7;
-      border-radius: 8px;
+      border-radius: 6px;
       background: #ffffff;
       color: #09090b;
       font-size: 14px;
@@ -88,7 +85,6 @@
     textarea:focus {
       outline: none;
       border-color: #09090b;
-      box-shadow: 0 0 0 2px rgba(9, 9, 11, 0.1);
     }
 
     input::placeholder,
@@ -98,13 +94,13 @@
 
     textarea {
       resize: vertical;
-      min-height: 80px;
-      line-height: 1.5;
+      min-height: 70px;
+      line-height: 1.4;
     }
 
     .button {
       width: 100%;
-      padding: 14px 16px;
+      padding: 12px 16px;
       background: #09090b;
       color: #ffffff;
       border: none;
@@ -114,34 +110,31 @@
       cursor: pointer;
       transition: all 0.2s ease;
       font-family: inherit;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .button:hover {
       background: #18181b;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
     }
 
     .button:active {
       background: #27272a;
-      transform: translateY(0);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     .button:disabled {
       background: #f4f4f5;
       color: #a1a1aa;
       cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
     }
 
     .status {
-      margin-top: 16px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 14px;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 13px;
       font-weight: 500;
       opacity: 0;
       transform: translateY(4px);
@@ -166,27 +159,27 @@
     }
 
     .footer {
-      margin-top: 24px;
-      padding-top: 16px;
+      margin-top: 20px;
+      padding-top: 12px;
       border-top: 1px solid #e4e4e7;
     }
 
     .links {
       display: flex;
       justify-content: center;
-      gap: 20px;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .link {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       color: #71717a;
       text-decoration: none;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: 6px;
       transition: all 0.2s ease;
       background: #f8f9fa;
@@ -197,12 +190,11 @@
       color: #09090b;
       background: #f1f3f4;
       border-color: #d1d5db;
-      transform: translateY(-1px);
     }
 
     .link-icon {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       fill: currentColor;
     }
 
@@ -241,13 +233,176 @@
 
     /* Input validation states */
     .form-group.error input,
-    .form-group.error textarea {
+    .form-group.error textarea,
+    .form-group.error select {
       border-color: #dc2626;
       box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
     }
 
     .form-group.error label {
       color: #dc2626;
+    }
+
+    /* New styles for enhanced popup */
+    .input-with-button {
+      display: flex;
+      gap: 8px;
+    }
+
+    .input-with-button input {
+      flex: 1;
+    }
+
+    .test-btn {
+      padding: 10px;
+      background: #09090b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+    }
+
+    .test-btn:hover {
+      background: #18181b;
+    }
+
+    .test-btn:disabled {
+      background: #a1a1aa;
+      cursor: not-allowed;
+    }
+
+    .test-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .test-btn.loading svg {
+      display: none;
+    }
+
+    .test-btn.loading::after {
+      content: '';
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .connection-status {
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: all 0.2s ease;
+    }
+
+    .connection-status.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .connection-status.success {
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .connection-status.error {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    .style-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e4e4e7;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #09090b;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .style-select:focus {
+      outline: none;
+      border-color: #09090b;
+    }
+
+    .custom-style-input {
+      margin-top: 8px;
+      animation: slideDown 0.2s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .model-info {
+      margin-top: 4px;
+    }
+
+    .model-cost {
+      color: #71717a;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    /* Section-based layout */
+    .section {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f8f9fa;
+      border: 1px solid #e4e4e7;
+      border-radius: 10px;
+    }
+
+    .section:last-of-type {
+      margin-bottom: 16px;
+    }
+
+    .section-header {
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e4e4e7;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #09090b;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section .form-group {
+      margin-bottom: 12px;
+    }
+
+    .section .form-group:last-child {
+      margin-bottom: 0;
     }
   </style>
 </head>
@@ -262,19 +417,64 @@
     </div>
 
     <form id="configForm">
-      <div class="form-group" id="apiKeyGroup">
-        <label for="openaiKey">OpenAI API Key</label>
-        <input type="password" id="openaiKey" placeholder="sk-proj-..." autocomplete="off">
+      <!-- API Configuration Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3 class="section-title">🔑 API Configuration</h3>
+        </div>
+        
+        <div class="form-group" id="apiKeyGroup">
+          <label for="openaiKey">OpenAI API Key</label>
+          <div class="input-with-button">
+            <input type="password" id="openaiKey" placeholder="sk-proj-..." autocomplete="off">
+            <button type="button" id="testConnection" class="test-btn" title="Test API Connection">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </button>
+          </div>
+          <div id="connectionStatus" class="connection-status"></div>
+        </div>
+
+        <div class="form-group" id="modelGroup">
+          <label for="modelSelect">AI Model</label>
+          <select id="modelSelect" class="style-select">
+            <option value="gpt-4">GPT-4 (Recommended) - Higher quality</option>
+            <option value="gpt-4-turbo">GPT-4 Turbo - Faster, cost-effective</option>
+            <option value="gpt-3.5-turbo">GPT-3.5 Turbo - Fastest, cheapest</option>
+          </select>
+          <div class="model-info">
+            <small id="modelCost" class="model-cost">~$0.03 per response</small>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group" id="styleGroup">
-        <label for="style">Response Style</label>
-        <textarea id="style" rows="3"
-          placeholder="Be conversational and helpful. Add genuine value to discussions while keeping responses under 280 characters."></textarea>
+      <!-- Response Configuration Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3 class="section-title">🎨 Response Style</h3>
+        </div>
+        
+        <div class="form-group" id="styleGroup">
+          <label for="styleSelect">Choose Your Voice</label>
+          <select id="styleSelect" class="style-select">
+            <option value="">Select a style...</option>
+            <option value="professional">🎯 Professional</option>
+            <option value="casual">😊 Casual & Friendly</option>
+            <option value="sarcastic">😏 Sarcastic</option>
+            <option value="unhinged">🔥 Unhinged</option>
+            <option value="technical">🤓 Technical Expert</option>
+            <option value="creative">🎨 Creative & Witty</option>
+            <option value="supportive">🤗 Supportive</option>
+            <option value="custom">✏️ Custom</option>
+          </select>
+          <textarea id="customStyle" rows="3" class="custom-style-input" style="display: none;"
+            placeholder="Describe your custom response style..."></textarea>
+        </div>
       </div>
 
       <button type="submit" class="button" id="saveConfig">
-        Save Configuration
+        💾 Save Configuration
       </button>
     </form>
 
@@ -301,7 +501,7 @@
           Twitter
         </a>
       </div>
-      <div class="version">v1.0.0</div>
+      <div class="version">v1.1.0</div>
     </div>
   </div>
 

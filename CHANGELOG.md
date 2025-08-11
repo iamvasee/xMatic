@@ -5,6 +5,50 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-01-11
+
+### Added
+- **🔌 API Connection Testing** - Real-time OpenAI API validation with visual feedback
+- **🤖 Model Selection** - Choose between GPT-4, GPT-4 Turbo, and GPT-3.5 Turbo
+- **💰 Dynamic Cost Display** - Shows estimated cost per response for each model
+- **🎨 Predefined Response Styles** - 7 preset personality styles:
+  - 🎯 Professional - Business-focused, formal tone
+  - 😊 Casual & Friendly - Warm, approachable responses  
+  - 😏 Sarcastic - Witty, clever humor
+  - 🔥 Unhinged - Bold, chaotic, attention-grabbing
+  - 🤓 Technical Expert - Precise, developer-focused
+  - 🎨 Creative & Witty - Imaginative, memorable responses
+  - 🤗 Supportive - Encouraging, empathetic tone
+- **✏️ Custom Style Option** - User-defined response personality with dynamic textarea
+
+### Improved
+- **🎨 Complete UI Redesign** - Section-based layout with organized configuration areas
+- **📱 Enhanced User Experience** - Card-based design with clear visual hierarchy
+- **⚡ Space Optimization** - More efficient use of popup space with tighter spacing
+- **🔧 Better Form Validation** - Enhanced error handling and user feedback
+- **💾 Persistent Settings** - Remembers model selection and style preferences
+- **🎯 Improved Text Insertion** - More reliable content insertion with better React compatibility
+
+### Changed
+- **📦 UI Layout** - Reorganized into "API Configuration" and "Response Style" sections
+- **🎨 Visual Design** - Sharp container edges with rounded internal elements
+- **📏 Typography** - Optimized font sizes and spacing for better readability
+- **🔘 Button Design** - Enhanced styling with icons and better hover states
+- **📱 Responsive Elements** - Better scaling and spacing throughout interface
+
+### Technical
+- **🔧 Enhanced Content Script** - Improved text insertion reliability
+- **💾 Extended Storage** - Added model and style type persistence
+- **🎨 CSS Optimization** - Streamlined styles with better organization
+- **🔄 Dynamic UI Updates** - Real-time cost updates and style switching
+- **✅ Better Error Handling** - More robust API testing and validation
+
+### Fixed
+- **🐛 Text Insertion Issues** - Resolved problems with Twitter's React editor
+- **🔘 Reply Button Validation** - Fixed greyed-out reply button after AI generation
+- **📱 UI Responsiveness** - Better layout consistency across different screen sizes
+- **⚡ Performance** - Optimized popup loading and interaction speeds
+
 ## [1.0.0] - 2024-12-10
 
 ### Added
