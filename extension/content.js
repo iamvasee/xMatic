@@ -79,7 +79,7 @@ class XMatic {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                margin: 4px 8px 0 0;
+                margin: 7px 8px 0 0;
                 transition: all 0.2s ease;
                 padding: 8px;
                 color: rgb(83, 100, 113);

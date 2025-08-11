@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **🔧 Better Form Validation** - Enhanced error handling and user feedback
 - **💾 Persistent Settings** - Remembers model selection and style preferences
 - **🎯 Improved Text Insertion** - More reliable content insertion with better React compatibility
+- **🤖 Componentized SVG Icons** - Replaced hardcoded SVGs with modular robot.svg and time.svg files
+- **🎨 Perfect Icon Integration** - AI button now matches Twitter's native icons exactly with proper alignment
+- **✨ Modern DOM APIs** - Replaced deprecated execCommand with modern Selection API and DOM methods
+- **🎯 Precise Icon Positioning** - Fine-tuned margins and spacing for seamless Twitter integration
 
 ### Changed
 - **📦 UI Layout** - Reorganized into "API Configuration" and "Response Style" sections
@@ -42,6 +46,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **🎨 CSS Optimization** - Streamlined styles with better organization
 - **🔄 Dynamic UI Updates** - Real-time cost updates and style switching
 - **✅ Better Error Handling** - More robust API testing and validation
+- **📦 Web Accessible Resources** - Added SVG files to manifest for proper loading
+- **🎨 Icon Component System** - Modular SVG loading with fallback mechanisms
+- **🔧 Hover Effect Fixes** - Corrected CSS !important declarations for proper styling
+- **📐 Alignment Optimization** - Precise 7px top margin for perfect icon positioning
 
 ### Fixed
 - **🐛 Text Insertion Issues** - Resolved problems with Twitter's React editor
