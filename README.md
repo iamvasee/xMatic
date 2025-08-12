@@ -17,6 +17,16 @@ xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X.
 - **⚡ Seamless Integration** - Works natively within Twitter's interface
 - **✏️ Fully Editable** - Generated text can be edited, deleted, or customized
 
+## 📸 Screenshots
+
+<div align="center">
+  <img src="assets/screenshots/App_Store_(iOS) 5.png" alt="Main Interface" width="30%">
+  <img src="assets/screenshots/App_Store_(iOS) 6.png" alt="Dark Mode" width="30%">
+  <img src="assets/screenshots/App_Store_(iOS) 10.png" alt="Customization" width="30%">
+</div>
+
+*Light and dark mode support with seamless Twitter/X integration*
+
 ## 🚀 Quick Start
 
 ### Installation
