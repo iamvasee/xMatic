@@ -5,6 +5,13 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2025-08-12
+
+### Fixed
+- **🐛 Ghost Hover Effect** - Resolved the ghost hover issue that affected user experience
+- **🎨 Icon Sizing** - Adjusted the robot icon size to match Twitter's native action buttons
+- **💅 UI Polish** - Improved button styling for better visual consistency with Twitter's design language
+
 ## [1.1.0] - 2025-01-11
 
 ### Added

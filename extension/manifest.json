@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "xMatic",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Unleash AI chaos on X/Twitter - BYOK viral reply generator",
   "permissions": [
     "activeTab",

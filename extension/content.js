@@ -11,11 +11,43 @@ class XMatic {
 
     async init() {
         console.log('xMatic: Initializing...');
+        
+        // Nuclear cleanup first - remove everything xMatic related
+        this.nuclearCleanup();
+        
         this.config = await chrome.storage.sync.get(['openaiKey', 'style', 'selectedModel']);
         await this.loadSvgIcons();
         this.addAIButtons();
         this.observeChanges();
         console.log('xMatic: Ready!');
+    }
+
+    nuclearCleanup() {
+        console.log('xMatic: Performing nuclear cleanup...');
+        
+        // Remove ALL elements with xmatic classes
+        const xmaticElements = document.querySelectorAll('[class*="xmatic"], [data-xmatic-active], [data-xmatic-id]');
+        xmaticElements.forEach(element => {
+            console.log('xMatic: Nuclear cleanup removing element:', element);
+            element.remove();
+        });
+
+        // Remove enhanced classes from all toolbars
+        const toolbars = document.querySelectorAll('[data-testid="toolBar"]');
+        toolbars.forEach(toolbar => {
+            toolbar.classList.remove('xmatic-enhanced');
+        });
+
+        // Remove any elements with our specific hover color
+        const stuckHoverElements = document.querySelectorAll('*');
+        stuckHoverElements.forEach(element => {
+            const style = window.getComputedStyle(element);
+            if (style.backgroundColor === 'rgb(239, 245, 253)' && !element.classList.contains('xmatic-ai-btn')) {
+                element.style.backgroundColor = 'transparent';
+            }
+        });
+
+        console.log('xMatic: Nuclear cleanup complete');
     }
 
     async loadSvgIcons() {
@@ -45,17 +77,54 @@ class XMatic {
     }
 
     observeChanges() {
-        const observer = new MutationObserver(() => {
-            this.addAIButtons();
+        // Disconnect any existing observer first
+        if (this.observer) {
+            this.observer.disconnect();
+        }
+
+        this.observer = new MutationObserver((mutations) => {
+            // Only react to specific changes that matter
+            let shouldUpdate = false;
+            mutations.forEach(mutation => {
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === 1 && node.querySelector && node.querySelector('[data-testid="toolBar"]')) {
+                            shouldUpdate = true;
+                        }
+                    });
+                }
+            });
+
+            if (shouldUpdate) {
+                // Debounce the button addition to prevent excessive calls
+                clearTimeout(this.addButtonsTimeout);
+                this.addButtonsTimeout = setTimeout(() => {
+                    this.addAIButtons();
+                }, 200);
+            }
         });
-        observer.observe(document.body, { childList: true, subtree: true });
+        
+        this.observer.observe(document.body, { childList: true, subtree: true });
+        console.log('xMatic: Observer started with debouncing');
     }
 
+
+
     addAIButtons() {
+        // Don't add buttons if SVGs aren't loaded yet
+        if (!this.robotSvg || !this.timeSvg) {
+            console.log('xMatic: SVGs not loaded yet, skipping button creation');
+            return;
+        }
+
+        // Clean up any orphaned buttons first
+        cleanupOrphanedButtons();
+
         // Find compose toolbars that don't have our button yet
         const toolbars = document.querySelectorAll('[data-testid="toolBar"]:not(.xmatic-enhanced)');
+        console.log(`xMatic: Found ${toolbars.length} toolbars to enhance`);
 
-        toolbars.forEach(toolbar => {
+        toolbars.forEach((toolbar, index) => {
             toolbar.classList.add('xmatic-enhanced');
 
             // Create AI icon (div instead of button to avoid shadows)
@@ -64,9 +133,12 @@ class XMatic {
             aiButton.title = 'Generate AI Reply';
             aiButton.setAttribute('role', 'button');
             aiButton.setAttribute('tabindex', '0');
+            aiButton.setAttribute('data-xmatic-active', 'true'); // Mark as active button
+            aiButton.setAttribute('data-xmatic-id', `btn-${Date.now()}-${index}`); // Unique ID
 
             // Use loaded robot SVG icon
             aiButton.innerHTML = this.robotSvg;
+            console.log(`xMatic: Created AI button ${index + 1} with ID: btn-${Date.now()}-${index}`);
 
             // Style to match Twitter's native icons exactly
             aiButton.style.cssText = `
@@ -89,26 +161,44 @@ class XMatic {
                 flex-shrink: 0;
             `;
 
-            // Add hover effects to match Twitter's style
-            aiButton.addEventListener('mouseenter', () => {
-                aiButton.style.backgroundColor = '#EFF5FD';
-                aiButton.style.color = 'rgb(29, 161, 242)';
-                aiButton.style.transform = 'none'; // Prevent any zoom/scale effects
+            // Add controlled hover effects only to this specific button
+            aiButton.addEventListener('mouseenter', (e) => {
+                // Only apply hover if this is the actual target
+                if (e.target === aiButton && aiButton.getAttribute('data-xmatic-active') === 'true') {
+                    aiButton.style.setProperty('background-color', '#EFF5FD', 'important');
+                    aiButton.style.setProperty('color', 'rgb(29, 161, 242)', 'important');
+                    console.log('xMatic: Hover enter on button:', aiButton.getAttribute('data-xmatic-id'));
+                }
             });
 
-            aiButton.addEventListener('mouseleave', () => {
-                aiButton.style.backgroundColor = 'transparent';
-                aiButton.style.color = 'rgb(83, 100, 113)';
-                aiButton.style.transform = 'none';
+            aiButton.addEventListener('mouseleave', (e) => {
+                // Only remove hover if this is the actual target
+                if (e.target === aiButton && aiButton.getAttribute('data-xmatic-active') === 'true') {
+                    aiButton.style.setProperty('background-color', 'transparent', 'important');
+                    aiButton.style.setProperty('color', 'rgb(83, 100, 113)', 'important');
+                    console.log('xMatic: Hover leave on button:', aiButton.getAttribute('data-xmatic-id'));
+                }
             });
 
             aiButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                console.log('xMatic: AI button clicked!');
                 this.handleAIClick();
             });
 
+            // Also handle keyboard activation
+            aiButton.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('xMatic: AI button activated via keyboard!');
+                    this.handleAIClick();
+                }
+            });
+
             toolbar.insertBefore(aiButton, toolbar.firstChild);
+            console.log(`xMatic: AI button ${index + 1} inserted into toolbar`);
         });
     }
 
@@ -334,14 +424,56 @@ class XMatic {
     }
 }
 
-// Initialize when page loads
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => new XMatic());
-} else {
-    new XMatic();
+// Prevent multiple instances with aggressive cleanup
+if (window.xMaticInstance) {
+    console.log('xMatic: Destroying existing instance');
+    if (window.xMaticInstance.observer) {
+        window.xMaticInstance.observer.disconnect();
+    }
+    cleanupOrphanedButtons();
+    window.xMaticInstance = null;
 }
 
-// Also initialize after a delay to catch dynamic content
-setTimeout(() => new XMatic(), 2000);
+console.log('xMatic: Creating new instance');
+
+// Initialize when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        window.xMaticInstance = new XMatic();
+    });
+} else {
+    window.xMaticInstance = new XMatic();
+}
 
 console.log('xMatic: Script loaded');
+
+function cleanupOrphanedButtons() {
+    console.log('xMatic: Starting aggressive cleanup...');
+    
+    // Remove ALL existing AI buttons to prevent duplicates and ghost effects
+    const allAIButtons = document.querySelectorAll('.xmatic-ai-btn, [class*="xmatic"], [data-xmatic-active], [data-xmatic-id]');
+    console.log(`xMatic: Found ${allAIButtons.length} xMatic elements to clean up`);
+    
+    allAIButtons.forEach((element, index) => {
+        console.log(`xMatic: Removing xMatic element ${index + 1}:`, element.className);
+        element.remove();
+    });
+
+    // Remove the enhanced class from all toolbars to reset state
+    const enhancedToolbars = document.querySelectorAll('[data-testid="toolBar"].xmatic-enhanced');
+    enhancedToolbars.forEach(toolbar => {
+        toolbar.classList.remove('xmatic-enhanced');
+    });
+
+    // Nuclear option: remove our hover color from ALL elements
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach(element => {
+        const computedStyle = window.getComputedStyle(element);
+        if (computedStyle.backgroundColor === 'rgb(239, 245, 253)') {
+            element.style.setProperty('background-color', 'transparent', 'important');
+            console.log('xMatic: Removed stuck hover color from element');
+        }
+    });
+
+    console.log('xMatic: Aggressive cleanup complete');
+}

@@ -1,21 +1,37 @@
-/* xMatic - Simple Styles */
+/* xMatic - Clean Styles */
 
-.xmatic-ai-btn {
-    transition: all 0.2s ease !important;
-    font-weight: 500;
-    pointer-events: auto;
-    -webkit-user-select: none; /* Safari 3+, Safari on iOS 3+ */
-    user-select: none; /* Standard syntax */
+/* Style for active AI button */
+[data-testid="toolBar"] .xmatic-ai-btn[data-xmatic-active="true"] {
+    font-weight: 500 !important;
+    pointer-events: auto !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
     box-shadow: none !important;
+    position: relative !important;
+    z-index: 1 !important;
+    background-color: transparent !important;
 }
 
-.xmatic-ai-btn:hover {
-    background: #EFF5FD !important;
-    transform: none !important;
+/* Button styling */
+.xmatic-ai-btn {
+    background: transparent !important;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin: 0 4px;
+    padding: 0;
+    border: none;
+    cursor: pointer;
 }
 
-.xmatic-ai-btn:active {
-    transform: none !important;
+/* Style for the SVG inside the button */
+.xmatic-ai-btn svg {
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
 }
 
 /* Spinning animation for loading icon */

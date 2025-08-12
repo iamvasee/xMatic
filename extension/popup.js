@@ -31,8 +31,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     if (config.openaiKey) {
       document.getElementById('openaiKey').value = config.openaiKey;
-      // Test connection on load if key exists
-      setTimeout(() => testConnection(), 500);
     }
     
     if (config.selectedModel) {
