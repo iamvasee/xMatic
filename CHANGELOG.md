@@ -5,6 +5,18 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-08-12
+
+### Added
+- **🌓 Dark Mode Support** - Automatic text color adjustment for dark/light themes
+- **✍️ Enhanced AI Prompts** - More natural and engaging reply generation
+- **🔤 Quote Handling** - Removed double quotes from AI responses for better readability
+
+### Improved
+- **🤖 Response Quality** - Better style matching and Twitter etiquette
+- **📝 Character Limit** - More consistent adherence to 280-character limit
+- **🔄 Generation Parameters** - Optimized for more natural-sounding responses
+
 ## [1.1.1] - 2025-08-12
 
 ### Fixed

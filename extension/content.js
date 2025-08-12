@@ -263,9 +263,18 @@ class XMatic {
     }
 
     async generateReply(context) {
-        const systemPrompt = `You are helping with Twitter/X replies. Generate a helpful, engaging response under 280 characters. Style: ${this.config.style || 'Be conversational and helpful'}`;
+        const systemPrompt = `You are an expert at crafting engaging Twitter/X replies. Follow these rules strictly:
+1. Keep responses under 280 characters - be concise and to the point
+2. Never use double quotes (") in your response - use single quotes (') if needed
+3. Match the user's requested style: ${this.config.style || 'conversational and helpful'}
+4. Use proper Twitter etiquette - @mentions, hashtags, and emojis when appropriate
+5. Never include any meta-commentary like "Here's a reply:" or "I would say:" - just provide the reply
+6. If the tweet is a question, directly answer it
+7. If it's an opinion, respond with a thoughtful reaction
+8. If it's a joke, respond in kind with humor
+9. If it's controversial, be diplomatic but engaging`;
 
-        const userPrompt = `Generate a reply to this tweet: "${context.mainTweet}"`;
+        const userPrompt = `Craft a Twitter reply to this tweet. Follow all system instructions carefully. Make it sound natural and engaging. Tweet to reply to: ${context.mainTweet}`;
 
         const selectedModel = this.config.selectedModel || 'gpt-4';
 
@@ -281,8 +290,11 @@ class XMatic {
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: userPrompt }
                 ],
-                max_tokens: 120,
-                temperature: 0.7
+                max_tokens: 100,  // Reduced to encourage brevity
+                temperature: 0.8,  // Slightly higher for more creative responses
+                top_p: 0.9,       // Controls diversity of responses
+                frequency_penalty: 0.5,  // Discourages repetition
+                presence_penalty: 0.3    // Encourages new topics
             })
         });
 
@@ -294,6 +306,27 @@ class XMatic {
         return data.choices?.[0]?.message?.content || '';
     }
 
+    getCurrentTheme() {
+        // Check if dark theme is active
+        const html = document.documentElement;
+        const body = document.body;
+        
+        // Check for data-theme attribute on html or body
+        if (html.getAttribute('data-theme') === 'dark' || 
+            body.getAttribute('data-theme') === 'dark' ||
+            html.getAttribute('data-mode') === 'dark' ||
+            body.getAttribute('data-mode') === 'dark' ||
+            html.classList.contains('dark') ||
+            body.classList.contains('dark') ||
+            window.getComputedStyle(html).colorScheme === 'dark' ||
+            window.getComputedStyle(body).colorScheme === 'dark') {
+            return 'dark';
+        }
+        
+        // Default to light theme
+        return 'light';
+    }
+
     async insertReply(text) {
         console.log('xMatic: Inserting reply:', text);
 
@@ -303,12 +336,22 @@ class XMatic {
             throw new Error('Could not find compose box');
         }
 
+        // Get current theme and set appropriate text color
+        const theme = this.getCurrentTheme();
+        console.log('xMatic: Current theme detected:', theme);
+
         // Try insertion methods
         await this.insertViaClipboard(composeBox, text);
+
+        // Set text color based on theme
+        composeBox.style.color = theme === 'dark' ? '#E7E9EA' : '#0F1419';
 
         // Ensure Twitter recognizes the content
         setTimeout(() => {
             this.validateInsertion(composeBox, text);
+            
+            // Re-apply color in case it was reset by Twitter
+            composeBox.style.color = theme === 'dark' ? '#E7E9EA' : '#0F1419';
         }, 500);
     }
 
