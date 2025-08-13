@@ -5,6 +5,25 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2025-08-13
+
+### Fixed
+- **🔧 Chrome Web Store Compliance**
+  - Removed unused `activeTab` and `scripting` permissions
+  - Fixed HTML validation issues in popup
+  - Added proper meta tags and accessibility attributes
+- **🔗 Link Updates**
+  - Updated website link to iamvasee.com
+  - Improved footer layout and styling
+- **🎨 UI Improvements**
+  - Moved inline styles to external CSS
+  - Improved responsive design for popup
+
+## [1.2.1] - 2025-08-13
+
+### Fixed
+- **🔒 Permission Cleanup** - Removed unused `activeTab` and `scripting` permissions to comply with Chrome Web Store policies
+
 ## [1.2.0] - 2025-08-12
 
 ### Added

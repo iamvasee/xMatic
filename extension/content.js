@@ -267,7 +267,7 @@ class XMatic {
 1. Keep responses under 280 characters - be concise and to the point
 2. Never use double quotes (") in your response - use single quotes (') if needed
 3. Match the user's requested style: ${this.config.style || 'conversational and helpful'}
-4. Use proper Twitter etiquette - @mentions, hashtags, and emojis when appropriate
+4. Use proper Twitter etiquette - mentions, hashtags, and emojis when appropriate
 5. Never include any meta-commentary like "Here's a reply:" or "I would say:" - just provide the reply
 6. If the tweet is a question, directly answer it
 7. If it's an opinion, respond with a thoughtful reaction

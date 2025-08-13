@@ -1,5 +1,10 @@
 /* xMatic - Clean Styles */
 
+/* Popup styles */
+.custom-style-input {
+    display: none;
+}
+
 /* Style for active AI button */
 [data-testid="toolBar"] .xmatic-ai-btn[data-xmatic-active="true"] {
     font-weight: 500 !important;
