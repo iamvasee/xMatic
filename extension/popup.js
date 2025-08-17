@@ -105,19 +105,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       grokSection.style.display = 'none';
       openaiModels.style.display = 'block';
       grokModels.style.display = 'none';
+      
+      // Set model to first OpenAI model if current model is Grok
+      if (modelSelect.value.startsWith('grok-')) {
+        modelSelect.value = 'gpt-4';
+      }
     } else {
       openaiSection.style.display = 'none';
       grokSection.style.display = 'block';
       openaiModels.style.display = 'none';
       grokModels.style.display = 'block';
+      
+      // Set model to first Grok model if current model is OpenAI
+      if (modelSelect.value.startsWith('gpt-')) {
+        modelSelect.value = 'grok-beta';
+      }
     }
     
-    // Update model selection to first available model for selected provider
-    if (provider === 'openai') {
-      modelSelect.value = 'gpt-4';
-    } else {
-      modelSelect.value = 'grok-beta';
-    }
     updateModelCost();
   }
   
