@@ -5,6 +5,90 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-01-15
+
+### Added
+- **🚀 Dual AI Provider Support**
+  - **OpenAI Integration**: Full support for GPT-4, GPT-4 Turbo, and GPT-3.5 Turbo
+  - **Grok AI (xAI) Integration**: Support for Grok-4-0709, Grok-3, and Grok-3-mini models
+  - **Provider Switching**: Seamless toggle between OpenAI and Grok providers
+  - **Model-Specific Parameters**: Optimized API calls for each provider's capabilities
+
+- **🎭 Enhanced Response Style System**
+  - **7 Preset Base Styles**: Professional, Casual, Humorous, Analytical, Concise, Empathetic, Creative
+  - **Custom Instructions**: Combine base styles with personalized requirements
+  - **Comprehensive Style Prompts**: Detailed instructions for each style category
+  - **Dynamic Style Combination**: Base style + custom instructions = personalized AI responses
+
+- **📈 Rich Context Extraction**
+  - **Author Information**: Extract display names from tweets
+  - **Engagement Metrics**: Likes, retweets, replies, and quote counts
+  - **Tweet Content Analysis**: Full tweet text with context preservation
+  - **Smart Context Integration**: AI considers author influence and engagement levels
+
+- **🛡️ Smart @ Symbol Prevention**
+  - **Accidental Tagging Prevention**: Explicit rules to prevent @ symbol usage
+  - **User Safety**: No accidental mentions of other users in AI responses
+  - **Clean Replies**: Professional, tag-free responses
+
+### Improved
+- **🔧 Robust Error Handling**
+  - **API Connection Testing**: Real-time validation for both OpenAI and Grok
+  - **Better Error Messages**: Clear feedback for configuration issues
+  - **Fallback Mechanisms**: Graceful handling of API failures
+  - **Connection Status Display**: Visual feedback for API health
+
+- **📱 Enhanced User Interface**
+  - **Provider Toggle**: Clean switching between AI providers
+  - **Model Selection**: Dynamic model lists based on selected provider
+  - **Cost Display**: Real-time cost estimates for each model
+  - **Responsive Design**: Better popup layout and organization
+
+- **🧠 AI Response Quality**
+  - **Context-Aware Prompts**: AI considers tweet content, author, and engagement
+  - **Style Consistency**: Better adherence to selected response styles
+  - **Engagement Awareness**: Responses tailored to tweet popularity
+  - **Professional Output**: No meta-commentary or unnecessary formatting
+
+### Changed
+- **📦 Architecture Updates**
+  - **Dual Provider Architecture**: Support for multiple AI services
+  - **Enhanced Context System**: More comprehensive tweet analysis
+  - **Improved Prompt Engineering**: Better system and user prompts
+  - **Storage Structure**: Extended configuration storage for dual providers
+
+- **🎨 User Experience**
+  - **Simplified Configuration**: Streamlined setup process
+  - **Better Validation**: Improved form validation and error handling
+  - **Provider Isolation**: Clear separation between OpenAI and Grok settings
+  - **Model Compatibility**: Automatic model switching based on provider
+
+### Technical
+- **🔧 Enhanced Content Script**
+  - **Improved Context Extraction**: Better DOM querying and data extraction
+  - **Robust Error Handling**: Graceful fallbacks for extraction failures
+  - **Performance Optimization**: Efficient context gathering and processing
+  - **Debug Logging**: Comprehensive logging for troubleshooting
+
+- **💾 Extended Storage System**
+  - **Provider Preferences**: Remember selected AI provider
+  - **Model Selection**: Persistent model choices per provider
+  - **Style Configuration**: Enhanced style storage and retrieval
+  - **API Key Management**: Secure storage for multiple providers
+
+### Fixed
+- **🐛 Context Extraction Issues**
+  - **Author Name Extraction**: Reliable display name detection
+  - **Engagement Metrics**: Accurate count extraction from Twitter UI
+  - **Tweet Content**: Better text extraction and formatting
+  - **Error Handling**: Graceful fallbacks for extraction failures
+
+- **🔧 API Integration**
+  - **Provider Switching**: Reliable provider and model switching
+  - **Connection Testing**: Better API validation and feedback
+  - **Error Reporting**: Clear error messages for troubleshooting
+  - **Model Compatibility**: Proper model selection per provider
+
 ## [1.2.2] - 2025-08-13
 
 ### Fixed

@@ -615,9 +615,9 @@
             </optgroup>
             <!-- Grok Models -->
             <optgroup label="Grok Models" id="grokModels" style="display: none;">
-              <option value="grok-beta">Grok Beta - Main model</option>
-              <option value="grok-beta-128k">Grok Beta 128K - Extended context</option>
-              <option value="grok-beta-32k">Grok Beta 32K - Standard context</option>
+              <option value="grok-4-0709">Grok-4-0709 - Latest model (256K context)</option>
+              <option value="grok-3">Grok-3 - Standard model (131K context)</option>
+              <option value="grok-3-mini">Grok-3-mini - Fast model (131K context)</option>
             </optgroup>
           </select>
           <div class="model-info">
@@ -627,27 +627,26 @@
       </div>
 
       <!-- Response Configuration Section -->
-      <div class="section">
-        <div class="section-header">
-          <h3 class="section-title">🎨 Response Style</h3>
-        </div>
+      <div class="section" id="styleGroup">
+        <label for="styleSelect">Response Style:</label>
+        <select id="styleSelect" class="style-select" required>
+          <option value="">Select a base style</option>
+          <option value="professional">Professional & Formal</option>
+          <option value="casual">Casual & Friendly</option>
+          <option value="humorous">Humorous & Witty</option>
+          <option value="analytical">Analytical & Detailed</option>
+          <option value="concise">Concise & Direct</option>
+          <option value="empathetic">Empathetic & Supportive</option>
+          <option value="creative">Creative & Imaginative</option>
+        </select>
         
-        <div class="form-group" id="styleGroup">
-          <label for="styleSelect">Choose Your Voice</label>
-          <select id="styleSelect" class="style-select">
-            <option value="">Select a style...</option>
-            <option value="professional">🎯 Professional</option>
-            <option value="casual">😊 Casual & Friendly</option>
-            <option value="sarcastic">😏 Sarcastic</option>
-            <option value="unhinged">🔥 Unhinged</option>
-            <option value="technical">🤓 Technical Expert</option>
-            <option value="creative">🎨 Creative & Witty</option>
-            <option value="supportive">🤗 Supportive</option>
-            <option value="custom">✏️ Custom</option>
-          </select>
-          <textarea id="customStyle" rows="3" class="custom-style-input"
-            placeholder="Describe your custom response style..."></textarea>
-        </div>
+        <label for="customStyleInput">Additional Custom Instructions:</label>
+        <textarea 
+          id="customStyleInput" 
+          placeholder="Add your own custom instructions, personality traits, or specific requirements here. These will be combined with the selected base style."
+          rows="3"
+        ></textarea>
+        <small class="help-text">Your custom instructions will be combined with the selected base style for a personalized AI response.</small>
       </div>
 
       <button type="submit" class="button" id="saveConfig">
@@ -679,7 +678,7 @@
           Twitter
         </a>
       </div>
-      <div class="version">v1.2.2</div>
+      <div class="version">v1.3.0</div>
     </div>
   </div>
 

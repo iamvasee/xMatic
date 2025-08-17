@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saveButton = document.getElementById('saveConfig');
   const modelSelect = document.getElementById('modelSelect');
   const styleSelect = document.getElementById('styleSelect');
-  const customStyleInput = document.getElementById('customStyle');
+  const customStyleInput = document.getElementById('customStyleInput');
   const modelCostDisplay = document.getElementById('modelCost');
   
   // API Provider elements
@@ -13,15 +13,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   const openaiModels = document.getElementById('openaiModels');
   const grokModels = document.getElementById('grokModels');
   
-  // Predefined styles
+  // Response styles with comprehensive instructions
   const styles = {
-    professional: "Write professional, insightful responses that add value to business discussions. Use industry terminology appropriately and maintain a formal tone. Keep responses under 280 characters.",
-    casual: "Be conversational and friendly. Use a warm, approachable tone that feels natural and engaging. Add personality while staying helpful. Keep responses under 280 characters.",
-    sarcastic: "Be witty and sarcastic, but not mean-spirited. Use clever humor and playful jabs. Make responses memorable and entertaining while still adding value. Keep responses under 280 characters.",
-    unhinged: "Be bold, chaotic, and unpredictable! Use wild analogies, unexpected comparisons, and energetic language. Stand out with creative, attention-grabbing responses. Keep responses under 280 characters.",
-    technical: "Provide technical insights and detailed explanations. Use precise terminology and offer actionable advice for developers and tech professionals. Keep responses under 280 characters.",
-    creative: "Be imaginative and memorable. Use creative metaphors, ask thought-provoking questions, and make responses that spark curiosity and engagement. Keep responses under 280 characters.",
-    supportive: "Be encouraging and empathetic. Offer genuine support, positive reinforcement, and helpful advice. Create a welcoming, uplifting tone in all responses. Keep responses under 280 characters."
+    'professional': `Be professional, formal, and business-like in all responses. Use proper language, maintain a respectful tone, and demonstrate expertise. Structure responses clearly with logical flow. Avoid slang, casual language, or overly informal expressions. When appropriate, use industry terminology and professional frameworks. Always maintain credibility and authority while remaining approachable. Focus on providing value, actionable insights, and professional guidance. Keep responses concise but comprehensive, ensuring they meet professional standards and expectations.`,
+    
+    'casual': `Be casual, friendly, and approachable in your responses. Use conversational language that feels natural and engaging, as if talking to a friend. Show personality and warmth while maintaining helpfulness. Use contractions, friendly expressions, and relatable examples. Avoid overly formal or technical language unless necessary. Make responses feel human and relatable, using humor when appropriate. Be encouraging and supportive, creating a comfortable atmosphere for discussion. Keep the tone light but informative, making complex topics accessible and enjoyable.`,
+    
+    'humorous': `Be witty, humorous, and entertaining in your responses while maintaining value and relevance. Use clever jokes, puns, and light-hearted commentary when appropriate. Inject humor naturally without forcing it, ensuring it enhances rather than distracts from the message. Use creative analogies, unexpected comparisons, and playful language that makes responses memorable. Balance humor with helpfulness - be funny but also genuinely useful. Avoid offensive or inappropriate humor, keeping it clever and inclusive. Make responses engaging and shareable, using wit to make complex topics more approachable and enjoyable.`,
+    
+    'analytical': `Be analytical, detailed, and thorough in your responses. Break down complex topics into understandable components, providing comprehensive insights and deep analysis. Use logical reasoning, evidence-based approaches, and systematic thinking. Present information in structured formats when helpful, using bullet points, numbered lists, or clear sections. Ask probing questions to understand the full context before providing analysis. Offer multiple perspectives and consider various angles of the topic. Be precise with terminology and explanations, ensuring clarity and accuracy. Provide actionable insights and practical recommendations based on your analysis.`,
+    
+    'concise': `Be concise, direct, and to the point in all responses. Avoid unnecessary words, filler language, or overly verbose explanations. Focus on essential information and key takeaways. Use clear, simple language that gets straight to the heart of the matter. Structure responses efficiently with clear headings or bullet points when helpful. Prioritize the most important information first, using the inverted pyramid style. Be efficient with words while maintaining clarity and completeness. Respect the reader's time by delivering maximum value in minimum words.`,
+    
+    'empathetic': `Be empathetic, supportive, and understanding in your responses. Show genuine care and emotional intelligence in all interactions. Acknowledge feelings and emotions expressed by the user, validating their experiences. Use supportive language that creates a safe, welcoming environment. Offer encouragement and positive reinforcement when appropriate. Be patient and understanding, especially with complex or sensitive topics. Show compassion while maintaining helpfulness and providing practical guidance. Create an atmosphere of trust and emotional safety where users feel heard and supported.`,
+    
+    'creative': `Be creative, imaginative, and innovative in your responses. Think outside the box and offer unique perspectives that spark curiosity and engagement. Use creative metaphors, analogies, and storytelling techniques to make concepts memorable. Approach problems from unexpected angles, offering creative solutions and fresh insights. Use vivid language and descriptive expressions that paint pictures in the reader's mind. Encourage creative thinking and exploration of possibilities. Make responses inspiring and thought-provoking, using creativity to make complex topics more accessible and engaging. Balance innovation with practicality, ensuring creative approaches are also useful and actionable.`
   };
 
   // Model cost information for both providers
@@ -31,9 +37,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     'gpt-4-turbo': '~$0.01 per response', 
     'gpt-3.5-turbo': '~$0.002 per response',
     // Grok Models
-    'grok-beta': '~$0.02 per response',
-    'grok-beta-128k': '~$0.04 per response',
-    'grok-beta-32k': '~$0.02 per response'
+    'grok-4-0709': '~$0.018 per response (256K context)',
+    'grok-3': '~$0.018 per response (131K context)',
+    'grok-3-mini': '~$0.0008 per response (131K context)'
   };
   
   // Load saved configuration
@@ -47,11 +53,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       'selectedModel'
     ]);
     
-    // Set API provider
+    // Set provider
     if (config.selectedProvider) {
+      // Set the active provider button
+      const providerBtn = document.querySelector(`[data-provider="${config.selectedProvider}"]`);
+      if (providerBtn) {
+        providerBtn.classList.add('active');
+      }
       setActiveProvider(config.selectedProvider);
     } else {
-      setActiveProvider('openai'); // Default to OpenAI
+      // Default to OpenAI
+      const openaiBtn = document.querySelector('[data-provider="openai"]');
+      if (openaiBtn) {
+        openaiBtn.classList.add('active');
+      }
+      setActiveProvider('openai');
     }
     
     // Set API keys
@@ -66,43 +82,72 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (config.selectedModel) {
       modelSelect.value = config.selectedModel;
     } else {
-      modelSelect.value = 'gpt-4'; // Default to GPT-4
+      // Set default based on provider
+      if (config.selectedProvider === 'grok') {
+        modelSelect.value = 'grok-4-0709'; // Default to Grok-4-0709
+      } else {
+        modelSelect.value = 'gpt-4'; // Default to GPT-4
+      }
     }
     updateModelCost();
     
     // Set style
     if (config.selectedStyleType) {
       styleSelect.value = config.selectedStyleType;
-      if (config.selectedStyleType === 'custom') {
-        customStyleInput.style.display = 'block';
-        customStyleInput.value = config.style || '';
-      }
+    }
+    
+    // Set custom instructions if they exist
+    if (config.style && config.style !== styles[config.selectedStyleType]) {
+      // If the saved style is different from the base style, it means there were custom instructions
+      customStyleInput.value = config.style.replace(styles[config.selectedStyleType] + '\n\nAdditional custom instructions: ', '');
     }
   } catch (error) {
     showStatus('Failed to load configuration', 'error');
   }
   
-  // Handle API provider switching
-  providerOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      const provider = option.getAttribute('data-provider');
+  // Event listeners
+  providerOptions.forEach(opt => {
+    opt.addEventListener('click', (event) => {
+      const provider = event.target.getAttribute('data-provider');
       setActiveProvider(provider);
     });
   });
+
+  // Model selection change handler
+  modelSelect.addEventListener('change', () => {
+    const selectedModel = modelSelect.value;
+    const currentProvider = document.querySelector('.provider-option.active').getAttribute('data-provider');
+    
+    // Strict validation: prevent cross-provider model selection
+    if (selectedModel.startsWith('gpt-') && currentProvider !== 'openai') {
+      // User somehow selected OpenAI model while Grok is active - revert to valid Grok model
+      console.warn('xMatic: Cross-provider model selection detected, reverting to valid model');
+      modelSelect.value = 'grok-4-0709';
+      return;
+    } else if (selectedModel.startsWith('grok-') && currentProvider !== 'grok') {
+      // User somehow selected Grok model while OpenAI is active - revert to valid OpenAI model
+      console.warn('xMatic: Cross-provider model selection detected, reverting to valid model');
+      modelSelect.value = 'gpt-4';
+      return;
+    }
+    
+    updateModelCost();
+  });
   
   function setActiveProvider(provider) {
-    // Update provider buttons
-    providerOptions.forEach(opt => {
-      opt.classList.remove('active');
-      if (opt.getAttribute('data-provider') === provider) {
-        opt.classList.add('active');
+    // Update active state on provider buttons
+    providerOptions.forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.getAttribute('data-provider') === provider) {
+        btn.classList.add('active');
       }
     });
     
-    // Show/hide sections
+    // Show/hide API key sections
     if (provider === 'openai') {
       openaiSection.style.display = 'block';
       grokSection.style.display = 'none';
+      // Show only OpenAI models, hide Grok models
       openaiModels.style.display = 'block';
       grokModels.style.display = 'none';
       
@@ -113,12 +158,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       openaiSection.style.display = 'none';
       grokSection.style.display = 'block';
+      // Show only Grok models, hide OpenAI models
       openaiModels.style.display = 'none';
       grokModels.style.display = 'block';
       
       // Set model to first Grok model if current model is OpenAI
       if (modelSelect.value.startsWith('gpt-')) {
-        modelSelect.value = 'grok-beta';
+        modelSelect.value = 'grok-4-0709';
       }
     }
     
@@ -133,16 +179,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     modelCostDisplay.textContent = modelCosts[selectedModel] || '~$0.01 per response';
   }
   
-  // Handle style selection
+  // Handle style selection - no need to show/hide custom input since it's always visible
   styleSelect.addEventListener('change', (e) => {
-    const selectedStyle = e.target.value;
-    
-    if (selectedStyle === 'custom') {
-      customStyleInput.style.display = 'block';
-      customStyleInput.focus();
-    } else {
-      customStyleInput.style.display = 'none';
-    }
+    // Custom input is always visible now, no need to toggle display
+    updateModelCost(); // Update cost display if needed
   });
   
   // Handle OpenAI test connection
@@ -236,52 +276,75 @@ document.addEventListener('DOMContentLoaded', async () => {
     const selectedStyleType = styleSelect.value;
     let style = '';
     
-    // Get style based on selection
-    if (selectedStyleType === 'custom') {
-      style = customStyleInput.value.trim();
-    } else if (selectedStyleType && styles[selectedStyleType]) {
-      style = styles[selectedStyleType];
+    // Get style based on selection and combine with custom instructions
+    let finalStyle = '';
+    const customInstructions = customStyleInput.value.trim();
+    
+    if (selectedStyleType && styles[selectedStyleType]) {
+      // Start with the base style
+      finalStyle = styles[selectedStyleType];
+      
+      // Add custom instructions if provided
+      if (customInstructions) {
+        finalStyle += '\n\nAdditional custom instructions: ' + customInstructions;
+      }
+    } else if (customInstructions) {
+      // If no base style selected, use only custom instructions
+      finalStyle = customInstructions;
+    } else {
+      // Default style if nothing is provided
+      finalStyle = 'Be conversational and helpful. Add genuine value to discussions while keeping responses under 280 characters.';
     }
     
     // Clear previous error states
     clearErrors();
     
-    // Validation based on selected provider
-    if (selectedProvider === 'openai') {
-      if (!openaiKey) {
-        setFieldError('openaiKeyGroup', 'OpenAI API key is required');
-        showStatus('Please provide your OpenAI API key', 'error');
-        return;
-      }
-      
-      if (!openaiKey.startsWith('sk-')) {
-        setFieldError('openaiKeyGroup', 'Invalid OpenAI API key format');
-        showStatus('Please enter a valid OpenAI API key', 'error');
-        return;
-      }
-    } else {
-      if (!grokKey) {
-        setFieldError('grokKeyGroup', 'Grok API key is required');
-        showStatus('Please provide your Grok API key', 'error');
-        return;
-      }
-      
-      if (!grokKey.startsWith('xai-')) {
-        setFieldError('grokKeyGroup', 'Invalid Grok API key format');
-        showStatus('Please enter a valid Grok API key', 'error');
-        return;
-      }
+    // Validate model selection matches provider
+    // Double-check provider-model compatibility
+    if (selectedProvider === 'openai' && !selectedModel.startsWith('gpt-')) {
+      setFieldError('modelSelectGroup', 'Invalid model selection for OpenAI provider');
+      return;
     }
-    
-    if (!selectedStyleType) {
-      setFieldError('styleGroup', 'Please select a response style');
-      showStatus('Please select a response style', 'error');
+    if (selectedProvider === 'grok' && !selectedModel.startsWith('grok-')) {
+      setFieldError('modelSelectGroup', 'Invalid model selection for Grok provider');
       return;
     }
     
-    if (selectedStyleType === 'custom' && !style) {
-      setFieldError('styleGroup', 'Please enter your custom style');
-      showStatus('Please enter your custom response style', 'error');
+    // Additional safety check - ensure the model is actually visible for the selected provider
+    if (selectedProvider === 'openai' && grokModels.style.display !== 'none') {
+      setFieldError('modelSelectGroup', 'OpenAI models not properly loaded');
+      return;
+    }
+    if (selectedProvider === 'grok' && openaiModels.style.display !== 'none') {
+      setFieldError('modelSelectGroup', 'Grok models not properly loaded');
+      return;
+    }
+    
+    // Validate API keys based on provider
+    if (selectedProvider === 'openai') {
+        if (!openaiKey || !openaiKey.trim()) {
+            setFieldError('openaiKeyGroup', 'OpenAI API key is required');
+            return;
+        }
+        if (!openaiKey.startsWith('sk-')) {
+            setFieldError('openaiKeyGroup', 'OpenAI API key must start with "sk-"');
+            return;
+        }
+    } else if (selectedProvider === 'grok') {
+        if (!grokKey || !grokKey.trim()) {
+            setFieldError('grokKeyGroup', 'Grok API key is required');
+            return;
+        }
+        if (!grokKey.startsWith('xai-')) {
+            setFieldError('grokKeyGroup', 'Grok API key must start with "xai-"');
+            return;
+        }
+    }
+    
+    // Validate style selection
+    if (!selectedStyleType) {
+      setFieldError('styleGroup', 'Please select a base style or provide custom instructions');
+      showStatus('Please select a response style or provide custom instructions', 'error');
       return;
     }
     
@@ -294,7 +357,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         openaiKey,
         grokKey,
         selectedModel,
-        style: style || 'Be conversational and helpful. Add genuine value to discussions while keeping responses under 280 characters.',
+        style: finalStyle, // Save the combined style
         selectedStyleType
       });
       

@@ -257,33 +257,123 @@ class XMatic {
     }
 
     getContext() {
-        // Get the main tweet content
+        console.log('xMatic: getContext() function called');
+        
+        // Get the main tweet content and metadata
         const tweetElement = document.querySelector('[data-testid="tweet"]');
+        console.log('xMatic: Tweet element found:', !!tweetElement);
+        
         let mainTweet = '';
+        let authorName = '';
+        let engagementData = {};
 
         if (tweetElement) {
+            console.log('xMatic: Processing tweet element');
+            
+            // Get tweet text
             const textElement = tweetElement.querySelector('[data-testid="tweetText"]');
             if (textElement) {
                 mainTweet = textElement.textContent.trim();
+                console.log('xMatic: Tweet text extracted:', mainTweet.substring(0, 100) + '...');
+            }
+
+            // Get author information (just the name, no username)
+            const authorElement = tweetElement.querySelector('[data-testid="User-Name"]');
+            console.log('xMatic: Author element found:', !!authorElement);
+            
+            if (authorElement) {
+                console.log('xMatic: Processing author element');
+                
+                // Get display name only
+                const nameElement = authorElement.querySelector('span');
+                if (nameElement) {
+                    authorName = nameElement.textContent.trim();
+                    console.log('xMatic: Author name extracted:', authorName);
+                }
+            }
+
+            // Get engagement metrics
+            try {
+                // Likes count
+                const likeButton = tweetElement.querySelector('[data-testid="like"]');
+                if (likeButton) {
+                    const likeText = likeButton.getAttribute('aria-label') || '';
+                    const likeMatch = likeText.match(/(\d+)/);
+                    if (likeMatch) {
+                        engagementData.likes = parseInt(likeMatch[1]);
+                    }
+                }
+
+                // Retweets count
+                const retweetButton = tweetElement.querySelector('[data-testid="retweet"]');
+                if (retweetButton) {
+                    const retweetText = retweetButton.getAttribute('aria-label') || '';
+                    const retweetMatch = retweetText.match(/(\d+)/);
+                    if (retweetMatch) {
+                        engagementData.retweets = parseInt(retweetMatch[1]);
+                    }
+                }
+
+                // Replies count
+                const replyButton = tweetElement.querySelector('[data-testid="reply"]');
+                if (replyButton) {
+                    const replyText = replyButton.getAttribute('aria-label') || '';
+                    const replyMatch = replyText.match(/(\d+)/);
+                    if (replyMatch) {
+                        engagementData.replies = parseInt(replyMatch[1]);
+                    }
+                }
+
+                // Quote tweets count
+                const quoteButton = tweetElement.querySelector('[data-testid="quote"]');
+                if (quoteButton) {
+                    const quoteText = quoteButton.getAttribute('aria-label') || '';
+                    const quoteMatch = quoteText.match(/(\d+)/);
+                    if (quoteMatch) {
+                        engagementData.quotes = parseInt(quoteMatch[1]);
+                    }
+                }
+            } catch (error) {
+                console.log('xMatic: Could not extract engagement data:', error);
             }
         }
 
-        return { mainTweet };
+        return { 
+            mainTweet, 
+            authorName, 
+            engagementData 
+        };
     }
 
     async generateReply(context) {
         const systemPrompt = `You are an expert at crafting engaging Twitter/X replies. Follow these rules strictly:
 1. Keep responses under 280 characters - be concise and to the point
-2. Never use double quotes (") in your response - use single quotes (') if needed
-3. Match the user's requested style: ${this.config.style || 'conversational and helpful'}
-4. Use proper Twitter etiquette - mentions, hashtags, and emojis when appropriate
-5. Never include any meta-commentary like "Here's a reply:" or "I would say:" - just provide the reply
-6. If the tweet is a question, directly answer it
-7. If it's an opinion, respond with a thoughtful reaction
-8. If it's a joke, respond in kind with humor
-9. If it's controversial, be diplomatic but engaging`;
+2. Never use double quotes (") in your response.
+3. Never use (—) in your response.
+4. NEVER use @ symbols (@) in your response - this could accidentally tag other users
+5. Match the user's requested style: ${this.config.style || 'conversational and helpful'}
+6. Use proper Twitter etiquette - mentions, hashtags, and emojis when appropriate
+7. Never include any meta-commentary like "Here's a reply:" or "I would say:" - just provide the reply
+8. If the tweet is a question, directly answer it
+9. If it's an opinion, respond with a thoughtful reaction
+10. If it's a joke, respond in kind with humor`;
 
-        const userPrompt = `Craft a Twitter reply to this tweet. Follow all system instructions carefully. Make it sound natural and engaging. Tweet to reply to: ${context.mainTweet}`;
+        const userPrompt = `Craft a Twitter reply to this tweet. Follow all system instructions carefully. Make it sound natural and engaging.
+
+Tweet Details:
+- Content: ${context.mainTweet}
+- Author: ${context.authorName}
+- Engagement: ${context.engagementData.likes || 0} likes, ${context.engagementData.retweets || 0} retweets, ${context.engagementData.replies || 0} replies, ${context.engagementData.quotes || 0} quotes
+
+Consider the author's influence and the tweet's engagement level when crafting your response.`;
+
+        // Log the complete prompts being sent to the AI model
+        console.log('🚀 xMatic: ===== COMPLETE AI PROMPTS =====');
+        console.log('📋 System Prompt:', systemPrompt);
+        console.log('👤 User Prompt:', userPrompt);
+        console.log('📊 Context Data:', context);
+        console.log('🎨 User Style:', this.config.style || 'conversational and helpful');
+        console.log('==========================================');
 
         const selectedModel = this.config.selectedModel || 'gpt-4';
         const selectedProvider = this.config.selectedProvider || 'openai';
@@ -299,7 +389,8 @@ class XMatic {
             }
             headers = {
                 'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             };
         } else {
             // Default to OpenAI
@@ -314,24 +405,50 @@ class XMatic {
             };
         }
 
+        console.log('xMatic: Making API call to:', apiEndpoint);
+        console.log('xMatic: Using model:', selectedModel);
+        console.log('xMatic: Provider:', selectedProvider);
+        console.log('xMatic: API Key (first 10 chars):', apiKey.substring(0, 10) + '...');
+        
+        const requestBody = {
+            model: selectedModel,
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userPrompt }
+            ],
+            stream: false,
+            temperature: 0.7
+        };
+        
+        // Add OpenAI-specific parameters only for OpenAI
+        if (selectedProvider === 'openai') {
+            requestBody.max_tokens = 100;
+            requestBody.top_p = 0.9;
+            requestBody.frequency_penalty = 0.5;
+            requestBody.presence_penalty = 0.3;
+        }
+        
+        console.log('xMatic: Request body:', requestBody);
+        console.log('xMatic: Request headers:', headers);
+
         const response = await fetch(apiEndpoint, {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify({
-                model: selectedModel,
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: userPrompt }
-                ],
-                max_tokens: 100,  // Reduced to encourage brevity
-                temperature: 0.8,  // Slightly higher for more creative responses
-                top_p: 0.9,       // Controls diversity of responses
-                frequency_penalty: 0.5,  // Discourages repetition
-                presence_penalty: 0.3    // Encourages new topics
-            })
+            body: JSON.stringify(requestBody)
         });
 
+        console.log('xMatic: API Response status:', response.status);
+        console.log('xMatic: API Response headers:', response.headers);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.log('xMatic: API Error response:', errorText);
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+
         const data = await response.json();
+        console.log('xMatic: API Response data:', data);
+        
         if (data.error) {
             const providerName = selectedProvider === 'grok' ? 'Grok' : 'OpenAI';
             throw new Error(`${providerName} Error: ${data.error.message}`);
