@@ -15,7 +15,7 @@ class XMatic {
         // Nuclear cleanup first - remove everything xMatic related
         this.nuclearCleanup();
         
-        this.config = await chrome.storage.sync.get(['openaiKey', 'style', 'selectedModel']);
+        this.config = await chrome.storage.sync.get(['openaiKey', 'grokKey', 'selectedProvider', 'style', 'selectedModel']);
         await this.loadSvgIcons();
         this.addAIButtons();
         this.observeChanges();
@@ -205,9 +205,18 @@ class XMatic {
     async handleAIClick() {
         console.log('xMatic: AI button clicked');
 
-        if (!this.config.openaiKey) {
-            alert('Please configure your OpenAI API key first!');
-            return;
+        const selectedProvider = this.config.selectedProvider || 'openai';
+        
+        if (selectedProvider === 'grok') {
+            if (!this.config.grokKey) {
+                alert('Please configure your Grok API key first!');
+                return;
+            }
+        } else {
+            if (!this.config.openaiKey) {
+                alert('Please configure your OpenAI API key first!');
+                return;
+            }
         }
 
         try {
@@ -277,13 +286,37 @@ class XMatic {
         const userPrompt = `Craft a Twitter reply to this tweet. Follow all system instructions carefully. Make it sound natural and engaging. Tweet to reply to: ${context.mainTweet}`;
 
         const selectedModel = this.config.selectedModel || 'gpt-4';
+        const selectedProvider = this.config.selectedProvider || 'openai';
 
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${this.config.openaiKey}`,
+        // Determine API endpoint and key based on selected provider
+        let apiEndpoint, apiKey, headers;
+        
+        if (selectedProvider === 'grok') {
+            apiEndpoint = 'https://api.x.ai/v1/chat/completions';
+            apiKey = this.config.grokKey;
+            if (!apiKey) {
+                throw new Error('Grok API key not configured');
+            }
+            headers = {
+                'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
-            },
+            };
+        } else {
+            // Default to OpenAI
+            apiEndpoint = 'https://api.openai.com/v1/chat/completions';
+            apiKey = this.config.openaiKey;
+            if (!apiKey) {
+                throw new Error('OpenAI API key not configured');
+            }
+            headers = {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: headers,
             body: JSON.stringify({
                 model: selectedModel,
                 messages: [
@@ -300,7 +333,8 @@ class XMatic {
 
         const data = await response.json();
         if (data.error) {
-            throw new Error(`OpenAI Error: ${data.error.message}`);
+            const providerName = selectedProvider === 'grok' ? 'Grok' : 'OpenAI';
+            throw new Error(`${providerName} Error: ${data.error.message}`);
         }
 
         return data.choices?.[0]?.message?.content || '';

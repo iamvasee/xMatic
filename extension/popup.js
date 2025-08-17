@@ -1,11 +1,17 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const form = document.getElementById('configForm');
   const saveButton = document.getElementById('saveConfig');
-  const testButton = document.getElementById('testConnection');
   const modelSelect = document.getElementById('modelSelect');
   const styleSelect = document.getElementById('styleSelect');
   const customStyleInput = document.getElementById('customStyle');
   const modelCostDisplay = document.getElementById('modelCost');
+  
+  // API Provider elements
+  const providerOptions = document.querySelectorAll('.provider-option');
+  const openaiSection = document.getElementById('openaiSection');
+  const grokSection = document.getElementById('grokSection');
+  const openaiModels = document.getElementById('openaiModels');
+  const grokModels = document.getElementById('grokModels');
   
   // Predefined styles
   const styles = {
@@ -18,21 +24,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     supportive: "Be encouraging and empathetic. Offer genuine support, positive reinforcement, and helpful advice. Create a welcoming, uplifting tone in all responses. Keep responses under 280 characters."
   };
 
-  // Model cost information
+  // Model cost information for both providers
   const modelCosts = {
+    // OpenAI Models
     'gpt-4': '~$0.03 per response',
     'gpt-4-turbo': '~$0.01 per response', 
-    'gpt-3.5-turbo': '~$0.002 per response'
+    'gpt-3.5-turbo': '~$0.002 per response',
+    // Grok Models
+    'grok-beta': '~$0.02 per response',
+    'grok-beta-128k': '~$0.04 per response',
+    'grok-beta-32k': '~$0.02 per response'
   };
   
   // Load saved configuration
   try {
-    const config = await chrome.storage.sync.get(['openaiKey', 'style', 'selectedStyleType', 'selectedModel']);
+    const config = await chrome.storage.sync.get([
+      'openaiKey', 
+      'grokKey', 
+      'selectedProvider', 
+      'style', 
+      'selectedStyleType', 
+      'selectedModel'
+    ]);
     
+    // Set API provider
+    if (config.selectedProvider) {
+      setActiveProvider(config.selectedProvider);
+    } else {
+      setActiveProvider('openai'); // Default to OpenAI
+    }
+    
+    // Set API keys
     if (config.openaiKey) {
       document.getElementById('openaiKey').value = config.openaiKey;
     }
+    if (config.grokKey) {
+      document.getElementById('grokKey').value = config.grokKey;
+    }
     
+    // Set model
     if (config.selectedModel) {
       modelSelect.value = config.selectedModel;
     } else {
@@ -40,6 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     updateModelCost();
     
+    // Set style
     if (config.selectedStyleType) {
       styleSelect.value = config.selectedStyleType;
       if (config.selectedStyleType === 'custom') {
@@ -49,6 +80,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   } catch (error) {
     showStatus('Failed to load configuration', 'error');
+  }
+  
+  // Handle API provider switching
+  providerOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      const provider = option.getAttribute('data-provider');
+      setActiveProvider(provider);
+    });
+  });
+  
+  function setActiveProvider(provider) {
+    // Update provider buttons
+    providerOptions.forEach(opt => {
+      opt.classList.remove('active');
+      if (opt.getAttribute('data-provider') === provider) {
+        opt.classList.add('active');
+      }
+    });
+    
+    // Show/hide sections
+    if (provider === 'openai') {
+      openaiSection.style.display = 'block';
+      grokSection.style.display = 'none';
+      openaiModels.style.display = 'block';
+      grokModels.style.display = 'none';
+    } else {
+      openaiSection.style.display = 'none';
+      grokSection.style.display = 'block';
+      openaiModels.style.display = 'none';
+      grokModels.style.display = 'block';
+    }
+    
+    // Update model selection to first available model for selected provider
+    if (provider === 'openai') {
+      modelSelect.value = 'gpt-4';
+    } else {
+      modelSelect.value = 'grok-beta';
+    }
+    updateModelCost();
   }
   
   // Handle model selection
@@ -71,23 +141,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
   
-  // Handle test connection
-  testButton.addEventListener('click', testConnection);
+  // Handle OpenAI test connection
+  document.getElementById('testOpenAIConnection').addEventListener('click', () => testOpenAIConnection());
   
-  async function testConnection() {
+  async function testOpenAIConnection() {
     const apiKey = document.getElementById('openaiKey').value.trim();
     
     if (!apiKey) {
-      showConnectionStatus('Please enter an API key first', 'error');
+      showConnectionStatus('openaiConnectionStatus', 'Please enter an OpenAI API key first', 'error');
       return;
     }
     
     if (!apiKey.startsWith('sk-')) {
-      showConnectionStatus('Invalid API key format', 'error');
+      showConnectionStatus('openaiConnectionStatus', 'Invalid OpenAI API key format', 'error');
       return;
     }
     
-    setTestButtonLoading(true);
+    setTestButtonLoading('testOpenAIConnection', true);
     
     try {
       const response = await fetch('https://api.openai.com/v1/models', {
@@ -99,15 +169,55 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       
       if (response.ok) {
-        showConnectionStatus('✅ OpenAI Connection Established', 'success');
+        showConnectionStatus('openaiConnectionStatus', '✅ OpenAI Connection Established', 'success');
       } else {
         const error = await response.json();
-        showConnectionStatus(`❌ Connection Failed: ${error.error?.message || 'Invalid API key'}`, 'error');
+        showConnectionStatus('openaiConnectionStatus', `❌ Connection Failed: ${error.error?.message || 'Invalid API key'}`, 'error');
       }
     } catch (error) {
-      showConnectionStatus('❌ Connection Failed: Network error', 'error');
+      showConnectionStatus('openaiConnectionStatus', '❌ Connection Failed: Network error', 'error');
     } finally {
-      setTestButtonLoading(false);
+      setTestButtonLoading('testOpenAIConnection', false);
+    }
+  }
+  
+  // Handle Grok test connection
+  document.getElementById('testGrokConnection').addEventListener('click', () => testGrokConnection());
+  
+  async function testGrokConnection() {
+    const apiKey = document.getElementById('grokKey').value.trim();
+    
+    if (!apiKey) {
+      showConnectionStatus('grokConnectionStatus', 'Please enter a Grok API key first', 'error');
+      return;
+    }
+    
+    if (!apiKey.startsWith('xai-')) {
+      showConnectionStatus('grokConnectionStatus', 'Invalid Grok API key format', 'error');
+      return;
+    }
+    
+    setTestButtonLoading('testGrokConnection', true);
+    
+    try {
+      const response = await fetch('https://api.x.ai/v1/models', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        showConnectionStatus('grokConnectionStatus', '✅ Grok Connection Established', 'success');
+      } else {
+        const error = await response.json();
+        showConnectionStatus('grokConnectionStatus', `❌ Connection Failed: ${error.error?.message || 'Invalid API key'}`, 'error');
+      }
+    } catch (error) {
+      showConnectionStatus('grokConnectionStatus', '❌ Connection Failed: Network error', 'error');
+    } finally {
+      setTestButtonLoading('testGrokConnection', false);
     }
   }
   
@@ -115,7 +225,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     
+    const selectedProvider = document.querySelector('.provider-option.active').getAttribute('data-provider');
     const openaiKey = document.getElementById('openaiKey').value.trim();
+    const grokKey = document.getElementById('grokKey').value.trim();
     const selectedModel = modelSelect.value;
     const selectedStyleType = styleSelect.value;
     let style = '';
@@ -130,17 +242,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Clear previous error states
     clearErrors();
     
-    // Validation
-    if (!openaiKey) {
-      setFieldError('apiKeyGroup', 'OpenAI API key is required');
-      showStatus('Please provide your OpenAI API key', 'error');
-      return;
-    }
-    
-    if (!openaiKey.startsWith('sk-')) {
-      setFieldError('apiKeyGroup', 'Invalid API key format');
-      showStatus('Please enter a valid OpenAI API key', 'error');
-      return;
+    // Validation based on selected provider
+    if (selectedProvider === 'openai') {
+      if (!openaiKey) {
+        setFieldError('openaiKeyGroup', 'OpenAI API key is required');
+        showStatus('Please provide your OpenAI API key', 'error');
+        return;
+      }
+      
+      if (!openaiKey.startsWith('sk-')) {
+        setFieldError('openaiKeyGroup', 'Invalid OpenAI API key format');
+        showStatus('Please enter a valid OpenAI API key', 'error');
+        return;
+      }
+    } else {
+      if (!grokKey) {
+        setFieldError('grokKeyGroup', 'Grok API key is required');
+        showStatus('Please provide your Grok API key', 'error');
+        return;
+      }
+      
+      if (!grokKey.startsWith('xai-')) {
+        setFieldError('grokKeyGroup', 'Invalid Grok API key format');
+        showStatus('Please enter a valid Grok API key', 'error');
+        return;
+      }
     }
     
     if (!selectedStyleType) {
@@ -160,7 +286,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     try {
       await chrome.storage.sync.set({
+        selectedProvider,
         openaiKey,
+        grokKey,
         selectedModel,
         style: style || 'Be conversational and helpful. Add genuine value to discussions while keeping responses under 280 characters.',
         selectedStyleType
@@ -220,8 +348,8 @@ function showStatus(message, type) {
   }, 4000);
 }
 
-function showConnectionStatus(message, type) {
-  const status = document.getElementById('connectionStatus');
+function showConnectionStatus(statusId, message, type) {
+  const status = document.getElementById(statusId);
   status.textContent = message;
   status.className = `connection-status ${type} show`;
   
@@ -231,8 +359,8 @@ function showConnectionStatus(message, type) {
   }, 5000);
 }
 
-function setTestButtonLoading(loading) {
-  const button = document.getElementById('testConnection');
+function setTestButtonLoading(buttonId, loading) {
+  const button = document.getElementById(buttonId);
   
   if (loading) {
     button.disabled = true;

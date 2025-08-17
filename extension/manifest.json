@@ -10,6 +10,7 @@
     "https://twitter.com/*",
     "https://x.com/*",
     "https://api.openai.com/*",
+    "https://api.x.ai/*",
     "https://api.perplexity.ai/*"
   ],
   "content_scripts": [

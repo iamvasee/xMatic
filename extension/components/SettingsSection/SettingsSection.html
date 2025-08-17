@@ -1,0 +1,103 @@
+<section id="configuration" class="content-section active">
+    <div class="section-header">
+        <h3>Settings</h3>
+        <p>Configure your AI response style and model preferences</p>
+    </div>
+    
+    <div class="config-grid">
+        <!-- AI Response Style Card -->
+        <div class="config-card">
+            <div class="card-header">
+                <h4>🎨 AI Response Style</h4>
+                <p>Choose how your AI responses should sound and behave</p>
+            </div>
+            
+            <div class="card-content">
+                <div class="input-group">
+                    <label for="styleSelect">Response Style</label>
+                    <select id="styleSelect" class="form-select">
+                        <option value="professional">Professional</option>
+                        <option value="casual">Casual</option>
+                        <option value="sarcastic">Sarcastic</option>
+                        <option value="unhinged">Unhinged</option>
+                        <option value="technical">Technical</option>
+                        <option value="creative">Creative</option>
+                        <option value="supportive">Supportive</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    <small class="help-text">
+                        Select a predefined style or create your own custom style
+                    </small>
+                </div>
+                
+                <div id="customStyleGroup" class="input-group" style="display: none;">
+                    <label for="customStyleInput">Custom Style Instructions</label>
+                    <textarea 
+                        id="customStyleInput" 
+                        placeholder="Describe how you want your AI responses to sound (e.g., 'Write like a friendly expert who uses emojis and casual language')"
+                        class="form-textarea"
+                        rows="4"
+                    ></textarea>
+                    <small class="help-text">
+                        Be specific about tone, language style, and personality traits
+                    </small>
+                </div>
+                
+                <div class="style-preview">
+                    <h5>Style Preview</h5>
+                    <div class="preview-content" id="stylePreview">
+                        Select a style above to see a preview of how your AI responses will sound.
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="saveStyleConfig" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17,21 17,13 7,13 7,21"></polyline>
+                            <polyline points="7,3 7,8 15,8"></polyline>
+                        </svg>
+                        Save Style Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Model Selection Card -->
+        <div class="config-card">
+            <div class="card-header">
+                <h4>🤖 AI Model Selection</h4>
+                <p>Choose the AI model that best fits your needs and budget</p>
+            </div>
+            
+            <div class="card-content">
+                <div class="input-group">
+                    <label for="modelSelect">AI Model</label>
+                    <select id="modelSelect" class="form-select">
+                        <option value="gpt-4">GPT-4 (Most Capable)</option>
+                        <option value="gpt-4-turbo">GPT-4 Turbo (Fast & Efficient)</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Most Affordable)</option>
+                    </select>
+                    <small class="help-text">
+                        GPT-4 is the most capable, GPT-4 Turbo is fast and efficient, GPT-3.5 Turbo is most affordable
+                    </small>
+                </div>
+                
+                <div class="cost-display">
+                    <span id="modelCost">$0.01 per 1K tokens</span>
+                </div>
+                
+                <div class="button-group">
+                    <button id="saveModelConfig" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17,21 17,13 7,13 7,21"></polyline>
+                            <polyline points="7,3 7,8 15,8"></polyline>
+                        </svg>
+                        Save Model Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -162,12 +162,12 @@
     }
 
     .footer {
-      margin-top: 0.5rem; /* Reduced from 1.5rem */
-      padding-top: 0.75rem; /* Reduced from 1rem */
+      margin-top: 0.5rem;
+      padding-top: 0.75rem;
       border-top: 1px solid hsl(240 3.7% 15.9%);
       display: flex;
       flex-direction: column;
-      gap: 0.5rem; /* Reduced from 0.75rem */
+      gap: 0.5rem;
       font-size: 0.875rem;
       color: hsl(240 3.8% 46.1%);
     }
@@ -493,6 +493,42 @@
     .section .form-group:last-child {
       margin-bottom: 0;
     }
+
+    /* API Provider Toggle */
+    .api-provider-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: #ffffff;
+      border: 1px solid #e4e4e7;
+      border-radius: 8px;
+    }
+
+    .provider-option {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #e4e4e7;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #71717a;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .provider-option.active {
+      background: #09090b;
+      color: #ffffff;
+      border-color: #09090b;
+    }
+
+    .provider-option:hover:not(.active) {
+      background: #f8f9fa;
+      border-color: #09090b;
+    }
   </style>
 </head>
 
@@ -506,31 +542,83 @@
     </div>
 
     <form id="configForm">
-      <!-- API Configuration Section -->
+      <!-- API Provider Selection -->
       <div class="section">
         <div class="section-header">
-          <h3 class="section-title">🔑 API Configuration</h3>
+          <h3 class="section-title">🤖 AI Provider</h3>
         </div>
         
-        <div class="form-group" id="apiKeyGroup">
-          <label for="openaiKey">OpenAI API Key</label>
+        <div class="api-provider-toggle">
+          <button type="button" class="provider-option active" data-provider="openai">
+            OpenAI
+          </button>
+          <button type="button" class="provider-option" data-provider="grok">
+            Grok (xAI)
+          </button>
+        </div>
+      </div>
+
+      <!-- OpenAI Configuration Section -->
+      <div class="section" id="openaiSection">
+        <div class="section-header">
+          <h3 class="section-title">🔑 OpenAI API</h3>
+        </div>
+        
+        <div class="form-group" id="openaiKeyGroup">
+          <label for="openaiKey">API Key</label>
           <div class="input-with-button">
             <input type="password" id="openaiKey" placeholder="sk-proj-..." autocomplete="off">
-            <button type="button" id="testConnection" class="test-btn" title="Test API Connection">
+            <button type="button" id="testOpenAIConnection" class="test-btn" title="Test OpenAI Connection">
               <svg viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
               </svg>
             </button>
           </div>
-          <div id="connectionStatus" class="connection-status"></div>
+          <div id="openaiConnectionStatus" class="connection-status"></div>
         </div>
+      </div>
 
+      <!-- Grok Configuration Section -->
+      <div class="section" id="grokSection" style="display: none;">
+        <div class="section-header">
+          <h3 class="section-title">🔑 Grok API (xAI)</h3>
+        </div>
+        
+        <div class="form-group" id="grokKeyGroup">
+          <label for="grokKey">API Key</label>
+          <div class="input-with-button">
+            <input type="password" id="grokKey" placeholder="xai-..." autocomplete="off">
+            <button type="button" id="testGrokConnection" class="test-btn" title="Test Grok Connection">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </button>
+          </div>
+          <div id="grokConnectionStatus" class="connection-status"></div>
+        </div>
+      </div>
+
+      <!-- AI Model Selection Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3 class="section-title">🧠 AI Model</h3>
+        </div>
+        
         <div class="form-group" id="modelGroup">
-          <label for="modelSelect">AI Model</label>
+          <label for="modelSelect">Select Model</label>
           <select id="modelSelect" class="style-select">
-            <option value="gpt-4">GPT-4 (Recommended) - Higher quality</option>
-            <option value="gpt-4-turbo">GPT-4 Turbo - Faster, cost-effective</option>
-            <option value="gpt-3.5-turbo">GPT-3.5 Turbo - Fastest, cheapest</option>
+            <!-- OpenAI Models -->
+            <optgroup label="OpenAI Models" id="openaiModels">
+              <option value="gpt-4">GPT-4 (Recommended) - Higher quality</option>
+              <option value="gpt-4-turbo">GPT-4 Turbo - Faster, cost-effective</option>
+              <option value="gpt-3.5-turbo">GPT-3.5 Turbo - Fastest, cheapest</option>
+            </optgroup>
+            <!-- Grok Models -->
+            <optgroup label="Grok Models" id="grokModels" style="display: none;">
+              <option value="grok-beta">Grok Beta - Main model</option>
+              <option value="grok-beta-128k">Grok Beta 128K - Extended context</option>
+              <option value="grok-beta-32k">Grok Beta 32K - Standard context</option>
+            </optgroup>
           </select>
           <div class="model-info">
             <small id="modelCost" class="model-cost">~$0.03 per response</small>
