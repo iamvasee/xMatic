@@ -10,24 +10,66 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 500px;
-            max-width: 90vw;
+            width: 700px;
+            max-width: 95vw;
+            height: 600px;
+            max-height: 90vh;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             z-index: 10000;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
         }
 
         .xmatic-panel-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 20px 24px;
+            padding: 24px 32px 0 32px;
             border-bottom: 1px solid #e5e7eb;
             background: #f9fafb;
-            border-radius: 12px 12px 0 0;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .xmatic-panel-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: -1px;
+        }
+
+        .xmatic-tab {
+            padding: 16px 32px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 16px;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .xmatic-tab.active {
+            color: #1d4ed8;
+            border-bottom-color: #1d4ed8;
+            background: white;
+        }
+
+        .xmatic-tab:hover:not(.active) {
+            color: #374151;
+            background: #f3f4f6;
+        }
+
+        .xmatic-tab-content {
+            display: none;
+        }
+
+        .xmatic-tab-content.active {
+            display: block;
         }
 
         .xmatic-panel-logo {
@@ -37,8 +79,8 @@
         }
 
         .xmatic-panel-logo img {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 26px;
             border-radius: 6px;
         }
 
@@ -66,7 +108,9 @@
         }
 
         .xmatic-panel-content {
-            padding: 24px;
+            padding: 32px;
+            flex: 1;
+            overflow-y: auto;
         }
 
         .xmatic-panel-textarea {
@@ -188,6 +232,49 @@
             line-height: 1.5;
         }
 
+        /* Section titles and descriptions */
+        .xmatic-section-title {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .xmatic-section-description {
+            margin: 0 0 24px 0;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Drafts section */
+        .xmatic-drafts {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .xmatic-drafts-empty {
+            margin-top: 60px;
+        }
+
+        .xmatic-drafts-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .xmatic-drafts-empty h4 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .xmatic-drafts-empty p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
         .xmatic-panel-overlay {
             position: fixed;
             top: 0;
@@ -218,15 +305,25 @@
         @media (max-width: 768px) {
             .xmatic-panel {
                 width: 95vw;
+                height: 90vh;
                 margin: 20px;
             }
             
             .xmatic-panel-header {
-                padding: 16px 20px;
+                padding: 20px 24px 0 24px;
+            }
+
+            .xmatic-panel-tabs {
+                padding: 0 24px;
+            }
+
+            .xmatic-tab {
+                padding: 12px 20px;
+                font-size: 14px;
             }
             
             .xmatic-panel-content {
-                padding: 20px;
+                padding: 24px;
             }
             
             .xmatic-panel-actions {
@@ -236,6 +333,10 @@
             .xmatic-panel-btn {
                 width: 100%;
             }
+
+            .xmatic-section-title {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -244,51 +345,76 @@
     <div class="xmatic-panel" id="xmaticPanel">
         <div class="xmatic-panel-header">
             <div class="xmatic-panel-logo">
-                <img src="chrome-extension://__MSG_@@extension_id__/xMatic.png" alt="xMatic Logo">
-                <h2>Create Tweet</h2>
+                <img src="chrome-extension://__MSG_@@extension_id__/robot.svg" alt="xMatic Logo" id="xmaticLogo" onload="console.log('xMatic Panel: Logo loaded successfully')" onerror="console.error('xMatic Panel: Logo failed to load')">
+                <h2>xMatic</h2>
             </div>
             <button class="xmatic-panel-close" id="xmaticClose">×</button>
         </div>
+
+        <div class="xmatic-panel-tabs">
+            <button class="xmatic-tab active" data-tab="create">Create</button>
+            <button class="xmatic-tab" data-tab="drafts">Drafts</button>
+        </div>
         
         <div class="xmatic-panel-content">
-            <div id="xmaticInputSection">
-                <textarea 
-                    class="xmatic-panel-textarea" 
-                    id="xmaticTextarea" 
-                    placeholder="What would you like to tweet about? Be creative, engaging, and authentic..."
-                    maxlength="280"
-                ></textarea>
-                
-                <div class="xmatic-panel-actions">
-                    <button class="xmatic-panel-btn xmatic-panel-btn-secondary" id="xmaticCancel">Cancel</button>
-                    <button class="xmatic-panel-btn xmatic-panel-btn-primary" id="xmaticGenerate">Generate</button>
-                </div>
-            </div>
-
-            <div id="xmaticLoadingSection" style="display: none;">
-                <div class="xmatic-loading">
-                    <div class="xmatic-spinner"></div>
-                    <p>Generating your tweet...</p>
-                </div>
-            </div>
-
-            <div id="xmaticResultSection" style="display: none;">
-                <div class="xmatic-result">
-                    <h3>Generated Tweet</h3>
-                    <div class="xmatic-tweet-content" id="xmaticTweetContent"></div>
+            <!-- Create Tab Content -->
+            <div class="xmatic-tab-content active" id="createTab">
+                <div id="xmaticInputSection">
+                    <h3 class="xmatic-section-title">Create a New Tweet</h3>
+                    <p class="xmatic-section-description">Describe what you want to tweet about and let AI generate engaging content for you.</p>
+                    
+                    <textarea 
+                        class="xmatic-panel-textarea" 
+                        id="xmaticTextarea" 
+                        placeholder="What would you like to tweet about? Be creative, engaging, and authentic..."
+                        maxlength="280"
+                    ></textarea>
+                    
                     <div class="xmatic-panel-actions">
-                        <button class="xmatic-panel-btn xmatic-panel-btn-secondary" id="xmaticRegenerate">Regenerate</button>
-                        <button class="xmatic-panel-btn xmatic-panel-btn-primary" id="xmaticUseTweet">Use This Tweet</button>
+                        <button class="xmatic-panel-btn xmatic-panel-btn-secondary" id="xmaticCancel">Cancel</button>
+                        <button class="xmatic-panel-btn xmatic-panel-btn-primary" id="xmaticGenerate">Generate</button>
+                    </div>
+                </div>
+
+                <div id="xmaticLoadingSection" style="display: none;">
+                    <div class="xmatic-loading">
+                        <div class="xmatic-spinner"></div>
+                        <p>Generating your tweet...</p>
+                    </div>
+                </div>
+
+                <div id="xmaticResultSection" style="display: none;">
+                    <div class="xmatic-result">
+                        <h3>Generated Tweet</h3>
+                        <div class="xmatic-tweet-content" id="xmaticTweetContent"></div>
+                        <div class="xmatic-panel-actions">
+                            <button class="xmatic-panel-btn xmatic-panel-btn-secondary" id="xmaticRegenerate">Regenerate</button>
+                            <button class="xmatic-panel-btn xmatic-panel-btn-primary" id="xmaticUseTweet">Use This Tweet</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="xmaticErrorSection" style="display: none;">
+                    <div class="xmatic-error">
+                        <h3>Error</h3>
+                        <p id="xmaticErrorMessage"></p>
+                        <div class="xmatic-panel-actions">
+                            <button class="xmatic-panel-btn xmatic-panel-btn-secondary" id="xmaticTryAgain">Try Again</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div id="xmaticErrorSection" style="display: none;">
-                <div class="xmatic-error">
-                    <h3>Error</h3>
-                    <p id="xmaticErrorMessage"></p>
-                    <div class="xmatic-panel-actions">
-                        <button class="xmatic-panel-btn xmatic-panel-btn-secondary" id="xmaticTryAgain">Try Again</button>
+            <!-- Drafts Tab Content -->
+            <div class="xmatic-tab-content" id="draftsTab">
+                <div class="xmatic-drafts">
+                    <h3 class="xmatic-section-title">Saved Drafts</h3>
+                    <p class="xmatic-section-description">Your saved tweet drafts will appear here.</p>
+                    
+                    <div class="xmatic-drafts-empty">
+                        <div class="xmatic-drafts-icon">📝</div>
+                        <h4>No drafts yet</h4>
+                        <p>Create your first tweet to see it here!</p>
                     </div>
                 </div>
             </div>
@@ -298,12 +424,28 @@
     <script>
         // Panel functionality
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('xMatic Panel: DOM loaded, initializing panel...');
             const panel = document.getElementById('xmaticPanel');
             const overlay = document.getElementById('xmaticOverlay');
             const closeBtn = document.getElementById('xmaticClose');
             const cancelBtn = document.getElementById('xmaticCancel');
             const generateBtn = document.getElementById('xmaticGenerate');
             const textarea = document.getElementById('xmaticTextarea');
+            
+            // Tab elements
+            const tabs = document.querySelectorAll('.xmatic-tab');
+            const tabContents = document.querySelectorAll('.xmatic-tab-content');
+            
+            console.log('xMatic Panel: Found tabs:', tabs.length);
+            console.log('xMatic Panel: Found tab contents:', tabContents.length);
+            
+            tabs.forEach((tab, index) => {
+                console.log(`xMatic Panel: Tab ${index}:`, tab.textContent, 'data-tab:', tab.dataset.tab);
+            });
+            
+            tabContents.forEach((content, index) => {
+                console.log(`xMatic Panel: Tab content ${index}:`, content.id);
+            });
             
             // Section elements
             const inputSection = document.getElementById('xmaticInputSection');
@@ -337,6 +479,39 @@
             closeBtn.addEventListener('click', closePanel);
             cancelBtn.addEventListener('click', closePanel);
             overlay.addEventListener('click', closePanel);
+
+            // Tab switching functionality
+            function switchTab(tabName) {
+                console.log('xMatic Panel: Switching to tab:', tabName);
+                
+                // Update tab buttons
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.tab === tabName) {
+                        tab.classList.add('active');
+                        console.log('xMatic Panel: Activated tab button:', tab.textContent);
+                    }
+                });
+
+                // Update tab content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === tabName + 'Tab') {
+                        content.classList.add('active');
+                        console.log('xMatic Panel: Activated tab content:', content.id);
+                    }
+                });
+            }
+
+            // Tab click handlers
+            tabs.forEach(tab => {
+                console.log('xMatic Panel: Adding click handler to tab:', tab.textContent, 'with data-tab:', tab.dataset.tab);
+                tab.addEventListener('click', function() {
+                    console.log('xMatic Panel: Tab clicked:', this.textContent, 'data-tab:', this.dataset.tab);
+                    const tabName = this.dataset.tab;
+                    switchTab(tabName);
+                });
+            });
 
             // Section switching functions
             function showSection(sectionToShow) {

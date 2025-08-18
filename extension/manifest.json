@@ -49,7 +49,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["robot.svg", "time.svg", "float.svg", "panel.html", "xMatic.png"],
+      "resources": ["robot.svg", "time.svg", "float.svg", "panel.html"],
       "matches": ["https://twitter.com/*", "https://x.com/*"]
     }
   ]
