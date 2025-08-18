@@ -3,7 +3,7 @@
 > **AI-Powered Twitter/X Reply Generator** - Generate engaging, contextual replies instantly with OpenAI GPT or Grok AI
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Coming%20Soon-blue)](https://chrome.google.com/webstore/)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jhgjeaklmjohgmnephiaeiefejdhfnml?color=4285F4&label=Chrome%20Web%20Store&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
 [![GitHub stars](https://img.shields.io/github/stars/iamvasee/xMatic?style=social)](https://github.com/iamvasee/xMatic/stargazers)
 
 xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X. Click the 🤖 button in any reply box to instantly generate contextual, engaging responses using **OpenAI's GPT models** or **Grok AI (xAI)**. Choose your preferred AI provider and customize your response style for the perfect reply every time.
@@ -42,7 +42,7 @@ xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X.
 
 ### Installation
 
-**Option 1: Chrome Web Store** *(Coming Soon)*
+**Option 1: Chrome Web Store** 
 1. Visit Chrome Web Store → Search "xMatic" → Add to Chrome
 
 **Option 2: Manual Installation**
