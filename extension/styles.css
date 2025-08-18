@@ -56,3 +56,57 @@
 [data-testid="tweetButton"] {
     pointer-events: auto !important;
 }
+
+/* Floating Create Tweet Button */
+.xmatic-float-btn {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.xmatic-float-btn:hover {
+    transform: translateY(-50%) scale(1.05);
+}
+
+.xmatic-float-btn:active {
+    transform: translateY(-50%) scale(0.98);
+}
+
+.xmatic-float-btn svg {
+    width: 45px;
+    height: 100px;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Animation for button appearance */
+@keyframes floatIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
+}
+
+.xmatic-float-btn {
+    animation: floatIn 0.5s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .xmatic-float-btn {
+        right: 0;
+    }
+    
+    .xmatic-float-btn svg {
+        width: 35px;
+        height: 80px;
+    }
+}

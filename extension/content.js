@@ -15,9 +15,10 @@ class XMatic {
         // Nuclear cleanup first - remove everything xMatic related
         this.nuclearCleanup();
         
-        this.config = await chrome.storage.sync.get(['openaiKey', 'grokKey', 'selectedProvider', 'style', 'selectedModel']);
+        this.config = await chrome.storage.sync.get(['openaiKey', 'grokKey', 'selectedProvider', 'style', 'selectedModel', 'extensionEnabled']);
         await this.loadSvgIcons();
         await this.addAIButtons();
+        this.addFloatingButton();
         this.observeChanges();
         this.setupStorageListener();
         console.log('xMatic: Ready!');
@@ -32,6 +33,13 @@ class XMatic {
             console.log('xMatic: Nuclear cleanup removing element:', element);
             element.remove();
         });
+        
+        // Specifically remove floating button
+        const floatBtn = document.querySelector('.xmatic-float-btn');
+        if (floatBtn) {
+            console.log('xMatic: Removing floating button');
+            floatBtn.remove();
+        }
 
         // Remove enhanced classes from all toolbars
         const toolbars = document.querySelectorAll('[data-testid="toolBar"]');
@@ -101,6 +109,7 @@ class XMatic {
                 clearTimeout(this.addButtonsTimeout);
                 this.addButtonsTimeout = setTimeout(async () => {
                     await this.addAIButtons();
+                    this.addFloatingButton();
                 }, 200);
             }
         });
@@ -115,11 +124,13 @@ class XMatic {
                 console.log('xMatic: Extension enabled state changed to:', changes.extensionEnabled.newValue);
                 
                 if (changes.extensionEnabled.newValue === false) {
-                    // Extension disabled - remove all AI buttons
+                    // Extension disabled - remove all AI buttons and floating button
                     this.removeAllAIButtons();
+                    this.removeFloatingButton();
                 } else {
-                    // Extension enabled - add AI buttons back
+                    // Extension enabled - add AI buttons and floating button back
                     this.addAIButtons();
+                    this.addFloatingButton();
                 }
             }
         });
@@ -137,6 +148,14 @@ class XMatic {
         toolbars.forEach(toolbar => {
             toolbar.classList.remove('xmatic-enhanced');
         });
+    }
+
+    removeFloatingButton() {
+        console.log('xMatic: Removing floating button due to extension being disabled');
+        const floatBtn = document.querySelector('.xmatic-float-btn');
+        if (floatBtn) {
+            floatBtn.remove();
+        }
     }
 
 
@@ -238,6 +257,105 @@ class XMatic {
             toolbar.insertBefore(aiButton, toolbar.firstChild);
             console.log(`xMatic: AI button ${index + 1} inserted into toolbar`);
         });
+    }
+
+    addFloatingButton() {
+        console.log('xMatic: Adding floating button...');
+        
+        // Check if extension is enabled
+        if (this.config.extensionEnabled === false) {
+            console.log('xMatic: Extension disabled, not adding floating button');
+            return;
+        }
+        
+        // Remove existing floating button if any
+        const existingFloatBtn = document.querySelector('.xmatic-float-btn');
+        if (existingFloatBtn) {
+            existingFloatBtn.remove();
+        }
+        
+        // Create floating button using the SVG directly
+        const floatSvgUrl = chrome.runtime.getURL('float.svg');
+        console.log('xMatic: Attempting to load float.svg from:', floatSvgUrl);
+        
+        fetch(floatSvgUrl)
+            .then(response => {
+                console.log('xMatic: Float SVG fetch response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(svgContent => {
+                console.log('xMatic: Float SVG content loaded, length:', svgContent.length);
+                
+                // Create the SVG element directly
+                const floatBtn = document.createElement('div');
+                floatBtn.className = 'xmatic-float-btn';
+                floatBtn.title = 'Create AI Tweet with xMatic';
+                floatBtn.setAttribute('data-xmatic-active', 'true');
+                floatBtn.setAttribute('data-xmatic-id', `float-${Date.now()}`);
+                
+                // Set the SVG as the button content
+                floatBtn.innerHTML = svgContent;
+                console.log('xMatic: Float SVG loaded successfully');
+                
+                // Add click event
+                floatBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('xMatic: Floating button clicked!');
+                    this.handleFloatingButtonClick();
+                });
+                
+                // Add to body
+                document.body.appendChild(floatBtn);
+                console.log('xMatic: Floating button added to page');
+            })
+            .catch(error => {
+                console.error('xMatic: Failed to load float.svg:', error);
+                console.log('xMatic: Using fallback plus icon');
+                
+                // Create fallback button with plus icon
+                const floatBtn = document.createElement('div');
+                floatBtn.className = 'xmatic-float-btn';
+                floatBtn.title = 'Create AI Tweet with xMatic';
+                floatBtn.setAttribute('data-xmatic-active', 'true');
+                floatBtn.setAttribute('data-xmatic-id', `float-${Date.now()}`);
+                
+                // Fallback to a simple plus icon
+                floatBtn.innerHTML = `
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                `;
+                
+                // Add click event
+                floatBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('xMatic: Floating button clicked!');
+                    this.handleFloatingButtonClick();
+                });
+                
+                // Add to body
+                document.body.appendChild(floatBtn);
+                console.log('xMatic: Floating button added to page (fallback)');
+            });
+    }
+
+    handleFloatingButtonClick() {
+        console.log('xMatic: Floating button clicked - opening create tweet interface');
+        
+        // For now, just show a message
+        // TODO: Implement create tweet functionality
+        alert('Create Tweet functionality coming soon! 🚀\n\nThis will open an AI-powered tweet creation interface.');
+        
+        // Future implementation will include:
+        // - Opening a modal/overlay for tweet creation
+        // - AI-powered content generation
+        // - Tweet composition and editing
+        // - Draft saving and scheduling
     }
 
     async handleAIClick() {
