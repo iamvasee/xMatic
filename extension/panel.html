@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xMatic Create Tweet</title>
+    <style>
+        .xmatic-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            max-width: 90vw;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 10000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            border: 1px solid #e5e7eb;
+        }
+
+        .xmatic-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .xmatic-panel-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .xmatic-panel-logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+        }
+
+        .xmatic-panel-logo h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .xmatic-panel-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .xmatic-panel-close:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .xmatic-panel-content {
+            padding: 24px;
+        }
+
+        .xmatic-panel-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease;
+        }
+
+        .xmatic-panel-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .xmatic-panel-textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        .xmatic-panel-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .xmatic-panel-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .xmatic-panel-btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .xmatic-panel-btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .xmatic-panel-btn-primary {
+            background: #1d4ed8;
+            color: white;
+        }
+
+        .xmatic-panel-btn-primary:hover {
+            background: #1e40af;
+        }
+
+        .xmatic-panel-btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* Loading, Result, and Error sections */
+        .xmatic-loading, .xmatic-result, .xmatic-error {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .xmatic-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .xmatic-loading p {
+            color: #6b7280;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .xmatic-result h3, .xmatic-error h3 {
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .xmatic-tweet-content {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #111827;
+            text-align: left;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .xmatic-error p {
+            color: #dc2626;
+            font-size: 16px;
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+        }
+
+        .xmatic-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        /* Animation */
+        .xmatic-panel {
+            animation: panelSlideIn 0.3s ease-out;
+        }
+
+        @keyframes panelSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .xmatic-panel {
+                width: 95vw;
+                margin: 20px;
+            }
+            
+            .xmatic-panel-header {
+                padding: 16px 20px;
+            }
+            
+            .xmatic-panel-content {
+                padding: 20px;
+            }
+            
+            .xmatic-panel-actions {
+                flex-direction: column;
+            }
+            
+            .xmatic-panel-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="xmatic-panel-overlay" id="xmaticOverlay"></div>
+    <div class="xmatic-panel" id="xmaticPanel">
+        <div class="xmatic-panel-header">
+            <div class="xmatic-panel-logo">
+                <img src="chrome-extension://__MSG_@@extension_id__/xMatic.png" alt="xMatic Logo">
+                <h2>Create Tweet</h2>
+            </div>
+            <button class="xmatic-panel-close" id="xmaticClose">×</button>
+        </div>
+        
+        <div class="xmatic-panel-content">
+            <div id="xmaticInputSection">
+                <textarea 
+                    class="xmatic-panel-textarea" 
+                    id="xmaticTextarea" 
+                    placeholder="What would you like to tweet about? Be creative, engaging, and authentic..."
+                    maxlength="280"
+                ></textarea>
+                
+                <div class="xmatic-panel-actions">
+                    <button class="xmatic-panel-btn xmatic-panel-btn-secondary" id="xmaticCancel">Cancel</button>
+                    <button class="xmatic-panel-btn xmatic-panel-btn-primary" id="xmaticGenerate">Generate</button>
+                </div>
+            </div>
+
+            <div id="xmaticLoadingSection" style="display: none;">
+                <div class="xmatic-loading">
+                    <div class="xmatic-spinner"></div>
+                    <p>Generating your tweet...</p>
+                </div>
+            </div>
+
+            <div id="xmaticResultSection" style="display: none;">
+                <div class="xmatic-result">
+                    <h3>Generated Tweet</h3>
+                    <div class="xmatic-tweet-content" id="xmaticTweetContent"></div>
+                    <div class="xmatic-panel-actions">
+                        <button class="xmatic-panel-btn xmatic-panel-btn-secondary" id="xmaticRegenerate">Regenerate</button>
+                        <button class="xmatic-panel-btn xmatic-panel-btn-primary" id="xmaticUseTweet">Use This Tweet</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="xmaticErrorSection" style="display: none;">
+                <div class="xmatic-error">
+                    <h3>Error</h3>
+                    <p id="xmaticErrorMessage"></p>
+                    <div class="xmatic-panel-actions">
+                        <button class="xmatic-panel-btn xmatic-panel-btn-secondary" id="xmaticTryAgain">Try Again</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Panel functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const panel = document.getElementById('xmaticPanel');
+            const overlay = document.getElementById('xmaticOverlay');
+            const closeBtn = document.getElementById('xmaticClose');
+            const cancelBtn = document.getElementById('xmaticCancel');
+            const generateBtn = document.getElementById('xmaticGenerate');
+            const textarea = document.getElementById('xmaticTextarea');
+            
+            // Section elements
+            const inputSection = document.getElementById('xmaticInputSection');
+            const loadingSection = document.getElementById('xmaticLoadingSection');
+            const resultSection = document.getElementById('xmaticResultSection');
+            const errorSection = document.getElementById('xmaticErrorSection');
+            
+            // Result section elements
+            const tweetContent = document.getElementById('xmaticTweetContent');
+            const regenerateBtn = document.getElementById('xmaticRegenerate');
+            const useTweetBtn = document.getElementById('xmaticUseTweet');
+            
+            // Error section elements
+            const errorMessage = document.getElementById('xmaticErrorMessage');
+            const tryAgainBtn = document.getElementById('xmaticTryAgain');
+
+            // Close panel functions
+            function closePanel() {
+                panel.style.animation = 'panelSlideOut 0.2s ease-in forwards';
+                setTimeout(() => {
+                    if (panel.parentNode) {
+                        panel.parentNode.removeChild(panel);
+                    }
+                    if (overlay.parentNode) {
+                        overlay.parentNode.removeChild(overlay);
+                    }
+                }, 200);
+            }
+
+            // Event listeners
+            closeBtn.addEventListener('click', closePanel);
+            cancelBtn.addEventListener('click', closePanel);
+            overlay.addEventListener('click', closePanel);
+
+            // Section switching functions
+            function showSection(sectionToShow) {
+                [inputSection, loadingSection, resultSection, errorSection].forEach(section => {
+                    section.style.display = 'none';
+                });
+                sectionToShow.style.display = 'block';
+            }
+
+            // Generate button functionality
+            generateBtn.addEventListener('click', function() {
+                const text = textarea.value.trim();
+                if (text) {
+                    showSection(loadingSection);
+                    // Send message to content script
+                    window.parent.postMessage({
+                        type: 'xmatic-generate-tweet',
+                        text: text
+                    }, '*');
+                }
+            });
+
+            // Regenerate button
+            regenerateBtn.addEventListener('click', function() {
+                showSection(loadingSection);
+                window.parent.postMessage({
+                    type: 'xmatic-generate-tweet',
+                    text: textarea.value.trim()
+                }, '*');
+            });
+
+            // Use tweet button
+            useTweetBtn.addEventListener('click', function() {
+                // Send message to content script to insert the tweet
+                window.parent.postMessage({
+                    type: 'xmatic-use-tweet',
+                    content: tweetContent.textContent
+                }, '*');
+                closePanel();
+            });
+
+            // Try again button
+            tryAgainBtn.addEventListener('click', function() {
+                showSection(inputSection);
+            });
+
+            // Character count
+            textarea.addEventListener('input', function() {
+                const remaining = 280 - this.value.length;
+                if (remaining < 20) {
+                    this.style.borderColor = remaining < 0 ? '#ef4444' : '#f59e0b';
+                } else {
+                    this.style.borderColor = '#d1d5db';
+                }
+            });
+
+            // Focus textarea on open
+            textarea.focus();
+
+            // Listen for messages from content script
+            window.addEventListener('message', function(event) {
+                if (event.data.type === 'xmatic-show-content') {
+                    tweetContent.textContent = event.data.content;
+                    showSection(resultSection);
+                } else if (event.data.type === 'xmatic-show-error') {
+                    errorMessage.textContent = event.data.error;
+                    showSection(errorSection);
+                }
+            });
+        });
+
+        // Add slide out animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes panelSlideOut {
+                from {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1);
+                }
+                to {
+                    opacity: 0;
+                    transform: translate(-50%, -50%) scale(0.9);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -345,17 +345,8 @@ class XMatic {
     }
 
     handleFloatingButtonClick() {
-        console.log('xMatic: Floating button clicked - opening create tweet interface');
-        
-        // For now, just show a message
-        // TODO: Implement create tweet functionality
-        alert('Create Tweet functionality coming soon! 🚀\n\nThis will open an AI-powered tweet creation interface.');
-        
-        // Future implementation will include:
-        // - Opening a modal/overlay for tweet creation
-        // - AI-powered content generation
-        // - Tweet composition and editing
-        // - Draft saving and scheduling
+        console.log('xMatic: Floating button clicked, opening create tweet panel');
+        this.showCreateTweetPanel();
     }
 
     async handleAIClick() {
@@ -771,6 +762,211 @@ Consider the author's influence and the tweet's engagement level when crafting y
         composeBox.dispatchEvent(new Event('keyup', { bubbles: true }));
 
         console.log('xMatic: Text inserted via modern DOM methods');
+    }
+
+    showCreateTweetPanel() {
+        console.log('xMatic: Opening create tweet panel');
+        
+        // Remove any existing panel
+        this.removeCreateTweetPanel();
+        
+        // Create iframe to load the panel
+        const iframe = document.createElement('iframe');
+        iframe.src = chrome.runtime.getURL('panel.html');
+        iframe.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            z-index: 10000;
+            background: transparent;
+        `;
+        
+        // Add message listener for communication
+        iframe.addEventListener('load', () => {
+            console.log('xMatic: Panel iframe loaded');
+        });
+        
+        // Listen for messages from the panel
+        window.addEventListener('message', this.handlePanelMessage.bind(this));
+        
+        document.body.appendChild(iframe);
+        this.currentPanel = iframe;
+        
+        console.log('xMatic: Create tweet panel opened');
+    }
+
+    removeCreateTweetPanel() {
+        if (this.currentPanel) {
+            this.currentPanel.remove();
+            this.currentPanel = null;
+            console.log('xMatic: Create tweet panel removed');
+        }
+    }
+
+    handlePanelMessage(event) {
+        if (event.data.type === 'xmatic-generate-tweet') {
+            console.log('xMatic: Received generate tweet request:', event.data.text);
+            this.generateTweetContent(event.data.text);
+        } else if (event.data.type === 'xmatic-use-tweet') {
+            console.log('xMatic: User wants to use generated tweet:', event.data.content);
+            this.insertTweetIntoCompose(event.data.content);
+            this.removeCreateTweetPanel();
+        }
+    }
+
+    async generateTweetContent(prompt) {
+        console.log('xMatic: Generating tweet content for prompt:', prompt);
+        
+        try {
+            // Show loading state
+            this.showPanelLoading();
+            
+            // Get AI configuration
+            const config = await this.getConfig();
+            
+            if (!config.openaiKey && !config.grokKey) {
+                throw new Error('No API key configured. Please set up your OpenAI or Grok API key in the extension settings.');
+            }
+            
+            // Generate content using AI
+            const tweetContent = await this.generateTweetWithAI(prompt, config);
+            
+            // Show the generated content
+            this.showGeneratedTweet(tweetContent);
+            
+        } catch (error) {
+            console.error('xMatic: Error generating tweet:', error);
+            this.showPanelError(error.message);
+        }
+    }
+
+    async generateTweetWithAI(prompt, config) {
+        const systemPrompt = `You are an expert social media content creator. Generate a compelling, engaging tweet based on the user's prompt.
+
+Requirements:
+- Maximum 280 characters
+- Engaging and authentic tone
+- Use relevant hashtags when appropriate
+- Avoid @ mentions unless specifically requested
+- Make it shareable and viral-worthy
+- Keep it concise and impactful
+
+User prompt: ${prompt}`;
+
+        const userPrompt = `Generate a tweet about: ${prompt}`;
+
+        if (config.selectedProvider === 'grok' && config.grokKey) {
+            return await this.callGrokAPI(systemPrompt, userPrompt, config.grokKey);
+        } else {
+            return await this.callOpenAIAPI(systemPrompt, userPrompt, config.openaiKey);
+        }
+    }
+
+    async callGrokAPI(systemPrompt, userPrompt, apiKey) {
+        const response = await fetch('https://api.x.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: userPrompt }
+                ],
+                model: 'grok-beta',
+                stream: false,
+                temperature: 0.7
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Grok API error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content.trim();
+    }
+
+    async callOpenAIAPI(systemPrompt, userPrompt, apiKey) {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-3.5-turbo',
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: userPrompt }
+                ],
+                temperature: 0.7,
+                max_tokens: 150
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content.trim();
+    }
+
+    showPanelLoading() {
+        // Send message to panel to show loading state
+        if (this.currentPanel && this.currentPanel.contentWindow) {
+            this.currentPanel.contentWindow.postMessage({
+                type: 'xmatic-show-loading'
+            }, '*');
+        }
+    }
+
+    showGeneratedTweet(content) {
+        // Send message to panel to show generated content
+        if (this.currentPanel && this.currentPanel.contentWindow) {
+            this.currentPanel.contentWindow.postMessage({
+                type: 'xmatic-show-content',
+                content: content
+            }, '*');
+        }
+    }
+
+    showPanelError(error) {
+        // Send message to panel to show error
+        if (this.currentPanel && this.currentPanel.contentWindow) {
+            this.currentPanel.contentWindow.postMessage({
+                type: 'xmatic-show-error',
+                error: error
+            }, '*');
+        }
+    }
+
+    insertTweetIntoCompose(content) {
+        console.log('xMatic: Inserting tweet into compose box:', content);
+        
+        // Find the compose box
+        const composeBox = document.querySelector('[data-testid="tweetTextarea_0"], [data-testid="tweetTextarea_1"]');
+        
+        if (composeBox) {
+            // Clear existing content
+            composeBox.textContent = '';
+            
+            // Insert the generated tweet
+            this.insertReply(content);
+            
+            // Focus the compose box
+            composeBox.focus();
+            
+            console.log('xMatic: Tweet inserted into compose box');
+        } else {
+            console.error('xMatic: Could not find compose box');
+        }
     }
 }
 
