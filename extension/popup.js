@@ -10,6 +10,60 @@ document.addEventListener('DOMContentLoaded', async () => {
   const extensionToggle = document.getElementById('extensionToggle');
   const extensionStatus = document.getElementById('extensionStatus');
   
+  // Debug: Check if elements are found
+  console.log('xMatic: Extension toggle found:', extensionToggle);
+  console.log('xMatic: Extension status found:', extensionStatus);
+  
+  // Debug: Check if toggle is a checkbox
+  if (extensionToggle) {
+    console.log('xMatic: Toggle type:', extensionToggle.type);
+    console.log('xMatic: Toggle checked state:', extensionToggle.checked);
+    console.log('xMatic: Toggle disabled state:', extensionToggle.disabled);
+    
+    // Add event listeners immediately
+    extensionToggle.addEventListener('change', async (e) => {
+      console.log('xMatic: Toggle change event fired!', e);
+      console.log('xMatic: New checked state:', extensionToggle.checked);
+      
+      try {
+        await chrome.storage.sync.set({
+          extensionEnabled: extensionToggle.checked
+        });
+        
+        // Update status indicator
+        updateExtensionStatus();
+        
+        // Show immediate feedback
+        const message = extensionToggle.checked ? 
+          'Extension enabled! AI button will appear on Twitter pages' : 
+          'Extension disabled! AI button will be hidden on Twitter pages';
+        
+        showStatus(message, 'success');
+        
+      } catch (error) {
+        console.error('xMatic: Failed to save toggle state:', error);
+        showStatus('Failed to save toggle state', 'error');
+        // Revert the toggle if save failed
+        extensionToggle.checked = !extensionToggle.checked;
+        updateExtensionStatus();
+      }
+    });
+    
+    // Also add click event as backup
+    extensionToggle.addEventListener('click', (e) => {
+      console.log('xMatic: Toggle clicked!', e);
+      console.log('xMatic: Click event target:', e.target);
+      console.log('xMatic: Current checked state:', extensionToggle.checked);
+    });
+    
+    // Add mousedown event to see if it's being captured
+    extensionToggle.addEventListener('mousedown', (e) => {
+      console.log('xMatic: Toggle mousedown!', e);
+    });
+    
+
+  }
+  
   // API Provider elements
   const providerOptions = document.querySelectorAll('.provider-option');
   const openaiSection = document.getElementById('openaiSection');
@@ -48,6 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Load saved configuration
   try {
+    console.log('xMatic: Loading configuration...');
     const config = await chrome.storage.sync.get([
       'openaiKey', 
       'grokKey', 
@@ -57,6 +112,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       'selectedModel',
       'extensionEnabled'
     ]);
+    
+    console.log('xMatic: Loaded config:', config);
     
     // Set provider
     if (config.selectedProvider) {
@@ -124,6 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Event listeners
   providerOptions.forEach(opt => {
     opt.addEventListener('click', (event) => {
+      console.log('xMatic: Provider button clicked:', event.target.getAttribute('data-provider'));
       const provider = event.target.getAttribute('data-provider');
       setActiveProvider(provider);
     });
@@ -187,8 +245,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateModelCost();
   }
   
-  // Handle model selection
-  modelSelect.addEventListener('change', updateModelCost);
+
   
   function updateModelCost() {
     const selectedModel = modelSelect.value;
@@ -284,6 +341,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Handle form submission
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log('xMatic: Form submission started');
     
     const selectedProvider = document.querySelector('.provider-option.active').getAttribute('data-provider');
     const openaiKey = document.getElementById('openaiKey').value.trim();
@@ -292,6 +350,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const selectedStyleType = styleSelect.value;
     const extensionEnabled = extensionToggle.checked;
     let style = '';
+    
+    console.log('xMatic: Form data:', { selectedProvider, selectedModel, selectedStyleType, extensionEnabled });
     
     // Get style based on selection and combine with custom instructions
     let finalStyle = '';
@@ -319,21 +379,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Validate model selection matches provider
     // Double-check provider-model compatibility
     if (selectedProvider === 'openai' && !selectedModel.startsWith('gpt-')) {
-      setFieldError('modelSelectGroup', 'Invalid model selection for OpenAI provider');
+      setFieldError('modelGroup', 'Invalid model selection for OpenAI provider');
       return;
     }
     if (selectedProvider === 'grok' && !selectedModel.startsWith('grok-')) {
-      setFieldError('modelSelectGroup', 'Invalid model selection for Grok provider');
+      setFieldError('modelGroup', 'Invalid model selection for Grok provider');
       return;
     }
     
     // Additional safety check - ensure the model is actually visible for the selected provider
-    if (selectedProvider === 'openai' && grokModels.style.display !== 'none') {
-      setFieldError('modelSelectGroup', 'OpenAI models not properly loaded');
+    if (selectedProvider === 'openai' && !grokModels.classList.contains('grok-models-hidden')) {
+      setFieldError('modelGroup', 'OpenAI models not properly loaded');
       return;
     }
-    if (selectedProvider === 'grok' && openaiModels.style.display !== 'none') {
-      setFieldError('modelSelectGroup', 'Grok models not properly loaded');
+    if (selectedProvider === 'grok' && !openaiModels.classList.contains('grok-models-hidden')) {
+      setFieldError('modelGroup', 'Grok models not properly loaded');
       return;
     }
     
@@ -359,7 +419,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     // Validate style selection
-    if (!selectedStyleType) {
+    if (!selectedStyleType && !customInstructions) {
       setFieldError('styleGroup', 'Please select a base style or provide custom instructions');
       showStatus('Please select a response style or provide custom instructions', 'error');
       return;
@@ -388,30 +448,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
   
-  // Handle extension toggle change
-  extensionToggle.addEventListener('change', async () => {
-    try {
-      await chrome.storage.sync.set({
-        extensionEnabled: extensionToggle.checked
-      });
-      
-      // Update status indicator
-      updateExtensionStatus();
-      
-      // Show immediate feedback
-      const message = extensionToggle.checked ? 
-        'Extension enabled! AI button will appear on Twitter pages' : 
-        'Extension disabled! AI button will be hidden on Twitter pages';
-      
-      showStatus(message, 'success');
-      
-    } catch (error) {
-      showStatus('Failed to save toggle state', 'error');
-      // Revert the toggle if save failed
-      extensionToggle.checked = !extensionToggle.checked;
-      updateExtensionStatus();
-    }
-  });
+
 });
 
 function setLoadingState(loading) {
