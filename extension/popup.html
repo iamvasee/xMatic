@@ -529,6 +529,108 @@
       background: #f8f9fa;
       border-color: #09090b;
     }
+
+    /* Toggle Switch Styles */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e4e4e7;
+      transition: 0.3s;
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #09090b;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #09090b;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: #71717a;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .extension-status {
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: #f8f9fa;
+      border: 1px solid #e4e4e7;
+    }
+
+    .status-indicator {
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-indicator.enabled {
+      color: #166534;
+    }
+
+    .status-indicator.disabled {
+      color: #dc2626;
+    }
+
+    /* Hidden elements */
+    .grok-section-hidden {
+      display: none;
+    }
+
+    .grok-models-hidden {
+      display: none;
+    }
   </style>
 </head>
 
@@ -539,6 +641,27 @@
         <img src="xMatic.png" alt="xMatic" class="logo-image">
       </div>
       <div class="tagline">AI-powered replies for X/Twitter</div>
+    </div>
+
+    <!-- Extension Toggle Section -->
+    <div class="section">
+      <div class="section-header">
+        <h3 class="section-title">⚡ Extension Status</h3>
+      </div>
+      
+              <div class="form-group">
+          <label for="extensionToggle" class="toggle-label">Enable xMatic on Twitter</label>
+          <div class="toggle-container">
+            <div class="toggle-switch">
+              <input type="checkbox" id="extensionToggle" checked aria-label="Enable xMatic extension on Twitter pages">
+              <span class="toggle-slider"></span>
+            </div>
+          </div>
+          <small class="help-text">When disabled, the AI button won't appear on Twitter pages</small>
+          <div id="extensionStatus" class="extension-status">
+            <span class="status-indicator enabled">🟢 Extension is currently active</span>
+          </div>
+        </div>
     </div>
 
     <form id="configForm">
@@ -579,7 +702,7 @@
       </div>
 
       <!-- Grok Configuration Section -->
-      <div class="section" id="grokSection" style="display: none;">
+      <div class="section" id="grokSection" class="grok-section-hidden">
         <div class="section-header">
           <h3 class="section-title">🔑 Grok API (xAI)</h3>
         </div>
@@ -614,7 +737,7 @@
               <option value="gpt-3.5-turbo">GPT-3.5 Turbo - Fastest, cheapest</option>
             </optgroup>
             <!-- Grok Models -->
-            <optgroup label="Grok Models" id="grokModels" style="display: none;">
+            <optgroup label="Grok Models" id="grokModels" class="grok-models-hidden">
               <option value="grok-4-0709">Grok-4-0709 - Latest model (256K context)</option>
               <option value="grok-3">Grok-3 - Standard model (131K context)</option>
               <option value="grok-3-mini">Grok-3-mini - Fast model (131K context)</option>
@@ -645,6 +768,7 @@
           id="customStyleInput" 
           placeholder="Add your own custom instructions, personality traits, or specific requirements here. These will be combined with the selected base style."
           rows="3"
+          title="Custom instructions for AI responses"
         ></textarea>
         <small class="help-text">Your custom instructions will be combined with the selected base style for a personalized AI response.</small>
       </div>
@@ -678,7 +802,7 @@
           Twitter
         </a>
       </div>
-      <div class="version">v1.3.0</div>
+      <div class="version">v1.3.1</div>
     </div>
   </div>
 

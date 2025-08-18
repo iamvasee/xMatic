@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const customStyleInput = document.getElementById('customStyleInput');
   const modelCostDisplay = document.getElementById('modelCost');
   
+  // Extension toggle element
+  const extensionToggle = document.getElementById('extensionToggle');
+  const extensionStatus = document.getElementById('extensionStatus');
+  
   // API Provider elements
   const providerOptions = document.querySelectorAll('.provider-option');
   const openaiSection = document.getElementById('openaiSection');
@@ -50,7 +54,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       'selectedProvider', 
       'style', 
       'selectedStyleType', 
-      'selectedModel'
+      'selectedModel',
+      'extensionEnabled'
     ]);
     
     // Set provider
@@ -95,6 +100,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (config.selectedStyleType) {
       styleSelect.value = config.selectedStyleType;
     }
+    
+    // Set extension toggle state
+    if (config.extensionEnabled !== undefined) {
+      extensionToggle.checked = config.extensionEnabled;
+    } else {
+      // Default to enabled
+      extensionToggle.checked = true;
+    }
+    
+    // Update status indicator
+    updateExtensionStatus();
     
     // Set custom instructions if they exist
     if (config.style && config.style !== styles[config.selectedStyleType]) {
@@ -145,22 +161,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Show/hide API key sections
     if (provider === 'openai') {
-      openaiSection.style.display = 'block';
-      grokSection.style.display = 'none';
+      openaiSection.classList.remove('grok-section-hidden');
+      grokSection.classList.add('grok-section-hidden');
       // Show only OpenAI models, hide Grok models
-      openaiModels.style.display = 'block';
-      grokModels.style.display = 'none';
+      openaiModels.classList.remove('grok-models-hidden');
+      grokModels.classList.add('grok-models-hidden');
       
       // Set model to first OpenAI model if current model is Grok
       if (modelSelect.value.startsWith('grok-')) {
         modelSelect.value = 'gpt-4';
       }
     } else {
-      openaiSection.style.display = 'none';
-      grokSection.style.display = 'block';
+      openaiSection.classList.add('grok-section-hidden');
+      grokSection.classList.remove('grok-section-hidden');
       // Show only Grok models, hide OpenAI models
-      openaiModels.style.display = 'none';
-      grokModels.style.display = 'block';
+      openaiModels.classList.add('grok-models-hidden');
+      grokModels.classList.remove('grok-models-hidden');
       
       // Set model to first Grok model if current model is OpenAI
       if (modelSelect.value.startsWith('gpt-')) {
@@ -274,6 +290,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const grokKey = document.getElementById('grokKey').value.trim();
     const selectedModel = modelSelect.value;
     const selectedStyleType = styleSelect.value;
+    const extensionEnabled = extensionToggle.checked;
     let style = '';
     
     // Get style based on selection and combine with custom instructions
@@ -358,7 +375,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         grokKey,
         selectedModel,
         style: finalStyle, // Save the combined style
-        selectedStyleType
+        selectedStyleType,
+        extensionEnabled
       });
       
       showStatus('Configuration saved successfully! 🎉', 'success');
@@ -367,6 +385,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       showStatus('Failed to save configuration', 'error');
     } finally {
       setLoadingState(false);
+    }
+  });
+  
+  // Handle extension toggle change
+  extensionToggle.addEventListener('change', async () => {
+    try {
+      await chrome.storage.sync.set({
+        extensionEnabled: extensionToggle.checked
+      });
+      
+      // Update status indicator
+      updateExtensionStatus();
+      
+      // Show immediate feedback
+      const message = extensionToggle.checked ? 
+        'Extension enabled! AI button will appear on Twitter pages' : 
+        'Extension disabled! AI button will be hidden on Twitter pages';
+      
+      showStatus(message, 'success');
+      
+    } catch (error) {
+      showStatus('Failed to save toggle state', 'error');
+      // Revert the toggle if save failed
+      extensionToggle.checked = !extensionToggle.checked;
+      updateExtensionStatus();
     }
   });
 });
@@ -435,5 +478,18 @@ function setTestButtonLoading(buttonId, loading) {
   } else {
     button.disabled = false;
     button.classList.remove('loading');
+  }
+}
+
+function updateExtensionStatus() {
+  const isEnabled = extensionToggle.checked;
+  const statusIndicator = extensionStatus.querySelector('.status-indicator');
+  
+  if (isEnabled) {
+    statusIndicator.textContent = '🟢 Extension is currently active';
+    statusIndicator.className = 'status-indicator enabled';
+  } else {
+    statusIndicator.textContent = '🔴 Extension is currently disabled';
+    statusIndicator.className = 'status-indicator disabled';
   }
 }

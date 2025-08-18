@@ -18,15 +18,15 @@ xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X.
 - **⚡ Seamless Integration** - Works natively within Twitter's interface
 - **✏️ Fully Editable** - Generated text can be edited, deleted, or customized
 - **📊 Engagement Awareness** - AI considers tweet popularity and author influence
+- **🔄 Extension Toggle Control** - Enable/disable the extension with a beautiful toggle switch
 
-## 🆕 What's New in v1.3.0
+## 🆕 What's New in v1.3.1
 
-- **🚀 Grok AI Integration** - Now supports xAI's Grok models alongside OpenAI
-- **🎭 Enhanced Style System** - 7 preset styles + custom instructions combination
-- **📈 Rich Context Extraction** - Author names, engagement metrics, tweet details
-- **🛡️ Smart @ Symbol Prevention** - Prevents accidental user tagging in replies
-- **🔧 Robust Error Handling** - Better API validation and connection testing
-- **📱 Improved UI/UX** - Cleaner popup interface with provider switching
+- **⚡ Extension Toggle Control** - Beautiful on/off switch to enable/disable the extension
+- **🔄 Dynamic Button Management** - AI buttons appear/disappear based on toggle state
+- **♿ Accessibility Improvements** - Better form labeling and ARIA attributes
+- **🎨 Code Quality** - Replaced inline styles with proper CSS classes
+- **🔧 Linter Compliance** - Fixed all accessibility and code standard warnings
 
 ## 📸 Screenshots
 

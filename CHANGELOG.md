@@ -5,6 +5,38 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2025-01-15
+
+### Added
+- **⚡ Extension Toggle Control**
+  - **On/Off Switch**: Beautiful toggle to enable/disable the extension
+  - **Status Indicator**: Visual feedback showing current extension state
+  - **Dynamic Button Management**: AI buttons appear/disappear based on toggle state
+  - **Immediate Persistence**: Toggle state saves instantly when changed
+
+### Improved
+- **♿ Accessibility Enhancements**
+  - **Proper Label Association**: Better form element labeling for screen readers
+  - **ARIA Labels**: Enhanced accessibility with proper aria-label attributes
+  - **Semantic HTML**: Improved HTML structure for better accessibility
+
+- **🎨 Code Quality Improvements**
+  - **CSS Class Management**: Replaced inline styles with proper CSS classes
+  - **Cleaner JavaScript**: Removed inline style manipulation
+  - **Better Maintainability**: Improved code structure and organization
+
+### Fixed
+- **🔧 Linter Issues**
+  - **Form Element Labels**: Resolved accessibility warnings for form controls
+  - **Inline Styles**: Removed all inline CSS styles from HTML
+  - **Code Standards**: Fixed Microsoft Edge Tools and WebHint linting errors
+
+### Technical
+- **🔧 Enhanced Content Script**
+  - **Storage Change Listeners**: Real-time updates when toggle state changes
+  - **Dynamic Button Management**: Smart addition/removal of AI buttons
+  - **Performance Optimization**: Efficient cleanup when extension is disabled
+
 ## [1.3.0] - 2025-01-15
 
 ### Added

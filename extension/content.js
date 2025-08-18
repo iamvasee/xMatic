@@ -17,8 +17,9 @@ class XMatic {
         
         this.config = await chrome.storage.sync.get(['openaiKey', 'grokKey', 'selectedProvider', 'style', 'selectedModel']);
         await this.loadSvgIcons();
-        this.addAIButtons();
+        await this.addAIButtons();
         this.observeChanges();
+        this.setupStorageListener();
         console.log('xMatic: Ready!');
     }
 
@@ -98,8 +99,8 @@ class XMatic {
             if (shouldUpdate) {
                 // Debounce the button addition to prevent excessive calls
                 clearTimeout(this.addButtonsTimeout);
-                this.addButtonsTimeout = setTimeout(() => {
-                    this.addAIButtons();
+                this.addButtonsTimeout = setTimeout(async () => {
+                    await this.addAIButtons();
                 }, 200);
             }
         });
@@ -108,9 +109,46 @@ class XMatic {
         console.log('xMatic: Observer started with debouncing');
     }
 
+    setupStorageListener() {
+        chrome.storage.onChanged.addListener((changes, namespace) => {
+            if (namespace === 'sync' && changes.extensionEnabled) {
+                console.log('xMatic: Extension enabled state changed to:', changes.extensionEnabled.newValue);
+                
+                if (changes.extensionEnabled.newValue === false) {
+                    // Extension disabled - remove all AI buttons
+                    this.removeAllAIButtons();
+                } else {
+                    // Extension enabled - add AI buttons back
+                    this.addAIButtons();
+                }
+            }
+        });
+    }
+
+    removeAllAIButtons() {
+        console.log('xMatic: Removing all AI buttons due to extension being disabled');
+        const aiButtons = document.querySelectorAll('.xmatic-ai-btn');
+        aiButtons.forEach(button => {
+            button.remove();
+        });
+        
+        // Remove enhanced class from toolbars
+        const toolbars = document.querySelectorAll('.xmatic-enhanced');
+        toolbars.forEach(toolbar => {
+            toolbar.classList.remove('xmatic-enhanced');
+        });
+    }
 
 
-    addAIButtons() {
+
+    async addAIButtons() {
+        // Check if extension is enabled
+        const config = await chrome.storage.sync.get(['extensionEnabled']);
+        if (config.extensionEnabled === false) {
+            console.log('xMatic: Extension is disabled, not adding AI buttons');
+            return;
+        }
+        
         // Don't add buttons if SVGs aren't loaded yet
         if (!this.robotSvg || !this.timeSvg) {
             console.log('xMatic: SVGs not loaded yet, skipping button creation');
