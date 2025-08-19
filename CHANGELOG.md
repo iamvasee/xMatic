@@ -5,7 +5,7 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.2] - 2025-01-15
+## [1.3.2]
 
 ### Added
 - **🧹 Final Code Cleanup**: Production-ready code quality improvements
@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Main Content Script** (231 lines): Orchestration and coordination
   - **Total Reduction**: 65% smaller main script (663 → 231 lines)
 
-## [1.3.1] - 2025-01-15
+## [1.3.1]
 
 ### Added
 - **⚡ Extension Toggle Control**
@@ -84,7 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Dynamic Button Management**: Smart addition/removal of AI buttons
   - **Performance Optimization**: Efficient cleanup when extension is disabled
 
-## [1.3.0] - 2025-01-15
+## [1.3.0]
 
 ### Added
 - **🚀 Dual AI Provider Support**
