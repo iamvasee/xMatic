@@ -62,11 +62,11 @@ class XMatic {
     async loadSvgIcons() {
         try {
             // Load robot SVG
-            const robotResponse = await fetch(chrome.runtime.getURL('robot.svg'));
+            const robotResponse = await fetch(chrome.runtime.getURL('src/assets/robot.svg'));
             this.robotSvg = await robotResponse.text();
 
             // Load time SVG
-            const timeResponse = await fetch(chrome.runtime.getURL('time.svg'));
+            const timeResponse = await fetch(chrome.runtime.getURL('src/assets/time.svg'));
             this.timeSvg = await timeResponse.text();
 
             console.log('xMatic: SVG icons loaded');
@@ -275,7 +275,7 @@ class XMatic {
         }
         
         // Create floating button using the SVG directly
-        const floatSvgUrl = chrome.runtime.getURL('float.svg');
+        const floatSvgUrl = chrome.runtime.getURL('src/assets/float.svg');
         console.log('xMatic: Attempting to load float.svg from:', floatSvgUrl);
         
         fetch(floatSvgUrl)

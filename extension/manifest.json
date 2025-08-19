@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "xMatic",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Unleash AI chaos on X/Twitter - BYOK viral reply generator",
   "permissions": [
     "storage"
@@ -20,36 +20,36 @@
         "https://x.com/*"
       ],
       "js": [
-        "content.js"
+        "src/scripts/content.js"
       ],
       "css": [
-        "styles.css"
+        "src/styles/styles.css"
       ],
       "run_at": "document_end"
     }
   ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "src/ui/popup.html",
     "default_title": "xMatic - AI Twitter Growth Tool",
     "default_icon": {
-      "16": "xmaticicon.png",
-      "32": "xmaticicon.png",
-      "48": "xmaticicon.png",
-      "128": "xmaticicon.png"
+      "16": "src/assets/xmaticicon.png",
+      "32": "src/assets/xmaticicon.png",
+      "48": "src/assets/xmaticicon.png",
+      "128": "src/assets/xmaticicon.png"
     }
   },
   "icons": {
-    "16": "xmaticicon.png",
-    "32": "xmaticicon.png",
-    "48": "xmaticicon.png",
-    "128": "xmaticicon.png"
+    "16": "src/assets/xmaticicon.png",
+    "32": "src/assets/xmaticicon.png",
+    "48": "src/assets/xmaticicon.png",
+    "128": "src/assets/xmaticicon.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/scripts/background.js"
   },
   "web_accessible_resources": [
     {
-      "resources": ["robot.svg", "time.svg", "float.svg"],
+      "resources": ["src/assets/robot.svg", "src/assets/time.svg", "src/assets/float.svg"],
       "matches": ["https://twitter.com/*", "https://x.com/*"]
     }
   ]

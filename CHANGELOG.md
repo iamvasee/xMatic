@@ -5,6 +5,41 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2] - 2025-01-15
+
+### Changed
+- **📁 Project Structure Reorganization**
+  - **Extension Folder Restructuring**: Reorganized extension files into logical folders
+  - **Source Code Organization**: Moved all source files to `src/` directory with subdirectories:
+    - `src/scripts/` - JavaScript files (content.js, background.js, popup.js)
+    - `src/styles/` - CSS styling files
+    - `src/ui/` - HTML interface files
+    - `src/assets/` - Images, icons, and SVG files
+    - `src/utils/` - Utility functions (future use)
+  - **Public Assets**: Moved manifest.json to `public/` directory
+  - **Cleaner Architecture**: Better separation of concerns and maintainability
+
+### Removed
+- **🗑️ Unused Files Cleanup**
+  - **Panel Interface**: Removed unused `panel.html` file and related references
+  - **TypeScript Config**: Removed invalid `tsconfig.json` file
+  - **Modal Styles**: Removed unused `styles/components/modal.css` file
+  - **Dead Code Elimination**: Cleaned up all unused and problematic files
+
+### Fixed
+- **🔧 Linting Issues Resolution**
+  - **Inline Styles**: Removed all inline CSS styles from HTML files
+  - **TypeScript Errors**: Eliminated TypeScript configuration errors
+  - **CSS Prefix Issues**: Resolved CSS vendor prefix ordering problems
+  - **Code Quality**: Improved overall code standards and maintainability
+
+### Technical
+- **🔧 Enhanced Project Structure**
+  - **Chrome Extension Best Practices**: Follows recommended folder organization
+  - **Scalable Architecture**: Easy to add new features and maintain code
+  - **Better Navigation**: Clear file organization for developers
+  - **Manifest Updates**: Updated all file paths to reflect new structure
+
 ## [1.3.1] - 2025-01-15
 
 ### Added

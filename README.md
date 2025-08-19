@@ -4,6 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jhgjeaklmjohgmnephiaeiefejdhfnml?color=4285F4&label=Chrome%20Web%20Store&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
+[![Version](https://img.shields.io/badge/version-1.3.2-blue.svg)](https://github.com/iamvasee/xMatic/releases)
 [![GitHub stars](https://img.shields.io/github/stars/iamvasee/xMatic?style=social)](https://github.com/iamvasee/xMatic/stargazers)
 
 xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X. Click the 🤖 button in any reply box to instantly generate contextual, engaging responses using **OpenAI's GPT models** or **Grok AI (xAI)**. Choose your preferred AI provider and customize your response style for the perfect reply every time.
@@ -19,6 +20,13 @@ xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X.
 - **✏️ Fully Editable** - Generated text can be edited, deleted, or customized
 - **📊 Engagement Awareness** - AI considers tweet popularity and author influence
 - **🔄 Extension Toggle Control** - Enable/disable the extension with a beautiful toggle switch
+
+## 🆕 What's New in v1.3.2
+
+- **📁 Project Structure Reorganization** - Clean, logical folder structure following Chrome extension best practices
+- **🗑️ Unused Files Cleanup** - Removed dead code and unused files for better maintainability
+- **🔧 Linting Issues Resolution** - Fixed all CSS and TypeScript configuration errors
+- **🎯 Better Code Organization** - Separated scripts, styles, UI, and assets into dedicated folders
 
 ## 🆕 What's New in v1.3.1
 
@@ -87,6 +95,33 @@ Add your own personality traits, requirements, or specific instructions that get
 - **AI Providers**: OpenAI GPT API, Grok AI (xAI) API
 - **Platform**: Chrome Extension (Manifest V3)
 - **Storage**: Chrome Storage API
+
+## 📁 Project Structure
+
+```
+xMatic/
+├── extension/
+│   ├── manifest.json              # Extension configuration
+│   ├── src/
+│   │   ├── scripts/
+│   │   │   ├── content.js         # Main content script (injects AI buttons)
+│   │   │   ├── background.js      # Service worker
+│   │   │   └── popup.js          # Popup functionality
+│   │   ├── styles/
+│   │   │   └── styles.css        # Extension styling
+│   │   ├── ui/
+│   │   │   └── popup.html        # Main popup interface
+│   │   ├── assets/
+│   │   │   ├── xMatic.png        # Main logo
+│   │   │   ├── xmaticicon.png    # Extension icon
+│   │   │   ├── robot.svg         # AI button icon
+│   │   │   ├── time.svg          # Loading indicator
+│   │   │   └── float.svg         # Floating button icon
+│   │   └── utils/                # Utility functions (future use)
+│   ├── assets/                   # Screenshots and documentation assets
+│   ├── docs/                     # Documentation files
+│   └── README.md                 # This file
+```
 
 ## 🔒 Privacy & Security
 
