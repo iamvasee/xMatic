@@ -229,7 +229,7 @@ class FloatingPanelManager {
             <div class="panel-footer">
                 <div class="footer-content">
                     <div class="version-info">
-                        <span class="version-badge">v1.3.2</span>
+                        <span class="version-badge">v2.0.0</span>
                     </div>
                     <div class="status-indicator" id="panelStatus">
                         <span class="status-dot"></span>

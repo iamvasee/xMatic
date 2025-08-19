@@ -4,26 +4,46 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jhgjeaklmjohgmnephiaeiefejdhfnml?color=4285F4&label=Chrome%20Web%20Store&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
-[![Version](https://img.shields.io/badge/version-1.3.2-blue.svg)](https://github.com/iamvasee/xMatic/releases)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/iamvasee/xMatic/releases)
 [![GitHub stars](https://img.shields.io/github/stars/iamvasee/xMatic?style=social)](https://github.com/iamvasee/xMatic/stargazers)
 
-xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X. Click the 🤖 button in any reply box to instantly generate contextual, engaging responses using **OpenAI's GPT models** or **Grok AI (xAI)**. Choose your preferred AI provider and customize your response style for the perfect reply every time.
+xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/X**. **Version 2.0.0 introduces a revolutionary floating panel interface** that integrates seamlessly within Twitter's interface. Generate original tweets, create engaging replies, manage drafts, and customize AI styles all from a beautiful multi-tab floating panel. Choose your preferred AI provider (OpenAI GPT or Grok AI) and create viral content with contextual AI assistance.
 
 ## ✨ Features
 
-- **🤖 Dual AI Provider Support** - Use OpenAI GPT or Grok AI (xAI) for replies
-- **🎯 One-Click AI Replies** - Generate responses instantly with a simple button
+- **🪟 Revolutionary Floating Panel Interface** - **NEW in v2.0.0** - Multi-tab interface integrated directly within Twitter
+- **📱 Advanced Tab System** - AI Configuration, Generation, Drafts, and Style tabs for comprehensive control
+- **🐦 AI Tweet Generation** - Create original, engaging tweets from scratch using AI
+- **💬 AI Reply Generation** - Generate contextual, engaging replies to existing tweets
+- **📝 Draft Management System** - Save, edit, and manage multiple AI-generated tweets and replies
+- **🤖 Dual AI Provider Support** - Use OpenAI GPT or Grok AI (xAI) for content creation
+- **🎯 One-Click AI Content** - Generate tweets and replies instantly with a simple button
 - **🎨 Advanced Style Customization** - Combine preset styles with custom instructions
 - **🧠 Smart Context Analysis** - Extracts tweet content, author info, and engagement metrics
 - **🔒 Privacy-First** - Uses your own API keys, no data collection
 - **⚡ Seamless Integration** - Works natively within Twitter's interface
-- **✏️ Fully Editable** - Generated text can be edited, deleted, or customized
+- **✏️ Fully Editable** - Generated content can be edited, deleted, or customized
 - **📊 Engagement Awareness** - AI considers tweet popularity and author influence
 - **🔄 Extension Toggle Control** - Enable/disable the extension with a beautiful toggle switch
-- **🪟 Floating Panel Interface** - Advanced multi-tab interface for AI configuration and generation
-- **📝 Draft Management** - Save, edit, and manage multiple AI-generated drafts
-- **🎭 Style Presets** - Professional, casual, humorous, analytical, and more response styles
-- **⚙️ Advanced Settings** - Fine-tune AI behavior, response length, and generation parameters
+- **🎭 Style Presets** - Professional, casual, humorous, analytical, and more content styles
+- **⚙️ Advanced Settings** - Fine-tune AI behavior, content length, and generation parameters
+
+## 🆕 What's New in v2.0.0
+
+- **🪟 Complete Floating Panel Interface** - Revolutionary new interface replacing the old popup system
+- **📱 Multi-Tab Design** - AI Configuration, Generation, Drafts, and Style tabs for comprehensive control
+- **🐦 AI Tweet Generation** - Create original, engaging tweets from scratch using AI
+- **💬 AI Reply Generation** - Generate contextual, engaging replies to existing tweets
+- **🎯 Advanced AI Configuration** - Full provider management, model selection, and API testing
+- **📝 Draft Management System** - Save, edit, and manage multiple AI-generated tweets and replies
+- **🎨 Style Customization Panel** - Advanced style presets with custom instruction combinations
+- **🔄 Seamless Integration** - Floating panel that works directly within Twitter's interface
+- **📊 Enhanced Context Analysis** - Improved tweet analysis and engagement metrics extraction
+- **🛡️ Better Error Handling** - Graceful fallbacks for storage operations and content script communication
+- **📁 Project Structure Reorganization** - Clean, logical folder structure following Chrome extension best practices
+- **🗑️ Unused Files Cleanup** - Removed dead code and unused files for better maintainability
+- **🔧 Linting Issues Resolution** - Fixed all CSS and TypeScript configuration errors
+- **🎯 Better Code Organization** - Separated scripts, styles, UI, and assets into dedicated folders
 
 ## 🆕 What's New in v1.3.2
 
@@ -32,10 +52,6 @@ xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X.
 - **🎯 Improved User Experience** - Toggle automatically disables on non-Twitter pages with helpful messaging
 - **🛡️ Better Error Handling** - Graceful fallbacks for storage operations and content script communication
 - **📱 Responsive Design** - Enhanced popup interface with proper styling and accessibility
-- **📁 Project Structure Reorganization** - Clean, logical folder structure following Chrome extension best practices
-- **🗑️ Unused Files Cleanup** - Removed dead code and unused files for better maintainability
-- **🔧 Linting Issues Resolution** - Fixed all CSS and TypeScript configuration errors
-- **🎯 Better Code Organization** - Separated scripts, styles, UI, and assets into dedicated folders
 
 ## 🆕 What's New in v1.3.1
 
@@ -78,25 +94,30 @@ xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X.
 
 ## 🎯 How It Works
 
-1. **Reply to any tweet** on Twitter/X
+1. **Create content on Twitter/X** - Compose a new tweet or reply to an existing tweet
 2. **Click the 🤖 AI button** in the compose toolbar
-3. **AI analyzes context** including tweet content, author, and engagement
-4. **Generates contextual response** based on your selected style
-5. **Edit if needed** and post your reply
+3. **Floating panel opens** with multiple tabs for different functions:
+   - **AI Tab**: Configure providers, models, and test API connections
+   - **Generate Tab**: Create AI-powered tweets and replies with style selection
+   - **Drafts Tab**: Manage and edit saved AI-generated content
+   - **Style Tab**: Customize content styles and personality
+4. **AI analyzes context** including tweet content, author, and engagement (for replies)
+5. **Generates contextual content** based on your selected style and content type
+6. **Edit if needed** and post your tweet or reply
 
-## 🎨 Response Styles
+## 🎨 Content Styles
 
 ### **Preset Styles:**
 - **🎯 Professional** - Business-focused, formal tone
-- **😊 Casual & Friendly** - Warm, approachable responses  
+- **😊 Casual & Friendly** - Warm, approachable content  
 - **😏 Humorous** - Witty, clever humor
 - **🧠 Analytical** - Detailed, thorough analysis
 - **⚡ Concise** - Direct, to-the-point
 - **🤗 Empathetic** - Encouraging, supportive tone
-- **🎨 Creative** - Imaginative, memorable responses
+- **🎨 Creative** - Imaginative, memorable content
 
 ### **Custom Instructions:**
-Add your own personality traits, requirements, or specific instructions that get combined with the selected base style for truly personalized AI responses.
+Add your own personality traits, requirements, or specific instructions that get combined with the selected base style for truly personalized AI content creation.
 
 ## 🛠️ Tech Stack
 
@@ -106,6 +127,7 @@ Add your own personality traits, requirements, or specific instructions that get
 - **Storage**: Chrome Storage API (sync + local fallback)
 - **Architecture**: Modular design with core, modules, and floating-panel components
 - **UI Framework**: Custom floating panel system with tabbed interface
+- **Content Types**: AI-powered tweet generation and contextual reply creation
 - **Code Organization**: 5,770+ lines across 20+ JavaScript and CSS files
 
 ## 📁 Project Structure

@@ -5,6 +5,43 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-01-XX
+
+### Added
+- **🪟 Complete Floating Panel Interface** - Revolutionary new interface replacing the old popup system
+  - **Multi-Tab Design**: AI Configuration, Generation, Drafts, and Style tabs for comprehensive control
+  - **Floating Panel System**: Seamless integration within Twitter's interface
+  - **AI Tweet Generation**: Create original, engaging tweets from scratch using AI
+  - **AI Reply Generation**: Generate contextual, engaging replies to existing tweets
+  - **Advanced AI Configuration**: Full provider management, model selection, and API testing
+  - **Draft Management System**: Save, edit, and manage multiple AI-generated tweets and replies
+  - **Style Customization Panel**: Advanced style presets with custom instruction combinations
+  - **Enhanced Context Analysis**: Improved tweet analysis and engagement metrics extraction
+
+### Changed
+- **🔄 Major Interface Overhaul**
+  - **Replaced Popup System**: Old popup interface replaced with comprehensive floating panel
+  - **New User Experience**: Direct integration with Twitter's interface for seamless workflow
+  - **Advanced Tab System**: Organized functionality into logical, accessible tabs
+  - **Improved Workflow**: Streamlined AI content creation and management process
+  - **Content Creation Evolution**: Evolved from reply-only to comprehensive tweet and reply generation
+
+### Improved
+- **🎯 User Experience**
+  - **Seamless Integration**: Floating panel works directly within Twitter's interface
+  - **Better Organization**: Logical tab structure for different functionality areas
+  - **Enhanced Accessibility**: Improved navigation and user interaction patterns
+  - **Professional Interface**: Modern, polished design matching Twitter's aesthetic
+  - **Content Versatility**: Support for both original tweet creation and contextual replies
+
+### Technical
+- **🔧 Enhanced Architecture**
+  - **Floating Panel System**: New floating-panel.js controller (382 lines)
+  - **Tab Management**: Specialized tab handlers for different functionality areas
+  - **Improved Context Extraction**: Better tweet analysis and data gathering
+  - **Enhanced Storage**: Better configuration management and persistence
+  - **Content Type Handling**: Support for both tweet generation and reply creation workflows
+
 ## [1.3.2]
 
 ### Added
