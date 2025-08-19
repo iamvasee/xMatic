@@ -6,25 +6,58 @@ class StorageManager {
 
     // Get configuration from storage
     async getConfig() {
-        return await chrome.storage.sync.get([
-            'openaiKey', 
-            'grokKey', 
-            'selectedProvider', 
-            'style', 
-            'selectedModel', 
-            'extensionEnabled'
-        ]);
+        try {
+            // Check if chrome.storage is available (extension context valid)
+            if (!chrome || !chrome.storage || !chrome.storage.sync) {
+                console.warn('xMatic: 🗄️ Chrome storage API not available - extension context may be invalid');
+                return {};
+            }
+            
+            return await chrome.storage.sync.get([
+                'openaiKey', 
+                'grokKey', 
+                'selectedProvider', 
+                'style', 
+                'selectedModel', 
+                'extensionEnabled'
+            ]);
+        } catch (error) {
+            console.error('xMatic: 🗄️ Error accessing storage:', error);
+            // Return empty config to prevent crashes
+            return {};
+        }
     }
 
     // Get specific configuration value
     async getConfigValue(key) {
-        const result = await chrome.storage.sync.get([key]);
-        return result[key];
+        try {
+            if (!chrome || !chrome.storage || !chrome.storage.sync) {
+                console.warn('xMatic: 🗄️ Chrome storage API not available - extension context may be invalid');
+                return null;
+            }
+            
+            const result = await chrome.storage.sync.get([key]);
+            return result[key];
+        } catch (error) {
+            console.error('xMatic: 🗄️ Error getting config value:', error);
+            return null;
+        }
     }
 
     // Set configuration value
     async setConfigValue(key, value) {
-        await chrome.storage.sync.set({ [key]: value });
+        try {
+            if (!chrome || !chrome.storage || !chrome.storage.sync) {
+                console.warn('xMatic: 🗄️ Chrome storage API not available - extension context may be invalid');
+                return false;
+            }
+            
+            await chrome.storage.sync.set({ [key]: value });
+            return true;
+        } catch (error) {
+            console.error('xMatic: 🗄️ Error setting config value:', error);
+            return false;
+        }
     }
 
     // Set multiple configuration values
@@ -104,4 +137,10 @@ class StorageManager {
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = StorageManager;
+}
+
+// Export for use in browser environment
+if (typeof window !== 'undefined') {
+    window.StorageManager = StorageManager;
+    console.log('xMatic: 🗄️ StorageManager exported to window object');
 }

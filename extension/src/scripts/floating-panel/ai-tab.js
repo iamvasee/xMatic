@@ -25,10 +25,7 @@ class AITab {
             <div class="tab-header">
                 <div class="tab-header-content">
                     <h3>AI Configuration</h3>
-                    <p>Manage API keys and model settings</p>
-                </div>
-                <div class="tab-actions">
-                    <button class="action-button primary" id="saveConfig">Save</button>
+                    <p>Manage API keys, models, and advanced settings</p>
                 </div>
             </div>
             
@@ -46,8 +43,8 @@ class AITab {
                 <div class="simple-form-group" id="openaiSection">
                     <label>OpenAI API Key</label>
                     <div class="input-with-test">
-                        <input type="password" id="openaiKey" placeholder="sk-proj-..." autocomplete="off">
-                        <button type="button" id="testOpenAIConnection" class="test-btn" title="Test">
+                        <input type="password" id="openaiKey" class="simple-input" placeholder="sk-proj-..." autocomplete="off">
+                        <button type="button" id="testOpenAIConnection" class="test-btn" title="Test Connection">
                             <svg viewBox="0 0 24 24">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
@@ -60,8 +57,8 @@ class AITab {
                 <div class="simple-form-group grok-hidden" id="grokSection">
                     <label>Grok API Key</label>
                     <div class="input-with-test">
-                        <input type="password" id="grokKey" placeholder="xai-..." autocomplete="off">
-                        <button type="button" id="testGrokConnection" class="test-btn" title="Test">
+                        <input type="password" id="grokKey" class="simple-input" placeholder="xai-..." autocomplete="off">
+                        <button type="button" id="testGrokConnection" class="test-btn" title="Test Connection">
                             <svg viewBox="0 0 24 24">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
@@ -93,6 +90,7 @@ class AITab {
                 <div class="simple-form-group">
                     <label>Max Tokens</label>
                     <input type="number" id="maxTokens" class="simple-input" placeholder="150" min="1" max="4000">
+                    <small class="help-text">Maximum number of tokens in the AI response</small>
                 </div>
 
                 <!-- Temperature -->
@@ -102,7 +100,18 @@ class AITab {
                         <input type="range" id="temperature" class="simple-range" min="0" max="2" step="0.1" value="0.7">
                         <span id="tempValue">0.7</span>
                     </div>
+                    <small class="help-text">Higher values make responses more creative, lower values more focused</small>
                 </div>
+
+                <!-- Save Button -->
+                <div class="simple-form-group">
+                    <button type="button" id="saveConfig" class="ai-save-btn">
+                        Save Configuration
+                    </button>
+                </div>
+                
+                <!-- Bottom Spacing for Footer -->
+                <div class="bottom-spacing"></div>
             </div>
         `;
         

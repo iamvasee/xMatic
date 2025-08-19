@@ -177,6 +177,11 @@
     line-height: 1.5;
 }
 
+/* Ensure consistent tab header spacing across all tabs */
+.tab-header-content {
+    flex: 1;
+}
+
 .tab-actions {
     display: flex;
     gap: 12px;

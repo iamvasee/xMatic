@@ -100,66 +100,9 @@
       line-height: 1.4;
     }
 
-    .button {
-      width: 100%;
-      padding: 12px 16px;
-      margin-bottom: 8px;
-      background: #09090b;
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: inherit;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
 
-    .button:hover {
-      background: #18181b;
-    }
 
-    .button:active {
-      background: #27272a;
-    }
 
-    .button:disabled {
-      background: #f4f4f5;
-      color: #a1a1aa;
-      cursor: not-allowed;
-    }
-
-    .status {
-      margin: 8px 0 4px;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 13px;
-      line-height: 1.4;
-      opacity: 0;
-      transform: translateY(4px);
-      transition: all 0.2s ease;
-    }
-
-    .status.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .status.success {
-      background: #f0fdf4;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
-
-    .status.error {
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
 
     .footer {
       margin-top: 0.5rem;
@@ -260,41 +203,7 @@
     }
   }
 
-  /* Notification System */
-  .notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    z-index: 1000;
-    animation: slideIn 0.3s ease;
-  }
 
-  .notification-success {
-    background: #f0fdf4;
-    color: #166534;
-    border: 1px solid #bbf7d0;
-  }
-
-  .notification-error {
-    background: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
-  }
-
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateX(100%);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
 
     .link {
       display: flex;
@@ -330,43 +239,9 @@
       text-align: center;
     }
 
-    /* Loading state */
-    .button.loading {
-      position: relative;
-      color: transparent;
-    }
 
-    .button.loading::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 16px;
-      height: 16px;
-      margin: -8px 0 0 -8px;
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 0.8s linear infinite;
-    }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
 
-    /* Input validation states */
-    .form-group.error input,
-    .form-group.error textarea,
-    .form-group.error select {
-      border-color: #dc2626;
-      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
-    }
-
-    .form-group.error label {
-      color: #dc2626;
-    }
 
     /* New styles for enhanced popup */
 
@@ -448,6 +323,18 @@
       background-color: #18181b;
     }
 
+    /* Disabled toggle state */
+    .toggle-switch input:disabled + .toggle-slider {
+      background-color: #f1f3f4;
+      border-color: #d1d5db;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .toggle-switch input:disabled + .toggle-slider:before {
+      background-color: #e4e4e7;
+    }
+
     .toggle-label {
       font-size: 14px;
       font-weight: 500;
@@ -494,6 +381,26 @@
     .grok-models-hidden {
       display: none;
     }
+
+    /* Section Styles */
+    .section {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f8f9fa;
+      border: 1px solid #e4e4e7;
+      border-radius: 8px;
+    }
+
+    .section-header {
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #09090b;
+      margin: 0;
+    }
   </style>
 </head>
 
@@ -527,13 +434,7 @@
         </div>
     </div>
 
-    <form id="configForm">
-      <button type="submit" class="button" id="saveConfig">
-        💾 Save Extension Settings
-      </button>
-    </form>
 
-    <div id="status" class="status"></div>
 
     <div class="footer">
       <div class="links">
@@ -561,8 +462,7 @@
     </div>
   </div>
 
-  <script src="../scripts/modules/ai-api.js"></script>
-      <script src="popup.js"></script>
+  <script src="popup.js"></script>
 </body>
 
 </html>

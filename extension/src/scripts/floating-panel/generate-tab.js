@@ -8,7 +8,12 @@ class GenerateTab {
 
     init() {
         // Initialize generate tab functionality
-        console.log('xMatic: Generate tab initialized');
+        console.log('xMatic: 🚀 Generate tab initialized');
+        
+        // Check configuration status after a short delay
+        setTimeout(() => {
+            this.checkConfigurationStatus();
+        }, 1000);
     }
 
     render(container) {
@@ -16,43 +21,57 @@ class GenerateTab {
         container.innerHTML = `
             <div class="tab-header">
                 <div class="tab-header-content">
-                    <h3>Generate AI Reply</h3>
-                    <p>Create contextual AI-powered replies to tweets</p>
-                </div>
-                <div class="tab-actions">
-                    <button class="action-button secondary" id="clearContext">Clear</button>
-                    <button class="action-button primary" id="generateReply">Generate</button>
+                    <h3>Generate Original Tweets</h3>
+                    <p>Create unique AI-powered tweets from your context</p>
                 </div>
             </div>
             
             <div class="generate-content">
-                <div class="content-card">
-                    <div class="card-header">
-                        <h4>Context</h4>
-                        <span class="context-badge">Tweet</span>
+                <!-- Context Input -->
+                <div class="simple-form-group">
+                    <label>Context for Tweet Generation</label>
+                    <textarea 
+                        id="contextInput" 
+                        class="simple-textarea large" 
+                        placeholder="Enter the topic, idea, or context you want AI to create original tweets about..."
+                        rows="6"
+                    ></textarea>
+                </div>
+
+                <!-- Tweet Count Selection -->
+                <div class="simple-form-group">
+                    <label>Number of Tweets to Generate</label>
+                    <div class="count-selector">
+                        <input 
+                            type="number" 
+                            id="tweetCount" 
+                            class="simple-input count-input" 
+                            min="1" 
+                            max="10" 
+                            value="3"
+                        >
+                        <span class="count-label">tweets (1-10)</span>
                     </div>
-                    <div class="card-content">
-                        <div id="tweetContext" class="tweet-context">
-                            <p class="placeholder-text">Tweet context will be displayed here...</p>
-                        </div>
-                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="simple-form-group">
+                    <button type="button" id="generateTweets" class="generate-btn">
+                        <span class="btn-text">Generate Original Tweets</span>
+                        <span class="btn-loading" style="display: none;">
+                            <svg class="spinner" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                    <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                                    <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                                </circle>
+                            </svg>
+                            Generating...
+                        </span>
+                    </button>
                 </div>
                 
-                <div class="content-card">
-                    <div class="card-header">
-                        <h4>Generated Reply</h4>
-                        <span class="context-badge">AI Response</span>
-                    </div>
-                    <div class="card-content">
-                        <div id="generatedReply" class="generated-reply">
-                            <p class="placeholder-text">Generated reply will appear here...</p>
-                        </div>
-                        <div class="reply-actions" style="margin-top: 20px; display: none;">
-                            <button class="action-button secondary" id="editReply">Edit</button>
-                            <button class="action-button primary" id="insertReply">Insert Reply</button>
-                        </div>
-                    </div>
-                </div>
+                <!-- Bottom Spacing for Footer -->
+                <div class="bottom-spacing"></div>
             </div>
         `;
         
@@ -61,59 +80,415 @@ class GenerateTab {
 
     setupEventListeners(container) {
         // Setup event listeners for the generate tab
-        const generateBtn = container.querySelector('#generateReply');
-        const clearBtn = container.querySelector('#clearContext');
-        const editBtn = container.querySelector('#editReply');
-        const insertBtn = container.querySelector('#insertReply');
+        const generateBtn = container.querySelector('#generateTweets');
+        const contextInput = container.querySelector('#contextInput');
+        const tweetCount = container.querySelector('#tweetCount');
         
         if (generateBtn) {
             generateBtn.addEventListener('click', () => this.handleGenerate());
+            console.log('xMatic: 🚀 Generate button event listener added');
         }
         
-        if (clearBtn) {
-            clearBtn.addEventListener('click', () => this.handleClear());
+        if (contextInput) {
+            contextInput.addEventListener('input', () => this.handleContextChange());
+            console.log('xMatic: 🚀 Context input event listener added');
         }
         
-        if (editBtn) {
-            editBtn.addEventListener('click', () => this.handleEdit());
+        if (tweetCount) {
+            tweetCount.addEventListener('change', () => this.handleCountChange());
+            console.log('xMatic: 🚀 Tweet count event listener added');
         }
         
-        if (insertBtn) {
-            insertBtn.addEventListener('click', () => this.handleInsert());
-        }
+        console.log('xMatic: 🚀 All generate tab event listeners set up successfully');
     }
 
     handleGenerate() {
-        // Handle AI reply generation
-        console.log('xMatic: Generating AI reply...');
-        // TODO: Integrate with existing AI API handler
-    }
-
-    handleClear() {
-        // Handle clearing context and reply
-        console.log('xMatic: Clearing context...');
-        const contextElement = document.querySelector('#tweetContext');
-        const replyElement = document.querySelector('#generatedReply');
+        // Handle AI tweet generation
+        console.log('xMatic: 🚀 Starting AI tweet generation...');
         
-        if (contextElement) {
-            contextElement.innerHTML = '<p class="placeholder-text">Tweet context will be displayed here...</p>';
+        const contextInput = document.querySelector('#contextInput');
+        const tweetCount = document.querySelector('#tweetCount');
+        const generateBtn = document.querySelector('#generateTweets');
+        
+        if (!contextInput || !tweetCount || !generateBtn) {
+            console.error('xMatic: 🚀 Required elements not found');
+            return;
         }
         
-        if (replyElement) {
-            replyElement.innerHTML = '<p class="placeholder-text">Generated reply will appear here...</p>';
+        const context = contextInput.value.trim();
+        const count = parseInt(tweetCount.value);
+        
+        if (!context) {
+            console.log('xMatic: 🚀 No context provided');
+            // TODO: Show error message to user
+            return;
+        }
+        
+        if (count < 1 || count > 10) {
+            console.log('xMatic: 🚀 Invalid tweet count');
+            // TODO: Show error message to user
+            return;
+        }
+        
+        // Show loading state
+        this.showLoadingState(generateBtn, true);
+        
+        // Generate tweets using AI API
+        this.generateTweetsWithAI(context, count);
+    }
+
+    handleContextChange() {
+        // Handle context input changes
+        console.log('xMatic: 🚀 Context input changed');
+    }
+
+    handleCountChange() {
+        // Handle tweet count changes
+        console.log('xMatic: 🚀 Tweet count changed to:', document.querySelector('#tweetCount')?.value);
+    }
+
+    showLoadingState(button, isLoading) {
+        const btnText = button.querySelector('.btn-text');
+        const btnLoading = button.querySelector('.btn-loading');
+        
+        if (isLoading) {
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-flex';
+            button.disabled = true;
+            button.classList.add('loading');
+        } else {
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
+            button.disabled = false;
+            button.classList.remove('loading');
         }
     }
 
-    handleEdit() {
-        // Handle editing the generated reply
-        console.log('xMatic: Editing reply...');
-        // TODO: Implement reply editing
+    async generateTweetsWithAI(context, count) {
+        try {
+            console.log('xMatic: 🚀 Calling AI API for', count, 'tweets...');
+            
+                    // Get user's AI configuration
+        const config = await this.getUserConfig();
+        
+        if (!config) {
+            throw new Error('Please configure your AI settings in the AI tab first. You need to select a provider, add an API key, and choose a model.');
+        }
+            
+            // Create AI handler instance
+            const aiHandler = new window.AIAPIHandler(config);
+            
+            // Generate tweets
+            const tweets = await aiHandler.generateMultipleReplies(context, count);
+            
+            console.log('xMatic: 🚀 Generated tweets:', tweets);
+            
+            // Save to drafts tab
+            this.saveToDrafts(tweets, context);
+            
+            // Clear context and show success
+            this.clearContext();
+            this.showSuccessMessage(count);
+            
+            // Auto-switch to drafts tab to show generated content
+            this.switchToDraftsTab();
+            
+        } catch (error) {
+            console.error('xMatic: 🚀 AI generation failed:', error);
+            this.showErrorMessage(error.message);
+        } finally {
+            // Hide loading state
+            const generateBtn = document.querySelector('#generateTweets');
+            if (generateBtn) {
+                this.showLoadingState(generateBtn, false);
+            }
+        }
     }
 
-    handleInsert() {
-        // Handle inserting the reply into Twitter
-        console.log('xMatic: Inserting reply...');
-        // TODO: Integrate with existing text insertion manager
+    async getUserConfig() {
+        try {
+            console.log('xMatic: 🚀 Getting user configuration...');
+            
+            return new Promise((resolve) => {
+                chrome.storage.sync.get([
+                    'selectedProvider',
+                    'selectedModel',
+                    'openaiKey',
+                    'grokKey',
+                    'maxTokens',
+                    'temperature'
+                ], (result) => {
+                    console.log('xMatic: 🚀 Retrieved config from storage:', result);
+                    
+                    // Check if we have the minimum required config
+                    if (!result.selectedProvider || !result.selectedModel) {
+                        console.warn('xMatic: 🚀 Missing required config: provider or model');
+                        resolve(null);
+                        return;
+                    }
+                    
+                    // Check if we have API key for selected provider
+                    const apiKey = result.selectedProvider === 'grok' ? result.grokKey : result.openaiKey;
+                    if (!apiKey) {
+                        console.warn('xMatic: 🚀 Missing API key for provider:', result.selectedProvider);
+                        resolve(null);
+                        return;
+                    }
+                    
+                    console.log('xMatic: 🚀 Configuration validation passed');
+                    resolve(result);
+                });
+            });
+        } catch (error) {
+            console.error('xMatic: 🚀 Error getting user config:', error);
+            return null;
+        }
+    }
+
+    checkConfigurationStatus() {
+        // Check if user has configured AI settings
+        chrome.storage.sync.get([
+            'selectedProvider',
+            'selectedModel',
+            'openaiKey',
+            'grokKey'
+        ], (result) => {
+            const hasProvider = !!result.selectedProvider;
+            const hasModel = !!result.selectedModel;
+            const hasOpenAIKey = !!result.openaiKey;
+            const hasGrokKey = !!result.grokKey;
+            
+            console.log('xMatic: 🚀 Configuration status:', {
+                hasProvider,
+                hasModel,
+                hasOpenAIKey,
+                hasGrokKey
+            });
+            
+            // Show configuration status to user
+            if (!hasProvider || !hasModel) {
+                this.showConfigurationWarning('Please select an AI provider and model in the AI tab.');
+            } else if (result.selectedProvider === 'openai' && !hasOpenAIKey) {
+                this.showConfigurationWarning('Please add your OpenAI API key in the AI tab.');
+            } else if (result.selectedProvider === 'grok' && !hasGrokKey) {
+                this.showConfigurationWarning('Please add your Grok API key in the AI tab.');
+            }
+        });
+    }
+
+    showConfigurationWarning(message) {
+        console.warn('xMatic: 🚀 Configuration warning:', message);
+        
+        // Show warning notification
+        const notification = document.createElement('div');
+        notification.className = 'warning-notification';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">⚠️</span>
+                <span class="notification-text">${message}</span>
+            </div>
+        `;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Remove after 8 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 8000);
+    }
+
+    saveToDrafts(tweets, context) {
+        // Save generated tweets to drafts
+        console.log('xMatic: 🚀 Saving', tweets.length, 'tweets to drafts...');
+        
+        const drafts = tweets.map((tweet, index) => ({
+            id: `generated-${Date.now()}-${index}`,
+            text: tweet,
+            context: context.substring(0, 200) + (context.length > 200 ? '...' : ''), // Truncate context
+            createdAt: new Date().toISOString(),
+            style: 'AI Generated',
+            type: 'generated'
+        }));
+        
+        // Try to use StorageManager if available
+        if (window.StorageManager) {
+            try {
+                const storageManager = new window.StorageManager();
+                this.saveDraftsWithStorageManager(storageManager, drafts);
+            } catch (error) {
+                console.warn('xMatic: 🚀 StorageManager failed, falling back to direct storage:', error);
+                this.saveDraftsDirectly(drafts);
+            }
+        } else {
+            // Fallback to direct storage
+            this.saveDraftsDirectly(drafts);
+        }
+    }
+
+    async saveDraftsWithStorageManager(storageManager, drafts) {
+        try {
+            console.log('xMatic: 🚀 Using StorageManager to save drafts...');
+            
+            // Get existing drafts
+            const existingDrafts = await storageManager.getConfigValue('drafts') || [];
+            const updatedDrafts = [...drafts, ...existingDrafts];
+            
+            // Save using StorageManager
+            await storageManager.setConfigValue('drafts', updatedDrafts);
+            
+            console.log('xMatic: 🚀 Drafts saved successfully using StorageManager');
+            
+            // Trigger custom event to refresh drafts tab
+            window.dispatchEvent(new CustomEvent('draftsUpdated', { 
+                detail: { newDrafts: drafts } 
+            }));
+            
+        } catch (error) {
+            console.error('xMatic: 🚀 StorageManager save failed:', error);
+            // Fallback to direct storage
+            this.saveDraftsDirectly(drafts);
+        }
+    }
+
+    saveDraftsDirectly(drafts) {
+        // Use local storage for large content to avoid quota issues
+        chrome.storage.local.get(['drafts'], (result) => {
+            const existingDrafts = result.drafts || [];
+            const updatedDrafts = [...drafts, ...existingDrafts];
+            
+            chrome.storage.local.set({ drafts: updatedDrafts }, (storageResult) => {
+                if (chrome.runtime.lastError) {
+                    console.warn('xMatic: 🚀 Local storage failed, trying sync storage:', chrome.runtime.lastError);
+                    this.saveMinimalDrafts(drafts, 'Generated content');
+                } else {
+                    console.log('xMatic: 🚀 Drafts saved to local storage successfully');
+                    
+                    // Trigger custom event to refresh drafts tab
+                    window.dispatchEvent(new CustomEvent('draftsUpdated', { 
+                        detail: { newDrafts: drafts } 
+                    }));
+                }
+            });
+        });
+    }
+
+    saveMinimalDrafts(tweets, context) {
+        // Save minimal draft data to avoid storage issues
+        console.log('xMatic: 🚀 Attempting minimal draft save...');
+        
+        const minimalDrafts = tweets.map((tweet, index) => ({
+            id: `generated-${Date.now()}-${index}`,
+            text: tweet.substring(0, 100) + (tweet.length > 100 ? '...' : ''), // Truncate tweet
+            context: context.substring(0, 100) + (context.length > 100 ? '...' : ''), // Truncate context
+            createdAt: new Date().toISOString(),
+            style: 'AI Generated',
+            type: 'generated'
+        }));
+        
+        // Try to save to sync storage with minimal data
+        chrome.storage.sync.get(['drafts'], (result) => {
+            const existingDrafts = result.drafts || [];
+            const updatedDrafts = [...minimalDrafts, ...existingDrafts];
+            
+            chrome.storage.sync.set({ drafts: updatedDrafts }, () => {
+                console.log('xMatic: 🚀 Minimal drafts saved to sync storage');
+                
+                // Trigger custom event to refresh drafts tab
+                window.dispatchEvent(new CustomEvent('draftsUpdated', { 
+                    detail: { newDrafts: minimalDrafts } 
+                }));
+            });
+        });
+    }
+
+    clearContext() {
+        const contextInput = document.querySelector('#contextInput');
+        if (contextInput) {
+            contextInput.value = '';
+        }
+    }
+
+    showSuccessMessage(count) {
+        console.log('xMatic: 🚀 Successfully generated', count, 'tweets');
+        
+        // Show success notification
+        const notification = document.createElement('div');
+        notification.className = 'success-notification';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">✅</span>
+                <span class="notification-text">Successfully generated ${count} original tweets! Check the Drafts tab.</span>
+            </div>
+        `;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 5000);
+    }
+
+    showErrorMessage(message) {
+        console.error('xMatic: 🚀 Error:', message);
+        
+        // Show error notification
+        const notification = document.createElement('div');
+        notification.className = 'error-notification';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">❌</span>
+                <span class="notification-text">Error: ${message}</span>
+            </div>
+        `;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 5000);
+    }
+
+    switchToDraftsTab() {
+        // Switch to drafts tab after successful generation
+        console.log('xMatic: 🚀 Auto-switching to drafts tab...');
+        
+        // Check if the floating panel is available
+        if (window.xMaticPanel && typeof window.xMaticPanel.switchTab === 'function') {
+            // Use the panel's built-in tab switching method
+            window.xMaticPanel.switchTab('drafts');
+            console.log('xMatic: 🚀 Successfully switched to drafts tab');
+        } else {
+            // Fallback: manually trigger tab switching
+            console.log('xMatic: 🚀 Using fallback tab switching method');
+            this.triggerTabSwitch('drafts');
+        }
+    }
+
+    triggerTabSwitch(tabName) {
+        // Fallback method to switch tabs if panel method is not available
+        try {
+            // Find the tab button and click it
+            const tabButton = document.querySelector(`[data-tab="${tabName}"]`);
+            if (tabButton) {
+                console.log('xMatic: 🚀 Found tab button, clicking to switch...');
+                tabButton.click();
+            } else {
+                console.warn('xMatic: 🚀 Tab button not found for:', tabName);
+            }
+        } catch (error) {
+            console.error('xMatic: 🚀 Error switching tabs:', error);
+        }
     }
 }
 

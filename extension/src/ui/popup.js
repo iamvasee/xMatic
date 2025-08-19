@@ -9,7 +9,6 @@ function initializePopup() {
     // Get DOM elements
     const extensionToggle = document.getElementById('extensionToggle');
     const extensionStatus = document.getElementById('extensionStatus');
-    const saveButton = document.getElementById('saveConfig');
 
     if (!extensionToggle || !extensionStatus) {
         console.error('xMatic: Required elements not found');
@@ -19,11 +18,18 @@ function initializePopup() {
     // Set up extension toggle functionality
     setupExtensionToggle(extensionToggle, extensionStatus);
 
-    // Set up form submission
-    setupFormSubmission(saveButton);
-
     // Load current configuration
     loadConfiguration();
+    
+    // Check current tab and update status
+    checkCurrentTab();
+    
+    // Listen for tab updates to refresh status
+    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+        if (changeInfo.status === 'complete' && tab.active) {
+            checkCurrentTab();
+        }
+    });
 }
 
 function setupExtensionToggle(toggle, status) {
@@ -34,16 +40,28 @@ function setupExtensionToggle(toggle, status) {
         // Update status display
         updateExtensionStatus(isEnabled);
         
-        // Save to storage
-        chrome.storage.sync.set({ extensionEnabled: isEnabled });
+        // Save to storage with error handling
+        chrome.storage.sync.set({ extensionEnabled: isEnabled }, function() {
+            if (chrome.runtime.lastError) {
+                console.error('xMatic: Failed to save extension state:', chrome.runtime.lastError);
+                // Try to save to local storage as fallback
+                chrome.storage.local.set({ extensionEnabled: isEnabled });
+            }
+        });
         
-        // Send message to content script
+        // Only try to send message if we're on a Twitter page
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            if (tabs[0]) {
+            if (tabs[0] && (tabs[0].url.includes('twitter.com') || tabs[0].url.includes('x.com'))) {
+                // Send message to content script with error handling
                 chrome.tabs.sendMessage(tabs[0].id, { 
                     action: 'toggleExtension', 
                     enabled: isEnabled 
+                }).catch(function(error) {
+                    // Content script not available, this is normal on non-Twitter pages
+                    console.log('xMatic: Content script not available on this page');
                 });
+            } else {
+                console.log('xMatic: Not on Twitter page, skipping content script message');
             }
         });
     });
@@ -76,43 +94,9 @@ function setupExtensionToggle(toggle, status) {
     });
 }
 
-function setupFormSubmission(saveButton) {
-    if (saveButton) {
-        saveButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            saveExtensionSettings();
-        });
-    }
-}
 
-function saveExtensionSettings() {
-    const extensionEnabled = document.getElementById('extensionToggle').checked;
-    
-    const config = {
-        extensionEnabled: extensionEnabled
-    };
-    
-    // Save to storage
-    chrome.storage.sync.set(config, function() {
-        if (chrome.runtime.lastError) {
-            console.error('xMatic: Error saving extension settings:', chrome.runtime.lastError);
-            showNotification('Error saving settings. Please try again.', 'error');
-        } else {
-            // Show success message
-            showNotification('Extension settings saved successfully!', 'success');
-            
-            // Send message to content script
-            chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                if (tabs[0]) {
-                    chrome.tabs.sendMessage(tabs[0].id, { 
-                        action: 'extensionSettingsUpdated', 
-                        config: config 
-                    });
-                }
-            });
-        }
-    });
-}
+
+
 
 function loadConfiguration() {
     chrome.storage.sync.get([
@@ -121,8 +105,22 @@ function loadConfiguration() {
         // Set extension toggle state
         const extensionToggle = document.getElementById('extensionToggle');
         if (extensionToggle) {
-            extensionToggle.checked = result.extensionEnabled !== false;
-            updateExtensionStatus(result.extensionEnabled !== false);
+            const isEnabled = result.extensionEnabled !== false;
+            extensionToggle.checked = isEnabled;
+            updateExtensionStatus(isEnabled);
+        }
+        
+        // Handle storage errors gracefully
+        if (chrome.runtime.lastError) {
+            console.log('xMatic: Sync storage error, trying local storage:', chrome.runtime.lastError);
+            // Try local storage as fallback
+            chrome.storage.local.get(['extensionEnabled'], function(localResult) {
+                if (extensionToggle) {
+                    const isEnabled = localResult.extensionEnabled !== false;
+                    extensionToggle.checked = isEnabled;
+                    updateExtensionStatus(isEnabled);
+                }
+            });
         }
     });
 }
@@ -140,19 +138,33 @@ function updateExtensionStatus(isEnabled) {
     }
 }
 
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    
-    // Add to popup
-    document.body.appendChild(notification);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
+function checkCurrentTab() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        if (tabs[0]) {
+            const isTwitterPage = tabs[0].url.includes('twitter.com') || tabs[0].url.includes('x.com');
+            const extensionToggle = document.getElementById('extensionToggle');
+            
+            if (extensionToggle) {
+                if (!isTwitterPage) {
+                    // Disable toggle on non-Twitter pages
+                    extensionToggle.disabled = true;
+                    extensionToggle.title = 'xMatic only works on Twitter/X pages';
+                    
+                    // Update status to show it's not available
+                    const status = document.getElementById('extensionStatus');
+                    if (status) {
+                        status.innerHTML = '<span class="status-indicator disabled">🔴 Not available on this page (Twitter/X only)</span>';
+                    }
+                } else {
+                    // Re-enable toggle on Twitter pages
+                    extensionToggle.disabled = false;
+                    extensionToggle.title = '';
+                    
+                    // Reload configuration to show correct status
+                    loadConfiguration();
+                }
+            }
         }
-    }, 3000);
+    });
 }
+

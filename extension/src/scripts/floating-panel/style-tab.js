@@ -18,11 +18,7 @@ class StyleTab {
             <div class="tab-header">
                 <div class="tab-header-content">
                     <h3>Response Style</h3>
-                    <p>Configure your AI response personality</p>
-                </div>
-                <div class="tab-actions">
-                    <button class="action-button secondary" id="resetStyles">Reset</button>
-                    <button class="action-button primary" id="saveStyles">Save</button>
+                    <p>Configure your AI response personality and tone</p>
                 </div>
             </div>
             
@@ -47,12 +43,27 @@ class StyleTab {
                     <label>Custom Instructions</label>
                     <textarea 
                         id="customStyleInput" 
-                        class="simple-textarea" 
+                        class="simple-textarea large" 
                         placeholder="Add your own custom instructions, personality traits, or specific requirements here..."
-                        rows="3"
+                        rows="4"
                     ></textarea>
                     <small class="help-text">Your custom instructions will be combined with the selected base style.</small>
                 </div>
+
+                <!-- Action Buttons -->
+                <div class="simple-form-group">
+                    <div class="style-actions">
+                        <button type="button" id="resetStyles" class="style-btn secondary">
+                            Reset to Default
+                        </button>
+                        <button type="button" id="saveStyles" class="style-btn primary">
+                            Save Style
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Bottom Spacing for Footer -->
+                <div class="bottom-spacing"></div>
             </div>
         `;
         
