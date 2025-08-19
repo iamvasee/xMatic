@@ -33,7 +33,9 @@ class XMatic {
         this.setupStorageListener();
         
         // Initialize floating panel interface
-        this.initializeFloatingPanel();
+        this.initializeFloatingPanel().catch(error => {
+            console.error('xMatic: Failed to initialize floating panel:', error);
+        });
     }
 
     nuclearCleanup() {
@@ -212,15 +214,53 @@ class XMatic {
         await this.textInsertionManager.insertReply(text);
     }
 
-    initializeFloatingPanel() {
-        // Load floating panel script and initialize
-        const script = document.createElement('script');
-        script.src = chrome.runtime.getURL('src/scripts/floating-panel/floating-panel.js');
-        script.onload = () => {
-            // Script loaded, floating panel will auto-initialize
-            console.log('xMatic: Floating panel script loaded');
-        };
-        document.head.appendChild(script);
+    async initializeFloatingPanel() {
+        try {
+            // Load and inject CSS files first
+            await this.injectFloatingPanelCSS();
+            
+            // Load floating panel script content and inject it
+            const scriptUrl = chrome.runtime.getURL('src/scripts/floating-panel/floating-panel.js');
+            const response = await fetch(scriptUrl);
+            const scriptContent = await response.text();
+            
+            // Create and inject the script
+            const script = document.createElement('script');
+            script.textContent = scriptContent;
+            document.head.appendChild(script);
+            
+            console.log('xMatic: Floating panel script injected successfully');
+        } catch (error) {
+            console.error('xMatic: Failed to load floating panel script:', error);
+        }
+    }
+
+    async injectFloatingPanelCSS() {
+        try {
+            // Inject floating panel CSS
+            const panelCSSUrl = chrome.runtime.getURL('src/styles/floating-panel.css');
+            const panelResponse = await fetch(panelCSSUrl);
+            const panelCSS = await panelResponse.text();
+            
+            const panelStyle = document.createElement('style');
+            panelStyle.id = 'xmatic-floating-panel-css';
+            panelStyle.textContent = panelCSS;
+            document.head.appendChild(panelStyle);
+            
+            // Inject tabs CSS
+            const tabsCSSUrl = chrome.runtime.getURL('src/styles/tabs.css');
+            const tabsResponse = await fetch(tabsCSSUrl);
+            const tabsCSS = await tabsResponse.text();
+            
+            const tabsStyle = document.createElement('style');
+            tabsStyle.id = 'xmatic-tabs-css';
+            tabsStyle.textContent = tabsCSS;
+            document.head.appendChild(tabsStyle);
+            
+            console.log('xMatic: Floating panel CSS injected successfully');
+        } catch (error) {
+            console.error('xMatic: Failed to inject floating panel CSS:', error);
+        }
     }
 }
 

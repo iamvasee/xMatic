@@ -60,7 +60,8 @@
         "src/assets/float.svg",
         "src/ui/floating-panel.html",
         "src/styles/floating-panel.css",
-        "src/styles/tabs.css"
+        "src/styles/tabs.css",
+        "src/scripts/floating-panel/*.js"
       ],
       "matches": ["https://twitter.com/*", "https://x.com/*"]
     }
