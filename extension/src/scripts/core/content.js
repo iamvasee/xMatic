@@ -271,7 +271,9 @@ class XMatic {
             position: fixed;
             top: 0;
             right: 0;
-            width: 400px;
+            width: 50vw;
+            min-width: 600px;
+            max-width: 800px;
             height: 100vh;
             background: #ffffff;
             box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);

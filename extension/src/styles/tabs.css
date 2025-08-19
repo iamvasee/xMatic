@@ -6,6 +6,27 @@
     flex-direction: column;
     height: calc(100vh - 200px); /* Account for header, tabs, and footer */
     overflow-y: auto;
+    padding: 0 20px;
+}
+
+/* Better use of wide space */
+.tab-pane {
+    max-width: 100%;
+}
+
+.tab-header {
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.tab-header h3 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.tab-header p {
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 /* Generate Tab Styles */
