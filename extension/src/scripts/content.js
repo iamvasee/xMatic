@@ -1,62 +1,52 @@
 // xMatic - Simple Twitter AI Reply Tool
-console.log('xMatic: Loading...');
 
 class XMatic {
     constructor() {
         this.config = null;
         this.robotSvg = null;
         this.timeSvg = null;
+        this.aiHandler = null;
+        this.uiManager = null;
+        this.storageManager = null;
+        this.contextExtractor = null;
+        this.textInsertionManager = null;
+        this.observer = null;
+        this.addButtonsTimeout = null;
         this.init();
     }
 
     async init() {
-        console.log('xMatic: Initializing...');
-        
         // Nuclear cleanup first - remove everything xMatic related
         this.nuclearCleanup();
         
-        this.config = await chrome.storage.sync.get(['openaiKey', 'grokKey', 'selectedProvider', 'style', 'selectedModel', 'extensionEnabled']);
+        this.storageManager = new StorageManager();
+        this.contextExtractor = new ContextExtractor();
+        this.textInsertionManager = new TextInsertionManager();
+        this.config = await this.storageManager.getConfig();
+        this.aiHandler = new AIAPIHandler(this.config);
         await this.loadSvgIcons();
-        await this.addAIButtons();
-        this.addFloatingButton();
+        this.uiManager = new UIManager(this.config, this.robotSvg, this.timeSvg);
+        await this.uiManager.addAIButtons();
+        this.uiManager.addFloatingButton();
+        this.setupEventListeners();
         this.observeChanges();
         this.setupStorageListener();
-        console.log('xMatic: Ready!');
     }
 
     nuclearCleanup() {
-        console.log('xMatic: Performing nuclear cleanup...');
-        
-        // Remove ALL elements with xmatic classes
-        const xmaticElements = document.querySelectorAll('[class*="xmatic"], [data-xmatic-active], [data-xmatic-id]');
-        xmaticElements.forEach(element => {
-            console.log('xMatic: Nuclear cleanup removing element:', element);
-            element.remove();
-        });
-        
-        // Specifically remove floating button
-        const floatBtn = document.querySelector('.xmatic-float-btn');
-        if (floatBtn) {
-            console.log('xMatic: Removing floating button');
-            floatBtn.remove();
+        // Use UI manager for cleanup if available, otherwise do basic cleanup
+        if (this.uiManager) {
+            this.uiManager.cleanupOrphanedButtons();
+        } else {
+            // Basic cleanup before UI manager is initialized
+            const xmaticElements = document.querySelectorAll('[class*="xmatic"], [data-xmatic-active], [data-xmatic-id]');
+            xmaticElements.forEach(element => element.remove());
         }
 
-        // Remove enhanced classes from all toolbars
-        const toolbars = document.querySelectorAll('[data-testid="toolBar"]');
-        toolbars.forEach(toolbar => {
-            toolbar.classList.remove('xmatic-enhanced');
-        });
-
-        // Remove any elements with our specific hover color
-        const stuckHoverElements = document.querySelectorAll('*');
-        stuckHoverElements.forEach(element => {
-            const style = window.getComputedStyle(element);
-            if (style.backgroundColor === 'rgb(239, 245, 253)' && !element.classList.contains('xmatic-ai-btn')) {
-                element.style.backgroundColor = 'transparent';
-            }
-        });
-
-        console.log('xMatic: Nuclear cleanup complete');
+        // Cleanup storage manager if available
+        if (this.storageManager) {
+            this.storageManager.cleanup();
+        }
     }
 
     async loadSvgIcons() {
@@ -68,8 +58,6 @@ class XMatic {
             // Load time SVG
             const timeResponse = await fetch(chrome.runtime.getURL('src/assets/time.svg'));
             this.timeSvg = await timeResponse.text();
-
-            console.log('xMatic: SVG icons loaded');
         } catch (error) {
             console.error('xMatic: Failed to load SVG icons:', error);
             // Fallback to hardcoded SVGs if loading fails
@@ -115,676 +103,124 @@ class XMatic {
         });
         
         this.observer.observe(document.body, { childList: true, subtree: true });
-        console.log('xMatic: Observer started with debouncing');
+    }
+
+    setupEventListeners() {
+        // Listen for AI button clicks from UI manager
+        document.addEventListener('xmatic-ai-click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.handleAIClick();
+        });
+
+        // Listen for floating button clicks from UI manager
+        document.addEventListener('xmatic-float-click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.handleFloatingButtonClick();
+        });
     }
 
     setupStorageListener() {
-        chrome.storage.onChanged.addListener((changes, namespace) => {
-            if (namespace === 'sync' && changes.extensionEnabled) {
-                console.log('xMatic: Extension enabled state changed to:', changes.extensionEnabled.newValue);
-                
-                if (changes.extensionEnabled.newValue === false) {
-                    // Extension disabled - remove all AI buttons and floating button
-                    this.removeAllAIButtons();
-                    this.removeFloatingButton();
-                } else {
-                    // Extension enabled - add AI buttons and floating button back
-                    this.addAIButtons();
-                    this.addFloatingButton();
-                }
+        this.storageManager.setupStorageListener((extensionEnabled) => {
+            if (extensionEnabled.newValue === false) {
+                // Extension disabled - remove all AI buttons and floating button
+                this.uiManager.removeAllAIButtons();
+                this.uiManager.removeFloatingButton();
+            } else {
+                // Extension enabled - add AI buttons and floating button back
+                this.addAIButtons();
+                this.addFloatingButton();
             }
         });
     }
 
-    removeAllAIButtons() {
-        console.log('xMatic: Removing all AI buttons due to extension being disabled');
-        const aiButtons = document.querySelectorAll('.xmatic-ai-btn');
-        aiButtons.forEach(button => {
-            button.remove();
-        });
-        
-        // Remove enhanced class from toolbars
-        const toolbars = document.querySelectorAll('.xmatic-enhanced');
-        toolbars.forEach(toolbar => {
-            toolbar.classList.remove('xmatic-enhanced');
-        });
-    }
-
-    removeFloatingButton() {
-        console.log('xMatic: Removing floating button due to extension being disabled');
-        const floatBtn = document.querySelector('.xmatic-float-btn');
-        if (floatBtn) {
-            floatBtn.remove();
-        }
-    }
-
-
-
     async addAIButtons() {
-        // Check if extension is enabled
-        const config = await chrome.storage.sync.get(['extensionEnabled']);
-        if (config.extensionEnabled === false) {
-            console.log('xMatic: Extension is disabled, not adding AI buttons');
-            return;
-        }
+        // Get latest config from storage
+        this.config = await this.storageManager.getConfig();
         
-        // Don't add buttons if SVGs aren't loaded yet
-        if (!this.robotSvg || !this.timeSvg) {
-            console.log('xMatic: SVGs not loaded yet, skipping button creation');
-            return;
-        }
-
-        // Clean up any orphaned buttons first
-        cleanupOrphanedButtons();
-
-        // Find compose toolbars that don't have our button yet
-        const toolbars = document.querySelectorAll('[data-testid="toolBar"]:not(.xmatic-enhanced)');
-        console.log(`xMatic: Found ${toolbars.length} toolbars to enhance`);
-
-        toolbars.forEach((toolbar, index) => {
-            toolbar.classList.add('xmatic-enhanced');
-
-            // Create AI icon (div instead of button to avoid shadows)
-            const aiButton = document.createElement('div');
-            aiButton.className = 'xmatic-ai-btn';
-            aiButton.title = 'Generate AI Reply';
-            aiButton.setAttribute('role', 'button');
-            aiButton.setAttribute('tabindex', '0');
-            aiButton.setAttribute('data-xmatic-active', 'true'); // Mark as active button
-            aiButton.setAttribute('data-xmatic-id', `btn-${Date.now()}-${index}`); // Unique ID
-
-            // Use loaded robot SVG icon
-            aiButton.innerHTML = this.robotSvg;
-            console.log(`xMatic: Created AI button ${index + 1} with ID: btn-${Date.now()}-${index}`);
-
-            // Style to match Twitter's native icons exactly
-            aiButton.style.cssText = `
-                background: transparent;
-                border: none;
-                border-radius: 50%;
-                width: 34.75px;
-                height: 34.75px;
-                cursor: pointer;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                margin: 7px 8px 0 0;
-                transition: all 0.2s ease;
-                padding: 8px;
-                color: rgb(83, 100, 113);
-                box-shadow: none;
-                outline: none;
-                vertical-align: middle;
-                flex-shrink: 0;
-            `;
-
-            // Add controlled hover effects only to this specific button
-            aiButton.addEventListener('mouseenter', (e) => {
-                // Only apply hover if this is the actual target
-                if (e.target === aiButton && aiButton.getAttribute('data-xmatic-active') === 'true') {
-                    aiButton.style.setProperty('background-color', '#EFF5FD', 'important');
-                    aiButton.style.setProperty('color', 'rgb(29, 161, 242)', 'important');
-                    console.log('xMatic: Hover enter on button:', aiButton.getAttribute('data-xmatic-id'));
-                }
-            });
-
-            aiButton.addEventListener('mouseleave', (e) => {
-                // Only remove hover if this is the actual target
-                if (e.target === aiButton && aiButton.getAttribute('data-xmatic-active') === 'true') {
-                    aiButton.style.setProperty('background-color', 'transparent', 'important');
-                    aiButton.style.setProperty('color', 'rgb(83, 100, 113)', 'important');
-                    console.log('xMatic: Hover leave on button:', aiButton.getAttribute('data-xmatic-id'));
-                }
-            });
-
-            aiButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('xMatic: AI button clicked!');
-                this.handleAIClick();
-            });
-
-            // Also handle keyboard activation
-            aiButton.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('xMatic: AI button activated via keyboard!');
-                    this.handleAIClick();
-                }
-            });
-
-            toolbar.insertBefore(aiButton, toolbar.firstChild);
-            console.log(`xMatic: AI button ${index + 1} inserted into toolbar`);
-        });
+        // Update UI manager with latest config and SVGs
+        this.uiManager.updateConfig(this.config);
+        this.uiManager.updateSvgIcons(this.robotSvg, this.timeSvg);
+        
+        // Use UI manager to add AI buttons
+        await this.uiManager.addAIButtons();
     }
 
-    addFloatingButton() {
-        console.log('xMatic: Adding floating button...');
-        
-        // Check if extension is enabled
-        if (this.config.extensionEnabled === false) {
-            console.log('xMatic: Extension disabled, not adding floating button');
-            return;
-        }
-        
-        // Remove existing floating button if any
-        const existingFloatBtn = document.querySelector('.xmatic-float-btn');
-        if (existingFloatBtn) {
-            existingFloatBtn.remove();
-        }
-        
-        // Create floating button using the SVG directly
-        const floatSvgUrl = chrome.runtime.getURL('src/assets/float.svg');
-        console.log('xMatic: Attempting to load float.svg from:', floatSvgUrl);
-        
-        fetch(floatSvgUrl)
-            .then(response => {
-                console.log('xMatic: Float SVG fetch response status:', response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                return response.text();
-            })
-            .then(svgContent => {
-                console.log('xMatic: Float SVG content loaded, length:', svgContent.length);
-                
-                // Create the SVG element directly
-                const floatBtn = document.createElement('div');
-                floatBtn.className = 'xmatic-float-btn';
-                floatBtn.title = 'Create AI Tweet with xMatic';
-                floatBtn.setAttribute('data-xmatic-active', 'true');
-                floatBtn.setAttribute('data-xmatic-id', `float-${Date.now()}`);
-                
-                // Set the SVG as the button content
-                floatBtn.innerHTML = svgContent;
-                console.log('xMatic: Float SVG loaded successfully');
-                
-                // Add click event
-                floatBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('xMatic: Floating button clicked!');
-                    this.handleFloatingButtonClick();
-                });
-                
-                // Add to body
-                document.body.appendChild(floatBtn);
-                console.log('xMatic: Floating button added to page');
-            })
-            .catch(error => {
-                console.error('xMatic: Failed to load float.svg:', error);
-                console.log('xMatic: Using fallback plus icon');
-                
-                // Create fallback button with plus icon
-                const floatBtn = document.createElement('div');
-                floatBtn.className = 'xmatic-float-btn';
-                floatBtn.title = 'Create AI Tweet with xMatic';
-                floatBtn.setAttribute('data-xmatic-active', 'true');
-                floatBtn.setAttribute('data-xmatic-id', `float-${Date.now()}`);
-                
-                // Fallback to a simple plus icon
-                floatBtn.innerHTML = `
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                    </svg>
-                `;
-                
-                // Add click event
-                floatBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('xMatic: Floating button clicked!');
-                    this.handleFloatingButtonClick();
-                });
-                
-                // Add to body
-                document.body.appendChild(floatBtn);
-                console.log('xMatic: Floating button added to page (fallback)');
-            });
+    async addFloatingButton() {
+        // Get latest config from storage
+        this.config = await this.storageManager.getConfig();
+        this.uiManager.updateConfig(this.config);
+        this.uiManager.addFloatingButton();
     }
 
     handleFloatingButtonClick() {
-        console.log('xMatic: Floating button clicked - opening create tweet interface');
-        
-        // For now, just show a message
-        // TODO: Implement create tweet functionality
+        // Show placeholder message for future functionality
         alert('Create Tweet functionality coming soon! 🚀\n\nThis will open an AI-powered tweet creation interface.');
-        
-        // Future implementation will include:
-        // - Opening a modal/overlay for tweet creation
-        // - AI-powered content generation
-        // - Tweet composition and editing
-        // - Draft saving and scheduling
     }
 
     async handleAIClick() {
-        console.log('xMatic: AI button clicked');
-
         const selectedProvider = this.config.selectedProvider || 'openai';
         
-        if (selectedProvider === 'grok') {
-            if (!this.config.grokKey) {
-                alert('Please configure your Grok API key first!');
-                return;
-            }
-        } else {
-            if (!this.config.openaiKey) {
-                alert('Please configure your OpenAI API key first!');
-                return;
-            }
+        if (!(await this.storageManager.hasApiKey(selectedProvider))) {
+            const providerName = selectedProvider === 'grok' ? 'Grok' : 'OpenAI';
+            alert(`Please configure your ${providerName} API key first!`);
+            return;
         }
 
         try {
-            // Show loading
-            const aiBtn = document.querySelector('.xmatic-ai-btn');
-            if (aiBtn) {
-                aiBtn.innerHTML = this.timeSvg;
-                aiBtn.style.backgroundColor = 'rgba(255, 140, 0, 0.1)';
-                aiBtn.style.color = 'rgb(255, 140, 0)';
-            }
+            // Show loading state
+            this.uiManager.showAILoading();
 
             // Get context and generate reply
             const context = this.getContext();
             const reply = await this.generateReply(context);
 
-            // Insert reply using the SIMPLEST method possible
-            this.insertReply(reply);
+            // Insert reply using the text insertion manager
+            await this.insertReply(reply);
 
             // Reset button
-            if (aiBtn) {
-                aiBtn.innerHTML = this.robotSvg;
-                aiBtn.style.backgroundColor = 'transparent';
-                aiBtn.style.color = 'rgb(83, 100, 113)';
-            }
+            this.uiManager.resetAIButton();
 
         } catch (error) {
             console.error('xMatic: Error:', error);
             alert('Error: ' + error.message);
 
             // Reset button
-            const aiBtn = document.querySelector('.xmatic-ai-btn');
-            if (aiBtn) {
-                aiBtn.innerHTML = this.robotSvg;
-                aiBtn.style.backgroundColor = 'transparent';
-                aiBtn.style.color = 'rgb(83, 100, 113)';
-            }
+            this.uiManager.resetAIButton();
         }
     }
 
     getContext() {
-        console.log('xMatic: getContext() function called');
-        
-        // Get the main tweet content and metadata
-        const tweetElement = document.querySelector('[data-testid="tweet"]');
-        console.log('xMatic: Tweet element found:', !!tweetElement);
-        
-        let mainTweet = '';
-        let authorName = '';
-        let engagementData = {};
-
-        if (tweetElement) {
-            console.log('xMatic: Processing tweet element');
-            
-            // Get tweet text
-            const textElement = tweetElement.querySelector('[data-testid="tweetText"]');
-            if (textElement) {
-                mainTweet = textElement.textContent.trim();
-                console.log('xMatic: Tweet text extracted:', mainTweet.substring(0, 100) + '...');
-            }
-
-            // Get author information (just the name, no username)
-            const authorElement = tweetElement.querySelector('[data-testid="User-Name"]');
-            console.log('xMatic: Author element found:', !!authorElement);
-            
-            if (authorElement) {
-                console.log('xMatic: Processing author element');
-                
-                // Get display name only
-                const nameElement = authorElement.querySelector('span');
-                if (nameElement) {
-                    authorName = nameElement.textContent.trim();
-                    console.log('xMatic: Author name extracted:', authorName);
-                }
-            }
-
-            // Get engagement metrics
-            try {
-                // Likes count
-                const likeButton = tweetElement.querySelector('[data-testid="like"]');
-                if (likeButton) {
-                    const likeText = likeButton.getAttribute('aria-label') || '';
-                    const likeMatch = likeText.match(/(\d+)/);
-                    if (likeMatch) {
-                        engagementData.likes = parseInt(likeMatch[1]);
-                    }
-                }
-
-                // Retweets count
-                const retweetButton = tweetElement.querySelector('[data-testid="retweet"]');
-                if (retweetButton) {
-                    const retweetText = retweetButton.getAttribute('aria-label') || '';
-                    const retweetMatch = retweetText.match(/(\d+)/);
-                    if (retweetMatch) {
-                        engagementData.retweets = parseInt(retweetMatch[1]);
-                    }
-                }
-
-                // Replies count
-                const replyButton = tweetElement.querySelector('[data-testid="reply"]');
-                if (replyButton) {
-                    const replyText = replyButton.getAttribute('aria-label') || '';
-                    const replyMatch = replyText.match(/(\d+)/);
-                    if (replyMatch) {
-                        engagementData.replies = parseInt(replyMatch[1]);
-                    }
-                }
-
-                // Quote tweets count
-                const quoteButton = tweetElement.querySelector('[data-testid="quote"]');
-                if (quoteButton) {
-                    const quoteText = quoteButton.getAttribute('aria-label') || '';
-                    const quoteMatch = quoteText.match(/(\d+)/);
-                    if (quoteMatch) {
-                        engagementData.quotes = parseInt(quoteMatch[1]);
-                    }
-                }
-            } catch (error) {
-                console.log('xMatic: Could not extract engagement data:', error);
-            }
-        }
-
-        return { 
-            mainTweet, 
-            authorName, 
-            engagementData 
-        };
+        // Use the context extractor to get tweet context
+        return this.contextExtractor.getContext();
     }
 
     async generateReply(context) {
-        const systemPrompt = `You are an expert at crafting engaging Twitter/X replies. Follow these rules strictly:
-1. Keep responses under 280 characters - be concise and to the point
-2. Never use double quotes (") in your response.
-3. Never use (—) in your response.
-4. NEVER use @ symbols (@) in your response - this could accidentally tag other users
-5. Match the user's requested style: ${this.config.style || 'conversational and helpful'}
-6. Use proper Twitter etiquette - mentions, hashtags, and emojis when appropriate
-7. Never include any meta-commentary like "Here's a reply:" or "I would say:" - just provide the reply
-8. If the tweet is a question, directly answer it
-9. If it's an opinion, respond with a thoughtful reaction
-10. If it's a joke, respond in kind with humor`;
-
-        const userPrompt = `Craft a Twitter reply to this tweet. Follow all system instructions carefully. Make it sound natural and engaging.
-
-Tweet Details:
-- Content: ${context.mainTweet}
-- Author: ${context.authorName}
-- Engagement: ${context.engagementData.likes || 0} likes, ${context.engagementData.retweets || 0} retweets, ${context.engagementData.replies || 0} replies, ${context.engagementData.quotes || 0} quotes
-
-Consider the author's influence and the tweet's engagement level when crafting your response.`;
-
-        // Log the complete prompts being sent to the AI model
-        console.log('🚀 xMatic: ===== COMPLETE AI PROMPTS =====');
-        console.log('📋 System Prompt:', systemPrompt);
-        console.log('👤 User Prompt:', userPrompt);
-        console.log('📊 Context Data:', context);
-        console.log('🎨 User Style:', this.config.style || 'conversational and helpful');
-        console.log('==========================================');
-
-        const selectedModel = this.config.selectedModel || 'gpt-4';
-        const selectedProvider = this.config.selectedProvider || 'openai';
-
-        // Determine API endpoint and key based on selected provider
-        let apiEndpoint, apiKey, headers;
+        // Update AI handler config if needed
+        this.aiHandler.updateConfig(this.config);
         
-        if (selectedProvider === 'grok') {
-            apiEndpoint = 'https://api.x.ai/v1/chat/completions';
-            apiKey = this.config.grokKey;
-            if (!apiKey) {
-                throw new Error('Grok API key not configured');
-            }
-            headers = {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            };
-        } else {
-            // Default to OpenAI
-            apiEndpoint = 'https://api.openai.com/v1/chat/completions';
-            apiKey = this.config.openaiKey;
-            if (!apiKey) {
-                throw new Error('OpenAI API key not configured');
-            }
-            headers = {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            };
-        }
-
-        console.log('xMatic: Making API call to:', apiEndpoint);
-        console.log('xMatic: Using model:', selectedModel);
-        console.log('xMatic: Provider:', selectedProvider);
-        console.log('xMatic: API Key (first 10 chars):', apiKey.substring(0, 10) + '...');
-        
-        const requestBody = {
-            model: selectedModel,
-            messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: userPrompt }
-            ],
-            stream: false,
-            temperature: 0.7
-        };
-        
-        // Add OpenAI-specific parameters only for OpenAI
-        if (selectedProvider === 'openai') {
-            requestBody.max_tokens = 100;
-            requestBody.top_p = 0.9;
-            requestBody.frequency_penalty = 0.5;
-            requestBody.presence_penalty = 0.3;
-        }
-        
-        console.log('xMatic: Request body:', requestBody);
-        console.log('xMatic: Request headers:', headers);
-
-        const response = await fetch(apiEndpoint, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(requestBody)
-        });
-
-        console.log('xMatic: API Response status:', response.status);
-        console.log('xMatic: API Response headers:', response.headers);
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.log('xMatic: API Error response:', errorText);
-            throw new Error(`HTTP ${response.status}: ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log('xMatic: API Response data:', data);
-        
-        if (data.error) {
-            const providerName = selectedProvider === 'grok' ? 'Grok' : 'OpenAI';
-            throw new Error(`${providerName} Error: ${data.error.message}`);
-        }
-
-        return data.choices?.[0]?.message?.content || '';
-    }
-
-    getCurrentTheme() {
-        // Check if dark theme is active
-        const html = document.documentElement;
-        const body = document.body;
-        
-        // Check for data-theme attribute on html or body
-        if (html.getAttribute('data-theme') === 'dark' || 
-            body.getAttribute('data-theme') === 'dark' ||
-            html.getAttribute('data-mode') === 'dark' ||
-            body.getAttribute('data-mode') === 'dark' ||
-            html.classList.contains('dark') ||
-            body.classList.contains('dark') ||
-            window.getComputedStyle(html).colorScheme === 'dark' ||
-            window.getComputedStyle(body).colorScheme === 'dark') {
-            return 'dark';
-        }
-        
-        // Default to light theme
-        return 'light';
+        // Use the AI handler to generate the reply
+        return await this.aiHandler.generateReply(context);
     }
 
     async insertReply(text) {
-        console.log('xMatic: Inserting reply:', text);
-
-        // Find the compose box
-        const composeBox = document.querySelector('[data-testid="tweetTextarea_0"]');
-        if (!composeBox) {
-            throw new Error('Could not find compose box');
-        }
-
-        // Get current theme and set appropriate text color
-        const theme = this.getCurrentTheme();
-        console.log('xMatic: Current theme detected:', theme);
-
-        // Try insertion methods
-        await this.insertViaClipboard(composeBox, text);
-
-        // Set text color based on theme
-        composeBox.style.color = theme === 'dark' ? '#E7E9EA' : '#0F1419';
-
-        // Ensure Twitter recognizes the content
-        setTimeout(() => {
-            this.validateInsertion(composeBox, text);
-            
-            // Re-apply color in case it was reset by Twitter
-            composeBox.style.color = theme === 'dark' ? '#E7E9EA' : '#0F1419';
-        }, 500);
-    }
-
-    validateInsertion(composeBox, expectedText) {
-        // Check if text was inserted correctly
-        const currentText = composeBox.textContent || composeBox.innerText || '';
-
-        if (currentText.trim() === expectedText.trim()) {
-            console.log('xMatic: Text insertion validated successfully');
-
-            // Ensure reply button is enabled
-            const replyButton = document.querySelector('[data-testid="tweetButtonInline"], [data-testid="tweetButton"]');
-            if (replyButton && replyButton.disabled) {
-                replyButton.disabled = false;
-                replyButton.removeAttribute('disabled');
-                console.log('xMatic: Reply button enabled');
-            }
-        } else {
-            console.log('xMatic: Text insertion may have failed, current text:', currentText);
-        }
-    }
-
-    async insertViaClipboard(composeBox, text) {
-        try {
-            // Focus the compose box
-            composeBox.focus();
-            composeBox.click();
-
-            // Wait for focus
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            // Method 1: Try modern clipboard API with paste event
-            await navigator.clipboard.writeText(text);
-
-            // Create and dispatch paste event
-            const pasteEvent = new ClipboardEvent('paste', {
-                bubbles: true,
-                cancelable: true,
-                clipboardData: new DataTransfer()
-            });
-
-            pasteEvent.clipboardData.setData('text/plain', text);
-            composeBox.dispatchEvent(pasteEvent);
-
-            console.log('xMatic: Text inserted via clipboard event');
-
-        } catch (error) {
-            console.log('xMatic: Clipboard method failed, using direct insertion fallback');
-            this.insertViaTyping(composeBox, text);
-        }
-    }
-
-    async insertViaTyping(composeBox, text) {
-        console.log('xMatic: Using direct insertion method');
-
-        // Focus the compose box
-        composeBox.focus();
-        composeBox.click();
-
-        // Wait for focus
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        // Method 1: Try modern Selection API with insertText
-        try {
-            const selection = window.getSelection();
-
-            // Clear existing content
-            selection.selectAllChildren(composeBox);
-            selection.deleteFromDocument();
-
-            // Create a text node and insert it
-            const textNode = document.createTextNode(text);
-            const range = document.createRange();
-            range.selectNodeContents(composeBox);
-            range.collapse(false);
-            range.insertNode(textNode);
-
-            // Position cursor at end
-            range.setStartAfter(textNode);
-            range.setEndAfter(textNode);
-            selection.removeAllRanges();
-            selection.addRange(range);
-
-            console.log('xMatic: Text inserted via Selection API');
-
-        } catch (selectionError) {
-            console.log('xMatic: Selection API failed, using DOM manipulation');
-
-            // Method 2: Direct DOM manipulation fallback
-            composeBox.textContent = text;
-
-            // Position cursor at end
-            const range = document.createRange();
-            const selection = window.getSelection();
-            range.selectNodeContents(composeBox);
-            range.collapse(false);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-
-        // Trigger input events to notify Twitter's React components
-        composeBox.dispatchEvent(new InputEvent('input', {
-            bubbles: true,
-            cancelable: true,
-            inputType: 'insertText',
-            data: text
-        }));
-
-        composeBox.dispatchEvent(new Event('change', { bubbles: true }));
-        composeBox.dispatchEvent(new Event('keyup', { bubbles: true }));
-
-        console.log('xMatic: Text inserted via modern DOM methods');
+        // Use the text insertion manager to insert reply
+        await this.textInsertionManager.insertReply(text);
     }
 }
 
 // Prevent multiple instances with aggressive cleanup
 if (window.xMaticInstance) {
-    console.log('xMatic: Destroying existing instance');
     if (window.xMaticInstance.observer) {
         window.xMaticInstance.observer.disconnect();
     }
-    cleanupOrphanedButtons();
+    // Cleanup handled by UI manager if available
+    if (window.xMaticInstance.uiManager) {
+        window.xMaticInstance.uiManager.cleanupOrphanedButtons();
+    }
     window.xMaticInstance = null;
 }
-
-console.log('xMatic: Creating new instance');
 
 // Initialize when page loads
 if (document.readyState === 'loading') {
@@ -793,37 +229,4 @@ if (document.readyState === 'loading') {
     });
 } else {
     window.xMaticInstance = new XMatic();
-}
-
-console.log('xMatic: Script loaded');
-
-function cleanupOrphanedButtons() {
-    console.log('xMatic: Starting aggressive cleanup...');
-    
-    // Remove ALL existing AI buttons to prevent duplicates and ghost effects
-    const allAIButtons = document.querySelectorAll('.xmatic-ai-btn, [class*="xmatic"], [data-xmatic-active], [data-xmatic-id]');
-    console.log(`xMatic: Found ${allAIButtons.length} xMatic elements to clean up`);
-    
-    allAIButtons.forEach((element, index) => {
-        console.log(`xMatic: Removing xMatic element ${index + 1}:`, element.className);
-        element.remove();
-    });
-
-    // Remove the enhanced class from all toolbars to reset state
-    const enhancedToolbars = document.querySelectorAll('[data-testid="toolBar"].xmatic-enhanced');
-    enhancedToolbars.forEach(toolbar => {
-        toolbar.classList.remove('xmatic-enhanced');
-    });
-
-    // Nuclear option: remove our hover color from ALL elements
-    const allElements = document.querySelectorAll('*');
-    allElements.forEach(element => {
-        const computedStyle = window.getComputedStyle(element);
-        if (computedStyle.backgroundColor === 'rgb(239, 245, 253)') {
-            element.style.setProperty('background-color', 'transparent', 'important');
-            console.log('xMatic: Removed stuck hover color from element');
-        }
-    });
-
-    console.log('xMatic: Aggressive cleanup complete');
 }

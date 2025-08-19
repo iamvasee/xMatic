@@ -20,6 +20,11 @@
         "https://x.com/*"
       ],
       "js": [
+        "src/scripts/ai-api.js",
+        "src/scripts/ui-manager.js",
+        "src/scripts/storage-manager.js",
+        "src/scripts/context-extractor.js",
+        "src/scripts/text-insertion-manager.js",
         "src/scripts/content.js"
       ],
       "css": [

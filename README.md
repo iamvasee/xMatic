@@ -104,20 +104,24 @@ xMatic/
 │   ├── manifest.json              # Extension configuration
 │   ├── src/
 │   │   ├── scripts/
-│   │   │   ├── content.js         # Main content script (injects AI buttons)
-│   │   │   ├── background.js      # Service worker
-│   │   │   └── popup.js          # Popup functionality
+│   │   │   ├── content.js         # Main orchestrator (231 lines)
+│   │   │   ├── ai-api.js          # AI API handler (107 lines)
+│   │   │   ├── ui-manager.js      # UI component manager (289 lines)
+│   │   │   ├── storage-manager.js # Storage and configuration management (107 lines)
+│   │   │   ├── context-extractor.js # Tweet context and engagement extraction (190 lines)
+│   │   │   ├── text-insertion-manager.js # Text insertion + Theme management (236 lines)
+│   │   │   ├── popup.js          # Popup functionality (277 lines)
+│   │   │   └── background.js      # Service worker (3 lines)
 │   │   ├── styles/
 │   │   │   └── styles.css        # Extension styling
 │   │   ├── ui/
 │   │   │   └── popup.html        # Main popup interface
-│   │   ├── assets/
-│   │   │   ├── xMatic.png        # Main logo
-│   │   │   ├── xmaticicon.png    # Extension icon
-│   │   │   ├── robot.svg         # AI button icon
-│   │   │   ├── time.svg          # Loading indicator
-│   │   │   └── float.svg         # Floating button icon
-│   │   └── utils/                # Utility functions (future use)
+│   │   └── assets/
+│   │       ├── xMatic.png        # Main logo
+│   │       ├── xmaticicon.png    # Extension icon
+│   │       ├── robot.svg         # AI button icon
+│   │       ├── time.svg          # Loading indicator
+│   │       └── float.svg         # Floating button icon
 │   ├── assets/                   # Screenshots and documentation assets
 │   ├── docs/                     # Documentation files
 │   └── README.md                 # This file
