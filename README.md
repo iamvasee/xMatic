@@ -20,9 +20,18 @@ xMatic is a Chrome extension that adds AI-powered reply generation to Twitter/X.
 - **✏️ Fully Editable** - Generated text can be edited, deleted, or customized
 - **📊 Engagement Awareness** - AI considers tweet popularity and author influence
 - **🔄 Extension Toggle Control** - Enable/disable the extension with a beautiful toggle switch
+- **🪟 Floating Panel Interface** - Advanced multi-tab interface for AI configuration and generation
+- **📝 Draft Management** - Save, edit, and manage multiple AI-generated drafts
+- **🎭 Style Presets** - Professional, casual, humorous, analytical, and more response styles
+- **⚙️ Advanced Settings** - Fine-tune AI behavior, response length, and generation parameters
 
 ## 🆕 What's New in v1.3.2
 
+- **🔧 Popup Functionality Fixes** - Resolved popup loading issues and improved toggle functionality
+- **🔄 Enhanced Toggle Control** - Better error handling and status management for extension toggle
+- **🎯 Improved User Experience** - Toggle automatically disables on non-Twitter pages with helpful messaging
+- **🛡️ Better Error Handling** - Graceful fallbacks for storage operations and content script communication
+- **📱 Responsive Design** - Enhanced popup interface with proper styling and accessibility
 - **📁 Project Structure Reorganization** - Clean, logical folder structure following Chrome extension best practices
 - **🗑️ Unused Files Cleanup** - Removed dead code and unused files for better maintainability
 - **🔧 Linting Issues Resolution** - Fixed all CSS and TypeScript configuration errors
@@ -94,38 +103,56 @@ Add your own personality traits, requirements, or specific instructions that get
 - **Frontend**: Vanilla JavaScript, HTML5, CSS3
 - **AI Providers**: OpenAI GPT API, Grok AI (xAI) API
 - **Platform**: Chrome Extension (Manifest V3)
-- **Storage**: Chrome Storage API
+- **Storage**: Chrome Storage API (sync + local fallback)
+- **Architecture**: Modular design with core, modules, and floating-panel components
+- **UI Framework**: Custom floating panel system with tabbed interface
+- **Code Organization**: 5,770+ lines across 20+ JavaScript and CSS files
 
 ## 📁 Project Structure
 
 ```
 xMatic/
 ├── extension/
-│   ├── manifest.json              # Extension configuration
+│   ├── manifest.json              # Extension configuration (74 lines)
 │   ├── src/
 │   │   ├── scripts/
-│   │   │   ├── content.js         # Main orchestrator (231 lines)
-│   │   │   ├── ai-api.js          # AI API handler (107 lines)
-│   │   │   ├── ui-manager.js      # UI component manager (289 lines)
-│   │   │   ├── storage-manager.js # Storage and configuration management (107 lines)
-│   │   │   ├── context-extractor.js # Tweet context and engagement extraction (190 lines)
-│   │   │   ├── text-insertion-manager.js # Text insertion + Theme management (236 lines)
-│   │   │   ├── popup.js          # Popup functionality (277 lines)
-│   │   │   └── background.js      # Service worker (3 lines)
+│   │   │   ├── core/
+│   │   │   │   ├── content.js         # Main orchestrator (277 lines)
+│   │   │   │   └── background.js      # Service worker (3 lines)
+│   │   │   ├── modules/
+│   │   │   │   ├── ai-api.js          # AI API handler (290 lines)
+│   │   │   │   ├── storage-manager.js # Storage and configuration management (146 lines)
+│   │   │   │   ├── context-extractor.js # Tweet context and engagement extraction (190 lines)
+│   │   │   │   └── text-insertion-manager.js # Text insertion + Theme management (236 lines)
+│   │   │   └── floating-panel/
+│   │   │       ├── floating-panel.js   # Main floating panel controller (382 lines)
+│   │   │       ├── ai-tab.js          # AI configuration and settings (520 lines)
+│   │   │       ├── generate-tab.js    # Reply generation interface (498 lines)
+│   │   │       ├── drafts-tab.js      # Draft management system (207 lines)
+│   │   │       └── style-tab.js       # Style customization panel (165 lines)
 │   │   ├── styles/
-│   │   │   └── styles.css        # Extension styling
+│   │   │   ├── styles.css             # Core extension styling (108 lines)
+│   │   │   ├── floating-panel.css     # Floating panel styles (486 lines)
+│   │   │   └── tabs.css               # Tab interface styling (1,803 lines)
 │   │   ├── ui/
-│   │   │   └── popup.html        # Main popup interface
+│   │   │   ├── popup.html             # Extension popup interface (468 lines)
+│   │   │   ├── popup.js               # Popup functionality (170 lines)
+│   │   │   └── ui-manager.js          # UI component manager (289 lines)
 │   │   └── assets/
-│   │       ├── xMatic.png        # Main logo
-│   │       ├── xmaticicon.png    # Extension icon
-│   │       ├── robot.svg         # AI button icon
-│   │       ├── time.svg          # Loading indicator
-│   │       └── float.svg         # Floating button icon
-│   ├── assets/                   # Screenshots and documentation assets
-│   ├── docs/                     # Documentation files
-│   └── README.md                 # This file
+│   │       ├── xMatic.png            # Main logo
+│   │       ├── xmaticicon.png        # Extension icon
+│   │       ├── robot.svg             # AI button icon
+│   │       ├── time.svg              # Loading indicator
+│   │       └── float.svg             # Floating button icon
+│   ├── assets/                       # Screenshots and documentation assets
+│   ├── docs/                         # Documentation files
+│   └── README.md                     # This file
+├── CHANGELOG.md                      # Version history and changes
+├── package.json                      # Project dependencies and metadata
+└── LICENSE                           # MIT License
 ```
+
+**Total Lines of Code:** 5,770+ lines across all JavaScript and CSS files
 
 ## 🔒 Privacy & Security
 
