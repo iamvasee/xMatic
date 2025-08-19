@@ -8,11 +8,19 @@ class AITab {
 
     init() {
         // Initialize AI tab functionality
-        console.log('xMatic: AI tab initialized');
+        console.log('xMatic: 🎯 AI Tab - Initializing...');
+        console.log('xMatic: 🎯 AI Tab - AIAPIHandler available:', !!window.AIAPIHandler);
+        console.log('xMatic: 🎯 AI Tab - AIAPIHandler type:', typeof window.AIAPIHandler);
+        if (window.AIAPIHandler) {
+            console.log('xMatic: 🎯 AI Tab - AIAPIHandler constructor:', window.AIAPIHandler.toString().substring(0, 100) + '...');
+        }
+        console.log('xMatic: 🎯 AI Tab - Initialization complete');
     }
 
     render(container) {
-        // Render the AI tab content
+        console.log('xMatic: 🎯 AI Tab - Starting render...', { container, containerExists: !!container });
+        
+        // Render the AI tab content with configuration from popup
         container.innerHTML = `
             <div class="tab-header">
                 <div class="tab-header-content">
@@ -20,192 +28,291 @@ class AITab {
                     <p>Manage API keys and model settings</p>
                 </div>
                 <div class="tab-actions">
-                    <button class="action-button secondary" id="testConnection">Test</button>
                     <button class="action-button primary" id="saveConfig">Save</button>
                 </div>
             </div>
             
             <div class="ai-content">
-                <div class="config-section">
-                    <h4>Provider Selection</h4>
+                <!-- Provider Selection -->
+                <div class="simple-form-group">
+                    <label>AI Provider</label>
                     <div class="provider-toggle">
-                        <button class="provider-option active" data-provider="openai">OpenAI</button>
-                        <button class="provider-option" data-provider="grok">Grok (xAI)</button>
-                        <button class="provider-option" data-provider="perplexity">Perplexity</button>
+                        <button type="button" class="provider-btn active" data-provider="openai">OpenAI</button>
+                        <button type="button" class="provider-btn" data-provider="grok">Grok (xAI)</button>
                     </div>
                 </div>
-                
-                <div class="config-section">
-                    <h4>API Configuration</h4>
-                    <div class="input-group">
-                        <label for="apiKey">API Key</label>
-                        <input 
-                            type="password" 
-                            id="apiKey" 
-                            class="config-input" 
-                            placeholder="sk-..."
-                        >
+
+                <!-- OpenAI API Key -->
+                <div class="simple-form-group" id="openaiSection">
+                    <label>OpenAI API Key</label>
+                    <div class="input-with-test">
+                        <input type="password" id="openaiKey" placeholder="sk-proj-..." autocomplete="off">
+                        <button type="button" id="testOpenAIConnection" class="test-btn" title="Test">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </button>
                     </div>
-                    <div class="input-group">
-                        <label for="modelSelect">Model</label>
-                        <select id="modelSelect" class="config-select">
-                            <option value="gpt-4">GPT-4</option>
+                    <div id="openaiConnectionStatus" class="status-text"></div>
+                </div>
+
+                <!-- Grok API Key -->
+                <div class="simple-form-group grok-hidden" id="grokSection">
+                    <label>Grok API Key</label>
+                    <div class="input-with-test">
+                        <input type="password" id="grokKey" placeholder="xai-..." autocomplete="off">
+                        <button type="button" id="testGrokConnection" class="test-btn" title="Test">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="grokConnectionStatus" class="status-text"></div>
+                </div>
+
+                <!-- AI Model -->
+                <div class="simple-form-group">
+                    <label>AI Model</label>
+                    <select id="modelSelect" class="simple-select">
+                        <!-- OpenAI Models -->
+                        <optgroup label="OpenAI Models" id="openaiModels">
+                            <option value="gpt-4">GPT-4 (Recommended)</option>
                             <option value="gpt-4-turbo">GPT-4 Turbo</option>
                             <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="maxTokens">Max Tokens</label>
-                        <input 
-                            type="number" 
-                            id="maxTokens" 
-                            class="config-input" 
-                            placeholder="150"
-                            min="1"
-                            max="4000"
-                        >
-                    </div>
+                        </optgroup>
+                        <!-- Grok Models -->
+                        <optgroup label="Grok Models" id="grokModels" class="grok-models-hidden">
+                            <option value="grok-4-0709">Grok-4-0709</option>
+                            <option value="grok-3">Grok-3</option>
+                            <option value="grok-3-mini">Grok-3-mini</option>
+                        </optgroup>
+                    </select>
                 </div>
-                
-                <div class="config-section">
-                    <h4>Advanced Settings</h4>
-                    <div class="input-group">
-                        <label for="temperature">Temperature</label>
-                        <input 
-                            type="range" 
-                            id="temperature" 
-                            class="config-range" 
-                            min="0" 
-                            max="2" 
-                            step="0.1" 
-                            value="0.7"
-                        >
-                        <div class="range-value">
-                            <span id="tempValue">0.7</span>
-                            <small>Lower = More focused, Higher = More creative</small>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="customPrompt">Custom System Prompt</label>
-                        <textarea 
-                            id="customPrompt" 
-                            class="config-input" 
-                            placeholder="Enter custom system prompt..."
-                            rows="3"
-                        ></textarea>
-                    </div>
+
+                <!-- Max Tokens -->
+                <div class="simple-form-group">
+                    <label>Max Tokens</label>
+                    <input type="number" id="maxTokens" class="simple-input" placeholder="150" min="1" max="4000">
                 </div>
-                
-                <div class="config-section">
-                    <h4>Connection Status</h4>
-                    <div class="connection-status" id="connectionStatus">
-                        <div class="status-indicator">
-                            <span class="status-dot"></span>
-                            <span class="status-text">Not tested</span>
-                        </div>
-                        <button class="action-button secondary" id="testNow">Test Now</button>
+
+                <!-- Temperature -->
+                <div class="simple-form-group">
+                    <label>Temperature</label>
+                    <div class="temp-control">
+                        <input type="range" id="temperature" class="simple-range" min="0" max="2" step="0.1" value="0.7">
+                        <span id="tempValue">0.7</span>
                     </div>
                 </div>
             </div>
         `;
         
+        console.log('xMatic: 🎯 AI Tab - HTML rendered, setting up event listeners...');
         this.setupEventListeners(container);
+        console.log('xMatic: 🎯 AI Tab - Event listeners set up, loading current config...');
         this.loadCurrentConfig();
+        console.log('xMatic: 🎯 AI Tab - Render complete!');
     }
 
     setupEventListeners(container) {
+        console.log('xMatic: 🎯 AI Tab - Setting up event listeners...', { container });
+        
         // Setup event listeners for the AI tab
         const saveBtn = container.querySelector('#saveConfig');
-        const testBtn = container.querySelector('#testConnection');
-        const testNowBtn = container.querySelector('#testNow');
-        const providerOptions = container.querySelectorAll('.provider-option');
+        const providerBtns = container.querySelectorAll('.provider-btn');
         const temperatureRange = container.querySelector('#temperature');
-        const apiKeyInput = container.querySelector('#apiKey');
+        const apiKeyInput = container.querySelector('#openaiKey');
+        const grokKeyInput = container.querySelector('#grokKey');
         const modelSelect = container.querySelector('#modelSelect');
+        const maxTokensInput = container.querySelector('#maxTokens');
+        
+        // Test connection buttons
+        const testOpenAIBtn = container.querySelector('#testOpenAIConnection');
+        const testGrokBtn = container.querySelector('#testGrokConnection');
+        
+        console.log('xMatic: 🎯 AI Tab - Found elements:', {
+            saveBtn: !!saveBtn,
+            providerBtns: providerBtns.length,
+            temperatureRange: !!temperatureRange,
+            apiKeyInput: !!apiKeyInput,
+            grokKeyInput: !!grokKeyInput,
+            modelSelect: !!modelSelect,
+            maxTokensInput: !!maxTokensInput,
+            testOpenAIBtn: !!testOpenAIBtn,
+            testGrokBtn: !!testGrokBtn
+        });
         
         if (saveBtn) {
             saveBtn.addEventListener('click', () => this.handleSave());
-        }
-        
-        if (testBtn) {
-            testBtn.addEventListener('click', () => this.handleTest());
-        }
-        
-        if (testNowBtn) {
-            testNowBtn.addEventListener('click', () => this.handleTestNow());
+            console.log('xMatic: 🎯 AI Tab - Save button event listener added');
         }
         
         if (temperatureRange) {
             temperatureRange.addEventListener('input', (e) => this.handleTemperatureChange(e));
+            console.log('xMatic: 🎯 AI Tab - Temperature range event listener added');
         }
         
         if (apiKeyInput) {
             apiKeyInput.addEventListener('input', () => this.handleApiKeyChange());
+            console.log('xMatic: 🎯 AI Tab - OpenAI API key event listener added');
+        }
+        
+        if (grokKeyInput) {
+            grokKeyInput.addEventListener('input', () => this.handleGrokKeyChange());
+            console.log('xMatic: 🎯 AI Tab - Grok API key event listener added');
         }
         
         if (modelSelect) {
             modelSelect.addEventListener('change', () => this.handleModelChange());
+            console.log('xMatic: 🎯 AI Tab - Model select event listener added');
+        }
+        
+        if (maxTokensInput) {
+            maxTokensInput.addEventListener('input', () => this.handleMaxTokensChange());
+            console.log('xMatic: 🎯 AI Tab - Max tokens input event listener added');
+        }
+        
+        // Test connection buttons
+        if (testOpenAIBtn) {
+            testOpenAIBtn.addEventListener('click', () => this.testOpenAIConnection());
+            console.log('xMatic: 🎯 AI Tab - Test OpenAI button event listener added');
+        }
+        
+        if (testGrokBtn) {
+            testGrokBtn.addEventListener('click', () => this.testGrokConnection());
+            console.log('xMatic: 🎯 AI Tab - Test Grok button event listener added');
         }
         
         // Setup provider selection
-        providerOptions.forEach(option => {
-            option.addEventListener('click', () => this.handleProviderSelection(option));
+        providerBtns.forEach((btn, index) => {
+            btn.addEventListener('click', () => this.handleProviderSelection(btn));
+            console.log(`xMatic: 🎯 AI Tab - Provider button ${index} event listener added`);
         });
+        
+        console.log('xMatic: 🎯 AI Tab - All event listeners set up successfully');
     }
 
     loadCurrentConfig() {
-        // Load current AI configuration
-        console.log('xMatic: Loading current AI config...');
-        // TODO: Load from storage manager
-        this.updateModelOptions();
+        // Load current AI configuration from storage
+        console.log('xMatic: 🎯 AI Tab - Loading current AI config from storage...');
+        chrome.storage.sync.get([
+            'selectedProvider',
+            'selectedModel',
+            'openaiKey',
+            'grokKey',
+            'maxTokens',
+            'temperature'
+        ], (result) => {
+            console.log('xMatic: 🎯 AI Tab - Storage result:', result);
+            
+            // Set provider selection
+            if (result.selectedProvider) {
+                console.log('xMatic: 🎯 AI Tab - Setting selected provider:', result.selectedProvider);
+                const providerButton = document.querySelector(`[data-provider="${result.selectedProvider}"]`);
+                if (providerButton) {
+                    this.handleProviderSelection(providerButton);
+                } else {
+                    console.log('xMatic: 🎯 AI Tab - Provider button not found for:', result.selectedProvider);
+                }
+            }
+            
+            // Set API keys
+            if (result.openaiKey) {
+                console.log('xMatic: 🎯 AI Tab - Setting OpenAI API key');
+                const openaiKeyInput = document.querySelector('#openaiKey');
+                if (openaiKeyInput) openaiKeyInput.value = result.openaiKey;
+            }
+            
+            if (result.grokKey) {
+                console.log('xMatic: 🎯 AI Tab - Setting Grok API key');
+                const grokKeyInput = document.querySelector('#grokKey');
+                if (grokKeyInput) grokKeyInput.value = result.grokKey;
+            }
+            
+            // Set model selection
+            if (result.selectedModel) {
+                console.log('xMatic: 🎯 AI Tab - Setting selected model:', result.selectedModel);
+                const modelSelect = document.querySelector('#modelSelect');
+                if (modelSelect) {
+                    setTimeout(() => {
+                        modelSelect.value = result.selectedModel;
+                        console.log('xMatic: 🎯 AI Tab - Model value set to:', result.selectedModel);
+                    }, 100);
+                }
+            }
+            
+            // Set advanced settings
+            if (result.maxTokens) {
+                console.log('xMatic: 🎯 AI Tab - Setting max tokens:', result.maxTokens);
+                const maxTokensInput = document.querySelector('#maxTokens');
+                if (maxTokensInput) maxTokensInput.value = result.maxTokens;
+            }
+            
+            if (result.temperature) {
+                console.log('xMatic: 🎯 AI Tab - Setting temperature:', result.temperature);
+                const temperatureRange = document.querySelector('#temperature');
+                const tempValue = document.querySelector('#tempValue');
+                if (temperatureRange) temperatureRange.value = result.temperature;
+                if (tempValue) tempValue.textContent = result.temperature;
+            }
+            
+            console.log('xMatic: 🎯 AI Tab - Updating model options...');
+            this.updateModelOptions();
+            console.log('xMatic: 🎯 AI Tab - Configuration loading complete');
+        });
     }
 
-    handleProviderSelection(selectedOption) {
-        // Handle provider selection
-        const allOptions = document.querySelectorAll('.provider-option');
-        allOptions.forEach(option => option.classList.remove('active'));
-        selectedOption.classList.add('active');
+    handleProviderSelection(selectedBtn) {
+        console.log('xMatic: 🎯 AI Tab - Handling provider selection:', selectedBtn.getAttribute('data-provider'));
         
-        const selectedProvider = selectedOption.getAttribute('data-provider');
-        console.log('xMatic: Selected provider:', selectedProvider);
+        // Handle provider selection
+        const allBtns = document.querySelectorAll('.provider-btn');
+        allBtns.forEach(btn => btn.classList.remove('active'));
+        selectedBtn.classList.add('active');
+        
+        const selectedProvider = selectedBtn.getAttribute('data-provider');
+        console.log('xMatic: 🎯 AI Tab - Selected provider:', selectedProvider);
+        
+        // Show/hide provider sections
+        const openaiSection = document.querySelector('#openaiSection');
+        const grokSection = document.querySelector('#grokSection');
+        const grokModels = document.querySelector('#grokModels');
+        
+        if (selectedProvider === 'openai') {
+            console.log('xMatic: 🎯 AI Tab - Showing OpenAI section, hiding Grok section');
+            if (openaiSection) openaiSection.style.display = 'block';
+            if (grokSection) grokSection.style.display = 'none';
+            if (grokModels) grokModels.style.display = 'none';
+        } else if (selectedProvider === 'grok') {
+            console.log('xMatic: 🎯 AI Tab - Showing Grok section, hiding OpenAI section');
+            if (openaiSection) openaiSection.style.display = 'none';
+            if (grokSection) grokSection.style.display = 'block';
+            if (grokModels) grokModels.style.display = 'block';
+        }
         
         this.updateModelOptions();
-        this.updateConnectionStatus('Not tested');
+        
+        // Save selection
+        chrome.storage.sync.set({ selectedProvider: selectedProvider }, () => {
+            console.log('xMatic: 🎯 AI Tab - Provider selection saved to storage');
+        });
     }
 
     updateModelOptions() {
         // Update model options based on selected provider
-        const selectedProvider = document.querySelector('.provider-option.active')?.getAttribute('data-provider');
+        const selectedProvider = document.querySelector('.provider-btn.active')?.getAttribute('data-provider');
         const modelSelect = document.querySelector('#modelSelect');
+        const openaiModels = document.querySelector('#openaiModels');
+        const grokModels = document.querySelector('#grokModels');
         
         if (!modelSelect) return;
         
-        let models = [];
-        switch (selectedProvider) {
-            case 'openai':
-                models = [
-                    { value: 'gpt-4', label: 'GPT-4' },
-                    { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
-                    { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo' }
-                ];
-                break;
-            case 'grok':
-                models = [
-                    { value: 'grok-beta', label: 'Grok Beta' },
-                    { value: 'grok-1', label: 'Grok-1' }
-                ];
-                break;
-            case 'perplexity':
-                models = [
-                    { value: 'llama-3.1-8b', label: 'Llama 3.1 8B' },
-                    { value: 'llama-3.1-70b', label: 'Llama 3.1 70B' }
-                ];
-                break;
+        if (selectedProvider === 'openai') {
+            if (openaiModels) openaiModels.style.display = 'block';
+            if (grokModels) grokModels.style.display = 'none';
+        } else if (selectedProvider === 'grok') {
+            if (openaiModels) openaiModels.style.display = 'none';
+            if (grokModels) grokModels.style.display = 'block';
         }
-        
-        modelSelect.innerHTML = models.map(model => 
-            `<option value="${model.value}">${model.label}</option>`
-        ).join('');
     }
 
     handleTemperatureChange(event) {
@@ -218,53 +325,184 @@ class AITab {
     }
 
     handleApiKeyChange() {
-        // Handle API key input change
-        console.log('xMatic: API key changed...');
-        this.updateConnectionStatus('Not tested');
+        // Handle OpenAI API key input change
+        console.log('xMatic: 🎯 AI Tab - OpenAI API key changed...');
+    }
+
+    handleGrokKeyChange() {
+        // Handle Grok API key input change
+        console.log('xMatic: 🎯 AI Tab - Grok API key changed...');
     }
 
     handleModelChange() {
         // Handle model selection change
-        console.log('xMatic: Model changed...');
-        this.updateConnectionStatus('Not tested');
+        console.log('xMatic: 🎯 AI Tab - Model changed...');
     }
 
-    updateConnectionStatus(status, type = 'info') {
-        const statusElement = document.querySelector('#connectionStatus');
+    handleStyleChange() {
+        // Handle style selection change
+        console.log('xMatic: Style changed...');
+    }
+
+    handleCustomStyleChange() {
+        // Handle custom style input change
+        console.log('xMatic: Custom style changed...');
+    }
+
+    handleMaxTokensChange() {
+        // Handle max tokens input change
+        console.log('xMatic: Max tokens changed...');
+    }
+
+
+
+    async testOpenAIConnection() {
+        // Test OpenAI connection
+        console.log('xMatic: 🎯 AI Tab - Testing OpenAI connection...');
+        const apiKey = document.querySelector('#openaiKey')?.value;
+        const statusElement = document.querySelector('#openaiConnectionStatus');
+        
+        console.log('xMatic: 🎯 AI Tab - OpenAI API key found:', !!apiKey);
+        console.log('xMatic: 🎯 AI Tab - Status element found:', !!statusElement);
+        
+        if (!apiKey) {
+            console.log('xMatic: 🎯 AI Tab - No OpenAI API key provided');
+            this.showConnectionStatus(statusElement, 'Please enter API key', 'error');
+            return;
+        }
+        
+        console.log('xMatic: 🎯 AI Tab - OpenAI API key found, testing connection...');
+        this.showConnectionStatus(statusElement, 'Testing...', 'warning');
+        
+        try {
+            // Use AIAPIHandler to test connection
+            if (!window.AIAPIHandler) {
+                console.error('xMatic: 🎯 AI Tab - AIAPIHandler not available');
+                this.showConnectionStatus(statusElement, 'AI Handler not available', 'error');
+                return;
+            }
+            
+            console.log('xMatic: 🎯 AI Tab - Creating AIAPIHandler instance...');
+            const aiHandler = new window.AIAPIHandler({
+                openaiKey: apiKey,
+                selectedProvider: 'openai',
+                selectedModel: 'gpt-3.5-turbo'
+            });
+            
+            // Test with a simple prompt
+            console.log('xMatic: 🎯 AI Tab - Sending test request...');
+            const response = await aiHandler.generateReply({
+                mainTweet: 'Hello, this is a test tweet.',
+                authorName: 'Test User',
+                engagementData: { likes: 0, retweets: 0, replies: 0, quotes: 0 }
+            });
+            
+            if (response) {
+                console.log('xMatic: 🎯 AI Tab - OpenAI test successful, response:', response);
+                this.showConnectionStatus(statusElement, 'Connection successful!', 'success');
+            } else {
+                console.log('xMatic: 🎯 AI Tab - OpenAI test failed - no response');
+                this.showConnectionStatus(statusElement, 'Connection failed', 'error');
+            }
+        } catch (error) {
+            console.error('xMatic: 🎯 AI Tab - OpenAI test failed with error:', error);
+            this.showConnectionStatus(statusElement, `Test failed: ${error.message}`, 'error');
+        }
+    }
+
+    async testGrokConnection() {
+        // Test Grok connection
+        console.log('xMatic: 🎯 AI Tab - Testing Grok connection...');
+        const apiKey = document.querySelector('#grokKey')?.value;
+        const statusElement = document.querySelector('#grokConnectionStatus');
+        
+        console.log('xMatic: 🎯 AI Tab - Grok API key found:', !!apiKey);
+        console.log('xMatic: 🎯 AI Tab - Status element found:', !!statusElement);
+        console.log('xMatic: 🎯 AI Tab - AIAPIHandler available:', !!window.AIAPIHandler);
+        console.log('xMatic: 🎯 AI Tab - AIAPIHandler type:', typeof window.AIAPIHandler);
+        
+        if (!apiKey) {
+            console.log('xMatic: 🎯 AI Tab - No Grok API key provided');
+            this.showConnectionStatus(statusElement, 'Please enter API key', 'error');
+            return;
+        }
+        
+        if (!window.AIAPIHandler) {
+            console.error('xMatic: 🎯 AI Tab - AIAPIHandler not available');
+            this.showConnectionStatus(statusElement, 'AI Handler not available', 'error');
+            return;
+        }
+        
+        console.log('xMatic: 🎯 AI Tab - Grok API key found, testing connection...');
+        this.showConnectionStatus(statusElement, 'Testing...', 'warning');
+        
+        try {
+            // Use AIAPIHandler to test connection
+            console.log('xMatic: 🎯 AI Tab - Creating AIAPIHandler instance for Grok...');
+            const aiHandler = new window.AIAPIHandler({
+                grokKey: apiKey,
+                selectedProvider: 'grok',
+                selectedModel: 'grok-3'
+            });
+            
+            // Test with a simple prompt
+            console.log('xMatic: 🎯 AI Tab - Sending Grok test request...');
+            const response = await aiHandler.generateReply({
+                mainTweet: 'Hello, this is a test tweet.',
+                authorName: 'Test User',
+                engagementData: { likes: 0, retweets: 0, replies: 0, quotes: 0 }
+            });
+            
+            if (response) {
+                console.log('xMatic: 🎯 AI Tab - Grok test successful, response:', response);
+                this.showConnectionStatus(statusElement, 'Connection successful!', 'success');
+            } else {
+                console.log('xMatic: 🎯 AI Tab - Grok test failed - no response');
+                this.showConnectionStatus(statusElement, 'Connection failed', 'error');
+            }
+        } catch (error) {
+            console.error('xMatic: 🎯 AI Tab - Grok test failed with error:', error);
+            this.showConnectionStatus(statusElement, `Test failed: ${error.message}`, 'error');
+        }
+    }
+
+    showConnectionStatus(statusElement, message, type) {
         if (!statusElement) return;
         
-        const statusText = statusElement.querySelector('.status-text');
-        const statusDot = statusElement.querySelector('.status-dot');
+        statusElement.textContent = message;
+        statusElement.className = `connection-status show ${type}`;
         
-        if (statusText) statusText.textContent = status;
-        if (statusDot) {
-            statusDot.className = `status-dot ${type}`;
-        }
+        // Hide after 5 seconds
+        setTimeout(() => {
+            statusElement.className = 'connection-status';
+        }, 5000);
     }
 
     handleSave() {
         // Handle saving AI configuration
-        console.log('xMatic: Saving AI config...');
-        // TODO: Save to storage manager
-        this.updateConnectionStatus('Configuration saved', 'success');
-    }
-
-    handleTest() {
-        // Handle testing connection
-        console.log('xMatic: Testing connection...');
-        this.handleTestNow();
-    }
-
-    handleTestNow() {
-        // Handle testing connection now
-        console.log('xMatic: Testing connection now...');
-        this.updateConnectionStatus('Testing...', 'warning');
+        console.log('xMatic: 🎯 AI Tab - Saving AI config...');
         
-        // Simulate test (replace with actual API test)
-        setTimeout(() => {
-            this.updateConnectionStatus('Connection successful', 'success');
-        }, 2000);
+        const config = {
+            selectedProvider: document.querySelector('.provider-btn.active')?.getAttribute('data-provider'),
+            openaiKey: document.querySelector('#openaiKey')?.value,
+            grokKey: document.querySelector('#grokKey')?.value,
+            selectedModel: document.querySelector('#modelSelect')?.value,
+            maxTokens: document.querySelector('#maxTokens')?.value,
+            temperature: document.querySelector('#temperature')?.value
+        };
+        
+        // Save to storage
+        chrome.storage.sync.set(config, () => {
+            if (chrome.runtime.lastError) {
+                console.error('xMatic: 🎯 AI Tab - Error saving config:', chrome.runtime.lastError);
+                console.log('xMatic: 🎯 AI Tab - Configuration save failed');
+            } else {
+                console.log('xMatic: 🎯 AI Tab - Configuration saved successfully!');
+            }
+        });
     }
+
+
 }
 
 // Export for use in floating panel

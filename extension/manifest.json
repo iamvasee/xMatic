@@ -25,6 +25,10 @@
         "src/scripts/modules/storage-manager.js",
         "src/scripts/modules/context-extractor.js",
         "src/scripts/modules/text-insertion-manager.js",
+        "src/scripts/floating-panel/ai-tab.js",
+        "src/scripts/floating-panel/generate-tab.js",
+        "src/scripts/floating-panel/drafts-tab.js",
+        "src/scripts/floating-panel/style-tab.js",
         "src/scripts/floating-panel/floating-panel.js",
         "src/scripts/core/content.js"
       ],

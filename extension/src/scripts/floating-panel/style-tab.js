@@ -12,6 +12,7 @@ class StyleTab {
     }
 
     render(container) {
+        console.log('xMatic: 🎨 Style Tab - Starting render...', { container, containerExists: !!container });
         // Render the style tab content
         container.innerHTML = `
             <div class="tab-header">
@@ -26,133 +27,102 @@ class StyleTab {
             </div>
             
             <div class="style-content">
-                <div class="style-grid">
-                    <div class="style-card" data-style="professional">
-                        <h4>Professional</h4>
-                        <p>Formal and business-like</p>
-                    </div>
-                    <div class="style-card" data-style="casual">
-                        <h4>Casual</h4>
-                        <p>Friendly and relaxed</p>
-                    </div>
-                    <div class="style-card" data-style="creative">
-                        <h4>Creative</h4>
-                        <p>Imaginative and artistic</p>
-                    </div>
-                    <div class="style-card" data-style="humorous">
-                        <h4>Humorous</h4>
-                        <p>Witty and entertaining</p>
-                    </div>
-                    <div class="style-card" data-style="analytical">
-                        <h4>Analytical</h4>
-                        <p>Logical and data-driven</p>
-                    </div>
-                    <div class="style-card" data-style="empathetic">
-                        <h4>Empathetic</h4>
-                        <p>Understanding and supportive</p>
-                    </div>
+                <!-- Base Style Selection -->
+                <div class="simple-form-group">
+                    <label>Base Style</label>
+                    <select id="styleSelect" class="simple-select">
+                        <option value="">Select a base style</option>
+                        <option value="professional">Professional & Formal</option>
+                        <option value="casual">Casual & Friendly</option>
+                        <option value="humorous">Humorous & Witty</option>
+                        <option value="analytical">Analytical & Detailed</option>
+                        <option value="concise">Concise & Direct</option>
+                        <option value="empathetic">Empathetic & Supportive</option>
+                        <option value="creative">Creative & Imaginative</option>
+                    </select>
                 </div>
-                
-                <div class="content-card">
-                    <div class="card-header">
-                        <h4>Custom Instructions</h4>
-                        <span class="context-badge">Advanced</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="input-group">
-                            <label for="customStyle">Additional Style Instructions</label>
-                            <textarea 
-                                id="customStyle" 
-                                class="config-input" 
-                                placeholder="Enter custom style instructions..."
-                                rows="4"
-                            ></textarea>
-                        </div>
-                        <div class="style-preview">
-                            <h5>Style Preview</h5>
-                            <div id="stylePreview" class="preview-content">
-                                <p class="placeholder-text">Style preview will appear here...</p>
-                            </div>
-                        </div>
-                    </div>
+
+                <!-- Custom Instructions -->
+                <div class="simple-form-group">
+                    <label>Custom Instructions</label>
+                    <textarea 
+                        id="customStyleInput" 
+                        class="simple-textarea" 
+                        placeholder="Add your own custom instructions, personality traits, or specific requirements here..."
+                        rows="3"
+                    ></textarea>
+                    <small class="help-text">Your custom instructions will be combined with the selected base style.</small>
                 </div>
             </div>
         `;
         
+        console.log('xMatic: 🎨 Style Tab - HTML rendered, setting up event listeners...');
         this.setupEventListeners(container);
+        console.log('xMatic: 🎨 Style Tab - Event listeners set up, loading current style...');
         this.loadCurrentStyle();
+        console.log('xMatic: 🎨 Style Tab - Render complete!');
     }
 
     setupEventListeners(container) {
+        console.log('xMatic: 🎨 Style Tab - Setting up event listeners...', { container });
+        
         // Setup event listeners for the style tab
         const saveBtn = container.querySelector('#saveStyles');
         const resetBtn = container.querySelector('#resetStyles');
-        const customStyleInput = container.querySelector('#customStyle');
-        const styleCards = container.querySelectorAll('.style-card');
+        const styleSelect = container.querySelector('#styleSelect');
+        const customStyleInput = container.querySelector('#customStyleInput');
+        
+        console.log('xMatic: 🎨 Style Tab - Found elements:', {
+            saveBtn: !!saveBtn,
+            resetBtn: !!resetBtn,
+            styleSelect: !!styleSelect,
+            customStyleInput: !!customStyleInput
+        });
         
         if (saveBtn) {
             saveBtn.addEventListener('click', () => this.handleSave());
+            console.log('xMatic: 🎨 Style Tab - Save button event listener added');
         }
         
         if (resetBtn) {
             resetBtn.addEventListener('click', () => this.handleReset());
+            console.log('xMatic: 🎨 Style Tab - Reset button event listener added');
+        }
+        
+        if (styleSelect) {
+            styleSelect.addEventListener('change', () => this.handleStyleSelectChange());
+            console.log('xMatic: 🎨 Style Tab - Style select event listener added');
         }
         
         if (customStyleInput) {
             customStyleInput.addEventListener('input', () => this.handleCustomStyleChange());
+            console.log('xMatic: 🎨 Style Tab - Custom style input event listener added');
         }
         
-        // Setup style card selection
-        styleCards.forEach(card => {
-            card.addEventListener('click', () => this.handleStyleSelection(card));
-        });
+        console.log('xMatic: 🎨 Style Tab - All event listeners set up successfully');
     }
 
     loadCurrentStyle() {
         // Load current style configuration
-        console.log('xMatic: Loading current style...');
+        console.log('xMatic: 🎨 Style Tab - Loading current style...');
         // TODO: Load from storage manager
-        this.updateStylePreview();
     }
 
-    handleStyleSelection(selectedCard) {
-        // Handle style card selection
-        const allCards = document.querySelectorAll('.style-card');
-        allCards.forEach(card => card.classList.remove('selected'));
-        selectedCard.classList.add('selected');
-        
-        const selectedStyle = selectedCard.getAttribute('data-style');
-        console.log('xMatic: Selected style:', selectedStyle);
-        
+
+
+    handleStyleSelectChange() {
+        // Handle style select dropdown changes
+        console.log('xMatic: 🎨 Style Tab - Style select changed...');
         this.updateStylePreview();
     }
 
     handleCustomStyleChange() {
         // Handle custom style input changes
-        console.log('xMatic: Custom style changed...');
+        console.log('xMatic: 🎨 Style Tab - Custom style changed...');
         this.updateStylePreview();
     }
 
-    updateStylePreview() {
-        // Update the style preview
-        const previewElement = document.querySelector('#stylePreview');
-        if (!previewElement) return;
-        
-        const selectedCard = document.querySelector('.style-card.selected');
-        const customStyle = document.querySelector('#customStyle')?.value || '';
-        
-        if (selectedCard) {
-            const styleName = selectedCard.querySelector('h4').textContent;
-            const styleDesc = selectedCard.querySelector('p').textContent;
-            
-            previewElement.innerHTML = `
-                <div class="preview-example">
-                    <strong>${styleName}</strong>: ${styleDesc}
-                    ${customStyle ? `<br><em>Custom: ${customStyle}</em>` : ''}
-                </div>
-            `;
-        }
-    }
+
 
     handleSave() {
         // Handle saving style configuration
@@ -162,16 +132,19 @@ class StyleTab {
 
     handleReset() {
         // Handle resetting style configuration
-        console.log('xMatic: Resetting styles...');
-        const allCards = document.querySelectorAll('.style-card');
-        allCards.forEach(card => card.classList.remove('selected'));
+        console.log('xMatic: 🎨 Style Tab - Resetting styles...');
         
-        const customStyleInput = document.querySelector('#customStyle');
+        const styleSelect = document.querySelector('#styleSelect');
+        if (styleSelect) {
+            styleSelect.value = '';
+        }
+        
+        const customStyleInput = document.querySelector('#customStyleInput');
         if (customStyleInput) {
             customStyleInput.value = '';
         }
         
-        this.updateStylePreview();
+        console.log('xMatic: 🎨 Style Tab - Styles reset complete');
     }
 }
 

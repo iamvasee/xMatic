@@ -255,10 +255,46 @@
         color: hsl(0 0% 98%);
       }
       
-      .version {
-        color: hsl(240 5% 64.9%);
-      }
+          .version {
+      color: hsl(240 5% 64.9%);
     }
+  }
+
+  /* Notification System */
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+  }
+
+  .notification-success {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+
+  .notification-error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 
     .link {
       display: flex;
@@ -333,202 +369,11 @@
     }
 
     /* New styles for enhanced popup */
-    .input-with-button {
-      display: flex;
-      gap: 8px;
-    }
 
-    .input-with-button input {
-      flex: 1;
-    }
 
-    .test-btn {
-      padding: 10px;
-      background: #09090b;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 40px;
-    }
 
-    .test-btn:hover {
-      background: #18181b;
-    }
 
-    .test-btn:disabled {
-      background: #a1a1aa;
-      cursor: not-allowed;
-    }
 
-    .test-btn svg {
-      width: 14px;
-      height: 14px;
-      fill: currentColor;
-    }
-
-    .test-btn.loading svg {
-      display: none;
-    }
-
-    .test-btn.loading::after {
-      content: '';
-      width: 16px;
-      height: 16px;
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 0.8s linear infinite;
-    }
-
-    .connection-status {
-      margin-top: 6px;
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 500;
-      opacity: 0;
-      transform: translateY(-4px);
-      transition: all 0.2s ease;
-    }
-
-    .connection-status.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .connection-status.success {
-      background: #f0fdf4;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
-
-    .connection-status.error {
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
-
-    .style-select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #e4e4e7;
-      border-radius: 6px;
-      background: #ffffff;
-      color: #09090b;
-      font-size: 14px;
-      font-family: inherit;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-
-    .style-select:focus {
-      outline: none;
-      border-color: #09090b;
-    }
-
-    .custom-style-input {
-      margin-top: 8px;
-      animation: slideDown 0.2s ease;
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .model-info {
-      margin-top: 4px;
-    }
-
-    .model-cost {
-      color: #71717a;
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    /* Section-based layout */
-    .section {
-      margin-bottom: 20px;
-      padding: 16px;
-      background: #f8f9fa;
-      border: 1px solid #e4e4e7;
-      border-radius: 10px;
-    }
-
-    .section:last-of-type {
-      margin-bottom: 16px;
-    }
-
-    .section-header {
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #e4e4e7;
-    }
-
-    .section-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: #09090b;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .section .form-group {
-      margin-bottom: 12px;
-    }
-
-    .section .form-group:last-child {
-      margin-bottom: 0;
-    }
-
-    /* API Provider Toggle */
-    .api-provider-toggle {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-      padding: 12px;
-      background: #ffffff;
-      border: 1px solid #e4e4e7;
-      border-radius: 8px;
-    }
-
-    .provider-option {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #e4e4e7;
-      border-radius: 6px;
-      background: #ffffff;
-      color: #71717a;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-
-    .provider-option.active {
-      background: #09090b;
-      color: #ffffff;
-      border-color: #09090b;
-    }
-
-    .provider-option:hover:not(.active) {
-      background: #f8f9fa;
-      border-color: #09090b;
-    }
 
     /* Toggle Switch Styles */
     .toggle-row {
@@ -683,116 +528,8 @@
     </div>
 
     <form id="configForm">
-      <!-- API Provider Selection -->
-      <div class="section">
-        <div class="section-header">
-          <h3 class="section-title">🤖 AI Provider</h3>
-        </div>
-        
-        <div class="api-provider-toggle">
-          <button type="button" class="provider-option active" data-provider="openai">
-            OpenAI
-          </button>
-          <button type="button" class="provider-option" data-provider="grok">
-            Grok (xAI)
-          </button>
-        </div>
-      </div>
-
-      <!-- OpenAI Configuration Section -->
-      <div class="section" id="openaiSection">
-        <div class="section-header">
-          <h3 class="section-title">🔑 OpenAI API</h3>
-        </div>
-        
-        <div class="form-group" id="openaiKeyGroup">
-          <label for="openaiKey">API Key</label>
-          <div class="input-with-button">
-            <input type="password" id="openaiKey" placeholder="sk-proj-..." autocomplete="off">
-            <button type="button" id="testOpenAIConnection" class="test-btn" title="Test OpenAI Connection">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </button>
-          </div>
-          <div id="openaiConnectionStatus" class="connection-status"></div>
-        </div>
-      </div>
-
-      <!-- Grok Configuration Section -->
-      <div class="section grok-section-hidden" id="grokSection">
-        <div class="section-header">
-          <h3 class="section-title">🔑 Grok API (xAI)</h3>
-        </div>
-        
-        <div class="form-group" id="grokKeyGroup">
-          <label for="grokKey">API Key</label>
-          <div class="input-with-button">
-            <input type="password" id="grokKey" placeholder="xai-..." autocomplete="off">
-            <button type="button" id="testGrokConnection" class="test-btn" title="Test Grok Connection">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </button>
-          </div>
-          <div id="grokConnectionStatus" class="connection-status"></div>
-        </div>
-      </div>
-
-      <!-- AI Model Selection Section -->
-      <div class="section">
-        <div class="section-header">
-          <h3 class="section-title">🧠 AI Model</h3>
-        </div>
-        
-        <div class="form-group" id="modelGroup">
-          <label for="modelSelect">Select Model</label>
-          <select id="modelSelect" class="style-select">
-            <!-- OpenAI Models -->
-            <optgroup label="OpenAI Models" id="openaiModels">
-              <option value="gpt-4">GPT-4 (Recommended) - Higher quality</option>
-              <option value="gpt-4-turbo">GPT-4 Turbo - Faster, cost-effective</option>
-              <option value="gpt-3.5-turbo">GPT-3.5 Turbo - Fastest, cheapest</option>
-            </optgroup>
-            <!-- Grok Models -->
-            <optgroup label="Grok Models" id="grokModels" class="grok-models-hidden">
-              <option value="grok-4-0709">Grok-4-0709 - Latest model (256K context)</option>
-              <option value="grok-3">Grok-3 - Standard model (131K context)</option>
-              <option value="grok-3-mini">Grok-3-mini - Fast model (131K context)</option>
-            </optgroup>
-          </select>
-          <div class="model-info">
-            <small id="modelCost" class="model-cost">~$0.03 per response</small>
-          </div>
-        </div>
-      </div>
-
-      <!-- Response Configuration Section -->
-      <div class="section" id="styleGroup">
-        <label for="styleSelect">Response Style:</label>
-        <select id="styleSelect" class="style-select" required>
-          <option value="">Select a base style</option>
-          <option value="professional">Professional & Formal</option>
-          <option value="casual">Casual & Friendly</option>
-          <option value="humorous">Humorous & Witty</option>
-          <option value="analytical">Analytical & Detailed</option>
-          <option value="concise">Concise & Direct</option>
-          <option value="empathetic">Empathetic & Supportive</option>
-          <option value="creative">Creative & Imaginative</option>
-        </select>
-        
-        <label for="customStyleInput">Additional Custom Instructions:</label>
-        <textarea 
-          id="customStyleInput" 
-          placeholder="Add your own custom instructions, personality traits, or specific requirements here. These will be combined with the selected base style."
-          rows="3"
-          title="Custom instructions for AI responses"
-        ></textarea>
-        <small class="help-text">Your custom instructions will be combined with the selected base style for a personalized AI response.</small>
-      </div>
-
       <button type="submit" class="button" id="saveConfig">
-        💾 Save Configuration
+        💾 Save Extension Settings
       </button>
     </form>
 

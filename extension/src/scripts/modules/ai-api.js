@@ -105,3 +105,9 @@ Consider the author's influence and the tweet's engagement level when crafting y
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = AIAPIHandler;
 }
+
+// Export for use in browser environment
+if (typeof window !== 'undefined') {
+    window.AIAPIHandler = AIAPIHandler;
+    console.log('xMatic: 🚀 AIAPIHandler exported to window object');
+}

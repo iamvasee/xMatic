@@ -332,11 +332,20 @@ class FloatingPanelManager {
 
     loadAITab() {
         // Load AI tab content from module
-        if (!this.panel) return;
+        console.log('xMatic: Loading AI tab...');
+        if (!this.panel) {
+            console.log('xMatic: Panel not found');
+            return;
+        }
         const aiContent = this.panel.querySelector('.ai-content');
+        console.log('xMatic: AI content element:', aiContent);
+        console.log('xMatic: AITab class available:', window.AITab);
         if (aiContent && window.AITab) {
+            console.log('xMatic: Creating AI tab instance...');
             const aiTab = new window.AITab();
             aiTab.render(aiContent);
+        } else {
+            console.log('xMatic: Missing aiContent or AITab class');
         }
     }
 
