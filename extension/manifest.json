@@ -21,10 +21,11 @@
       ],
       "js": [
         "src/scripts/modules/ai-api.js",
-        "src/scripts/ui/ui-manager.js",
+        "src/ui/ui-manager.js",
         "src/scripts/modules/storage-manager.js",
         "src/scripts/modules/context-extractor.js",
         "src/scripts/modules/text-insertion-manager.js",
+        "src/scripts/floating-panel/floating-panel.js",
         "src/scripts/core/content.js"
       ],
       "css": [
@@ -58,7 +59,7 @@
         "src/assets/robot.svg", 
         "src/assets/time.svg", 
         "src/assets/float.svg",
-        "src/ui/floating-panel.html",
+        "src/assets/xMatic.png",
         "src/styles/floating-panel.css",
         "src/styles/tabs.css",
         "src/scripts/floating-panel/*.js"

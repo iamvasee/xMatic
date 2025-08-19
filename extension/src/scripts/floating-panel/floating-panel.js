@@ -11,21 +11,21 @@ class FloatingPanelManager {
     init() {
         this.createFloatingButton();
         this.setupEventListeners();
-        this.loadTabContent();
+        // Don't load tab content until panel is actually created
     }
 
     createFloatingButton() {
-        // Create floating button using the float.svg
+        // Create floating button with clean design
         this.floatingButton = document.createElement('div');
         this.floatingButton.id = 'xmatic-floating-button';
         this.floatingButton.className = 'xmatic-floating-button';
         this.floatingButton.innerHTML = `
-            <img src="${chrome.runtime.getURL('src/assets/float.svg')}" 
-                 alt="xMatic" 
-                 class="floating-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 3L17 10L10 17M3 10H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         `;
         
-        // Position the button
+        // Position the button with Shadcn-inspired styling
         this.floatingButton.style.cssText = `
             position: fixed;
             right: 20px;
@@ -33,11 +33,38 @@ class FloatingPanelManager {
             transform: translateY(-50%);
             z-index: 10000;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            color: #374151;
         `;
 
         // Add to page
         document.body.appendChild(this.floatingButton);
+        
+        // Add hover effects
+        this.floatingButton.addEventListener('mouseenter', () => {
+            if (!this.isOpen) {
+                this.floatingButton.style.background = '#f9fafb';
+                this.floatingButton.style.borderColor = '#d1d5db';
+                this.floatingButton.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+            }
+        });
+        
+        this.floatingButton.addEventListener('mouseleave', () => {
+            if (!this.isOpen) {
+                this.floatingButton.style.background = '#ffffff';
+                this.floatingButton.style.borderColor = '#e5e7eb';
+                this.floatingButton.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+            }
+        });
     }
 
     setupEventListeners() {
@@ -61,9 +88,13 @@ class FloatingPanelManager {
             }
         });
 
-        // Close panel when clicking outside
+        // Close panel when clicking outside (but not inside the panel)
         document.addEventListener('click', (e) => {
-            if (this.isOpen && !e.target.closest('#xmatic-panel') && !e.target.closest('#xmatic-floating-button')) {
+            // Only close if clicking outside both the panel and the floating button
+            const isClickingInsidePanel = e.target.closest('#xmatic-panel-container');
+            const isClickingOnFloatingButton = e.target.closest('#xmatic-floating-button');
+            
+            if (this.isOpen && !isClickingInsidePanel && !isClickingOnFloatingButton) {
                 this.closePanel();
             }
         });
@@ -98,7 +129,9 @@ class FloatingPanelManager {
         this.isOpen = true;
 
         // Update floating button
-        this.floatingButton.style.transform = 'translateY(-50%) scale(0.9)';
+        this.floatingButton.style.transform = 'translateY(-50%) scale(0.95)';
+        this.floatingButton.style.background = '#f9fafb';
+        this.floatingButton.style.borderColor = '#d1d5db';
         
         // Load current tab content
         this.loadTabContent();
@@ -119,6 +152,8 @@ class FloatingPanelManager {
 
         // Reset floating button
         this.floatingButton.style.transform = 'translateY(-50%) scale(1)';
+        this.floatingButton.style.background = '#ffffff';
+        this.floatingButton.style.borderColor = '#e5e7eb';
     }
 
     createPanel() {
@@ -133,12 +168,14 @@ class FloatingPanelManager {
             min-width: 600px;
             max-width: 800px;
             height: 100vh;
-            background: white;
-            box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            box-shadow: -4px 0 25px rgba(0, 0, 0, 0.08);
             z-index: 10001;
             transform: translateX(100%);
             transition: transform 0.3s ease;
             overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            border-left: 1px solid #e5e7eb;
         `;
 
         // Load panel content
@@ -154,65 +191,50 @@ class FloatingPanelManager {
             <div class="panel-header">
                 <div class="panel-logo">
                     <img src="${chrome.runtime.getURL('src/assets/xMatic.png')}" alt="xMatic" class="logo-image">
-                    <span class="logo-text">xMatic</span>
                 </div>
-                <button class="close-button" id="closePanel">×</button>
+                <button class="close-button" id="closePanel" aria-label="Close panel">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
             </div>
 
             <div class="tab-navigation">
-                <button class="tab-button active" data-tab="generate">🚀 Generate</button>
-                <button class="tab-button" data-tab="drafts">📝 Drafts</button>
-                <button class="tab-button" data-tab="style">🎭 Style</button>
-                <button class="tab-button" data-tab="ai">🤖 AI</button>
+                <div class="tab-container">
+                    <button class="tab-button active" data-tab="generate">Generate</button>
+                    <button class="tab-button" data-tab="drafts">Drafts</button>
+                    <button class="tab-button" data-tab="style">Style</button>
+                    <button class="tab-button" data-tab="ai">AI</button>
+                </div>
             </div>
 
             <div class="tab-content">
                 <div id="generate-tab" class="tab-pane active">
-                    <div class="tab-header">
-                        <h3>🚀 Generate AI Reply</h3>
-                        <p>Create contextual AI-powered replies to tweets</p>
-                    </div>
-                    <div class="generate-content">
-                        <div class="tab-content-placeholder">Generate tab content will be loaded here</div>
-                    </div>
+                    <div class="generate-content"></div>
                 </div>
 
                 <div id="drafts-tab" class="tab-pane">
-                    <div class="tab-header">
-                        <h3>📝 Saved Drafts</h3>
-                        <p>Manage your saved reply drafts</p>
-                    </div>
-                    <div class="drafts-content">
-                        <div class="tab-content-placeholder">Drafts tab content will be loaded here</div>
-                    </div>
+                    <div class="drafts-content"></div>
                 </div>
 
                 <div id="style-tab" class="tab-pane">
-                    <div class="tab-header">
-                        <h3>🎭 Response Style</h3>
-                        <p>Configure your AI response personality</p>
-                    </div>
-                    <div class="style-content">
-                        <div class="tab-content-placeholder">Style tab content will be loaded here</div>
-                    </div>
+                    <div class="style-content"></div>
                 </div>
 
                 <div id="ai-tab" class="tab-pane">
-                    <div class="tab-header">
-                        <h3>🤖 AI Configuration</h3>
-                        <p>Manage API keys and model settings</p>
-                    </div>
-                    <div class="ai-content">
-                        <div class="tab-content-placeholder">AI configuration content will be loaded here</div>
-                    </div>
+                    <div class="ai-content"></div>
                 </div>
             </div>
 
             <div class="panel-footer">
-                <div class="version-info">v1.3.2</div>
-                <div class="status-indicator" id="panelStatus">
-                    <span class="status-dot"></span>
-                    <span class="status-text">Ready</span>
+                <div class="footer-content">
+                    <div class="version-info">
+                        <span class="version-badge">v1.3.2</span>
+                    </div>
+                    <div class="status-indicator" id="panelStatus">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Ready</span>
+                    </div>
                 </div>
             </div>
         `;
@@ -258,6 +280,9 @@ class FloatingPanelManager {
     }
 
     loadTabContent() {
+        // Only load tab content if panel exists
+        if (!this.panel) return;
+        
         // Load specific tab content based on current tab
         switch (this.currentTab) {
             case 'generate':
@@ -276,34 +301,42 @@ class FloatingPanelManager {
     }
 
     loadGenerateTab() {
-        // Load generate tab content
+        // Load generate tab content from module
+        if (!this.panel) return;
         const generateContent = this.panel.querySelector('.generate-content');
-        if (generateContent) {
-            generateContent.innerHTML = '<div class="tab-content-placeholder">Generate tab content will be loaded here</div>';
+        if (generateContent && window.GenerateTab) {
+            const generateTab = new window.GenerateTab();
+            generateTab.render(generateContent);
         }
     }
 
     loadDraftsTab() {
-        // Load drafts tab content
+        // Load drafts tab content from module
+        if (!this.panel) return;
         const draftsContent = this.panel.querySelector('.drafts-content');
-        if (draftsContent) {
-            draftsContent.innerHTML = '<div class="tab-content-placeholder">Drafts tab content will be loaded here</div>';
+        if (draftsContent && window.DraftsTab) {
+            const draftsTab = new window.DraftsTab();
+            draftsTab.render(draftsContent);
         }
     }
 
     loadStyleTab() {
-        // Load style tab content
+        // Load style tab content from module
+        if (!this.panel) return;
         const styleContent = this.panel.querySelector('.style-content');
-        if (styleContent) {
-            styleContent.innerHTML = '<div class="tab-content-placeholder">Style tab content will be loaded here</div>';
+        if (styleContent && window.StyleTab) {
+            const styleTab = new window.StyleTab();
+            styleTab.render(styleContent);
         }
     }
 
     loadAITab() {
-        // Load AI tab content
+        // Load AI tab content from module
+        if (!this.panel) return;
         const aiContent = this.panel.querySelector('.ai-content');
-        if (aiContent) {
-            aiContent.innerHTML = '<div class="tab-content-placeholder">AI configuration content will be loaded here</div>';
+        if (aiContent && window.AITab) {
+            const aiTab = new window.AITab();
+            aiTab.render(aiContent);
         }
     }
 
