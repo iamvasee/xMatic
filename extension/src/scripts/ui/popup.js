@@ -10,8 +10,8 @@ function initializePopup() {
     const extensionToggle = document.getElementById('extensionToggle');
     const extensionStatus = document.getElementById('extensionStatus');
     const providerButtons = document.querySelectorAll('[data-provider]');
-    const modelSelect = document.getElementById('modelSelect');
-    const styleSelect = document.getElementById('styleSelect');
+  const modelSelect = document.getElementById('modelSelect');
+  const styleSelect = document.getElementById('styleSelect');
     const saveButton = document.getElementById('saveButton');
     const resetButton = document.getElementById('resetButton');
 
@@ -201,7 +201,7 @@ function resetConfiguration() {
             if (chrome.runtime.lastError) {
                 console.error('xMatic: Error resetting configuration:', chrome.runtime.lastError);
                 alert('Error resetting configuration. Please try again.');
-            } else {
+  } else {
                 // Reload popup to reflect changes
                 window.location.reload();
             }
@@ -236,7 +236,7 @@ function loadConfiguration() {
             const modelSelect = document.getElementById('modelSelect');
             if (modelSelect) {
                 // Wait for models to be populated
-                setTimeout(() => {
+  setTimeout(() => {
                     modelSelect.value = result.selectedModel;
                 }, 100);
             }

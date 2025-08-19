@@ -31,6 +31,9 @@ class XMatic {
         this.setupEventListeners();
         this.observeChanges();
         this.setupStorageListener();
+        
+        // Initialize floating panel interface
+        this.initializeFloatingPanel();
     }
 
     nuclearCleanup() {
@@ -39,7 +42,7 @@ class XMatic {
             this.uiManager.cleanupOrphanedButtons();
         } else {
             // Basic cleanup before UI manager is initialized
-            const xmaticElements = document.querySelectorAll('[class*="xmatic"], [data-xmatic-active], [data-xmatic-id]');
+        const xmaticElements = document.querySelectorAll('[class*="xmatic"], [data-xmatic-active], [data-xmatic-id]');
             xmaticElements.forEach(element => element.remove());
         }
 
@@ -124,14 +127,14 @@ class XMatic {
     setupStorageListener() {
         this.storageManager.setupStorageListener((extensionEnabled) => {
             if (extensionEnabled.newValue === false) {
-                // Extension disabled - remove all AI buttons and floating button
+                    // Extension disabled - remove all AI buttons and floating button
                 this.uiManager.removeAllAIButtons();
                 this.uiManager.removeFloatingButton();
-            } else {
-                // Extension enabled - add AI buttons and floating button back
-                this.addAIButtons();
-                this.addFloatingButton();
-            }
+                } else {
+                    // Extension enabled - add AI buttons and floating button back
+                    this.addAIButtons();
+                    this.addFloatingButton();
+                }
         });
     }
 
@@ -165,7 +168,7 @@ class XMatic {
         if (!(await this.storageManager.hasApiKey(selectedProvider))) {
             const providerName = selectedProvider === 'grok' ? 'Grok' : 'OpenAI';
             alert(`Please configure your ${providerName} API key first!`);
-            return;
+                return;
         }
 
         try {
@@ -207,6 +210,17 @@ class XMatic {
     async insertReply(text) {
         // Use the text insertion manager to insert reply
         await this.textInsertionManager.insertReply(text);
+    }
+
+    initializeFloatingPanel() {
+        // Load floating panel script and initialize
+        const script = document.createElement('script');
+        script.src = chrome.runtime.getURL('src/scripts/floating-panel/floating-panel.js');
+        script.onload = () => {
+            // Script loaded, floating panel will auto-initialize
+            console.log('xMatic: Floating panel script loaded');
+        };
+        document.head.appendChild(script);
     }
 }
 
