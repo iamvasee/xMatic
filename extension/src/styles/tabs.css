@@ -1,0 +1,370 @@
+/* xMatic - Tab-specific Styles */
+
+/* Tab Content Layout */
+.tab-content {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 200px); /* Account for header, tabs, and footer */
+    overflow-y: auto;
+}
+
+/* Generate Tab Styles */
+.generate-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.generate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.generate-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e4e4e7;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.generate-button {
+    background: #09090b;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.generate-button:hover {
+    background: #18181b;
+}
+
+.generate-button:disabled {
+    background: #a1a1aa;
+    cursor: not-allowed;
+}
+
+/* Drafts Tab Styles */
+.drafts-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.draft-item {
+    padding: 16px;
+    border: 1px solid #e4e4e7;
+    border-radius: 8px;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.draft-item:hover {
+    border-color: #09090b;
+    background: #f1f3f4;
+}
+
+.draft-text {
+    font-size: 14px;
+    color: #09090b;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.draft-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #71717a;
+}
+
+.draft-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.draft-action-btn {
+    padding: 4px 8px;
+    border: 1px solid #e4e4e7;
+    border-radius: 4px;
+    background: white;
+    color: #71717a;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.draft-action-btn:hover {
+    border-color: #09090b;
+    color: #09090b;
+}
+
+/* Style Tab Styles */
+.style-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.style-section {
+    padding: 16px;
+    border: 1px solid #e4e4e7;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.style-section h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #09090b;
+}
+
+.style-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #e4e4e7;
+    border-radius: 6px;
+    background: white;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.style-option:hover {
+    border-color: #09090b;
+    background: #f1f3f4;
+}
+
+.style-option.selected {
+    border-color: #09090b;
+    background: #09090b;
+    color: white;
+}
+
+.style-radio {
+    width: 16px;
+    height: 16px;
+}
+
+.style-label {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.custom-style-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e4e4e7;
+    border-radius: 6px;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 60px;
+    margin-top: 12px;
+}
+
+/* AI Tab Styles */
+.ai-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ai-section {
+    padding: 16px;
+    border: 1px solid #e4e4e7;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+
+.ai-section h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #09090b;
+}
+
+.provider-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.provider-option {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e4e4e7;
+    border-radius: 6px;
+    background: white;
+    color: #71717a;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.provider-option.active {
+    background: #09090b;
+    color: white;
+    border-color: #09090b;
+}
+
+.provider-option:hover:not(.active) {
+    border-color: #09090b;
+    color: #09090b;
+}
+
+.api-key-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e4e4e7;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.test-connection-btn {
+    background: #09090b;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.test-connection-btn:hover {
+    background: #18181b;
+}
+
+.test-connection-btn:disabled {
+    background: #a1a1aa;
+    cursor: not-allowed;
+}
+
+.connection-status {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.connection-status.show {
+    opacity: 1;
+}
+
+.connection-status.success {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.connection-status.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.model-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e4e4e7;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+}
+
+.model-select:focus {
+    outline: none;
+    border-color: #09090b;
+}
+
+.model-info {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #71717a;
+}
+
+/* Dark Mode Support for Tabs */
+@media (prefers-color-scheme: dark) {
+    .draft-item {
+        background: #2a2a2a;
+        border-color: #404040;
+    }
+    
+    .draft-item:hover {
+        background: #404040;
+        border-color: #ffffff;
+    }
+    
+    .style-section,
+    .ai-section {
+        background: #2a2a2a;
+        border-color: #404040;
+    }
+    
+    .style-option {
+        background: #1a1a1a;
+        border-color: #404040;
+    }
+    
+    .style-option:hover {
+        background: #404040;
+        border-color: #ffffff;
+    }
+    
+    .style-option.selected {
+        background: #ffffff;
+        color: #1a1a1a;
+        border-color: #ffffff;
+    }
+    
+    .provider-option {
+        background: #1a1a1a;
+        border-color: #404040;
+        color: #a1a1aa;
+    }
+    
+    .provider-option:hover:not(.active) {
+        border-color: #ffffff;
+        color: #ffffff;
+    }
+    
+    .api-key-input,
+    .model-select {
+        background: #1a1a1a;
+        border-color: #404040;
+        color: #ffffff;
+    }
+    
+    .custom-style-input,
+    .generate-input {
+        background: #1a1a1a;
+        border-color: #404040;
+        color: #ffffff;
+    }
+}

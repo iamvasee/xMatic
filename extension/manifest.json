@@ -54,7 +54,14 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["src/assets/robot.svg", "src/assets/time.svg", "src/assets/float.svg"],
+      "resources": [
+        "src/assets/robot.svg", 
+        "src/assets/time.svg", 
+        "src/assets/float.svg",
+        "src/ui/floating-panel.html",
+        "src/styles/floating-panel.css",
+        "src/styles/tabs.css"
+      ],
       "matches": ["https://twitter.com/*", "https://x.com/*"]
     }
   ]
