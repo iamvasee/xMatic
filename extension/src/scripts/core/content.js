@@ -27,14 +27,32 @@ class XMatic {
         this.aiHandler = new AIAPIHandler(this.config);
         await this.loadSvgIcons();
         this.uiManager = new UIManager(this.config, this.robotSvg, this.timeSvg);
-        await this.uiManager.addAIButtons();
-        this.uiManager.addFloatingButton();
+        
+        // Check if extension is enabled before adding UI elements
+        const isEnabled = await this.checkExtensionState();
+        
+        if (isEnabled) {
+            await this.uiManager.addAIButtons();
+            this.uiManager.addFloatingButton();
+        }
+        
         this.setupEventListeners();
         this.observeChanges();
         this.setupStorageListener();
         
         // Initialize floating panel interface using the proper manager
         this.initializeFloatingPanel();
+    }
+
+    async checkExtensionState() {
+        try {
+            const result = await chrome.storage.sync.get(['extensionEnabled']);
+            // Default to enabled if not set
+            return result.extensionEnabled !== false;
+        } catch (error) {
+            console.log('xMatic: Could not check extension state, defaulting to enabled:', error);
+            return true;
+        }
     }
 
     nuclearCleanup() {
@@ -110,32 +128,82 @@ class XMatic {
     }
 
     setupEventListeners() {
-        // Listen for AI button clicks from UI manager
-        document.addEventListener('xmatic-ai-click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.handleAIClick();
+        // Listen for messages from popup
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.action === 'toggleExtension') {
+                this.handleExtensionToggle(message.enabled);
+                sendResponse({ success: true });
+            }
         });
 
-        // Listen for floating button clicks from UI manager
-        document.addEventListener('xmatic-float-click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.handleFloatingButtonClick();
+        // Add click event listeners for AI buttons
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('[data-xmatic-ai-button]')) {
+                this.handleAIClick(e);
+            }
         });
     }
 
+    async handleExtensionToggle(enabled) {
+        console.log('xMatic: Extension toggle:', enabled);
+        
+        if (enabled) {
+            // Show all UI elements
+            await this.showUIElements();
+        } else {
+            // Hide all UI elements
+            this.hideUIElements();
+        }
+    }
+
+    async showUIElements() {
+        // Show floating button
+        const floatingButton = document.getElementById('xmatic-floating-button');
+        if (floatingButton) {
+            floatingButton.style.display = 'flex';
+        } else {
+            // Create floating button if it doesn't exist
+            this.uiManager.addFloatingButton();
+        }
+
+        // Show all AI buttons
+        const aiButtons = document.querySelectorAll('[data-xmatic-ai-button]');
+        if (aiButtons.length > 0) {
+            aiButtons.forEach(button => {
+                button.style.display = 'flex';
+            });
+        } else {
+            // Create AI buttons if they don't exist
+            await this.uiManager.addAIButtons();
+        }
+
+        console.log('xMatic: UI elements shown');
+    }
+
+    hideUIElements() {
+        // Hide floating button
+        const floatingButton = document.getElementById('xmatic-floating-button');
+        if (floatingButton) {
+            floatingButton.style.display = 'none';
+        }
+
+        // Hide all AI buttons
+        const aiButtons = document.querySelectorAll('[data-xmatic-ai-button]');
+        aiButtons.forEach(button => {
+            button.style.display = 'none';
+        });
+
+        console.log('xMatic: UI elements hidden');
+    }
+
     setupStorageListener() {
-        this.storageManager.setupStorageListener((extensionEnabled) => {
-            if (extensionEnabled.newValue === false) {
-                    // Extension disabled - remove all AI buttons and floating button
-                this.uiManager.removeAllAIButtons();
-                this.uiManager.removeFloatingButton();
-                } else {
-                    // Extension enabled - add AI buttons and floating button back
-                    this.addAIButtons();
-                    this.addFloatingButton();
-                }
+        // Listen for storage changes
+        chrome.storage.onChanged.addListener((changes, namespace) => {
+            if (namespace === 'sync' && changes.extensionEnabled) {
+                const newValue = changes.extensionEnabled.newValue;
+                console.log('xMatic: Extension state changed to:', newValue);
+                this.handleExtensionToggle(newValue !== false);
+            }
         });
     }
 
