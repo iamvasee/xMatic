@@ -420,6 +420,54 @@
     background: #ef4444;
 }
 
+/* Social Links */
+.social-links {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    justify-content: center;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.social-link:hover {
+    color: #374151;
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    transform: translateY(-1px);
+}
+
+.social-link .link-icon {
+    width: 14px;
+    height: 14px;
+    color: #6b7280;
+    transition: color 0.2s ease;
+}
+
+.social-link:hover .link-icon {
+    color: #374151;
+}
+
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     #xmatic-panel-container {
