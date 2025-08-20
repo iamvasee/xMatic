@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jhgjeaklmjohgmnephiaeiefejdhfnml?color=4285F4&label=Chrome%20Web%20Store&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/iamvasee/xMatic/releases)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/iamvasee/xMatic/releases)
 [![GitHub stars](https://img.shields.io/badge/GitHub-stars-yellow.svg?style=social&logo=github)](https://github.com/iamvasee/xMatic/stargazers)
 
 xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/X**. **Version 2.0.0 introduces a revolutionary floating panel interface** that integrates seamlessly within Twitter's interface. Generate multiple original tweets from context, create engaging replies, manage drafts, and customize AI styles all from a beautiful multi-tab floating panel.

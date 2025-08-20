@@ -5,12 +5,21 @@ class AIAPIHandler {
     }
 
     async generateReply(context) {
+        // Build the complete style instruction by combining base style and custom instructions
+        const baseStyle = this.config.style || 'conversational and helpful';
+        const customInstructions = this.config.customStyleInstructions || '';
+        
+        let styleInstruction = baseStyle;
+        if (customInstructions) {
+            styleInstruction = `${baseStyle}. ${customInstructions}`;
+        }
+        
         const systemPrompt = `You are an expert at crafting engaging Twitter/X replies. Follow these rules strictly:
 1. Keep responses under 280 characters - be concise and to the point
 2. Never use double quotes (") in your response.
 3. Never use (—) in your response.
 4. NEVER use @ symbols (@) in your response - this could accidentally tag other users
-5. Match the user's requested style: ${this.config.style || 'conversational and helpful'}
+5. Match the user's requested style: ${styleInstruction}
 6. Use proper Twitter etiquette - mentions, hashtags, and emojis when appropriate
 7. Never include any meta-commentary like "Here's a reply:" or "I would say:" - just provide the reply
 8. If the tweet is a question, directly answer it
@@ -30,10 +39,11 @@ Consider the author's influence and the tweet's engagement level when crafting y
         console.log('xMatic: 🚀 AI API - ===== REPLY GENERATION REQUEST =====');
         console.log('xMatic: 🚀 AI API - Provider:', this.config.selectedProvider || 'openai');
         console.log('xMatic: 🚀 AI API - Model:', this.config.selectedModel || 'gpt-4');
-        console.log('xMatic: 🚀 AI API - Style:', this.config.style || 'conversational and helpful');
+        console.log('xMatic: 🚀 AI API - Base Style:', this.config.style || 'conversational and helpful');
+        console.log('xMatic: 🚀 AI API - Custom Instructions:', this.config.customStyleInstructions || 'none');
+        console.log('xMatic: 🚀 AI API - Combined Style:', styleInstruction);
         console.log('xMatic: 🚀 AI API - ===== SYSTEM PROMPT =====');
         console.log('xMatic: 🚀 AI API -', systemPrompt);
-        console.log('xMatic: 🚀 AI API - ===== USER PROMPT =====');
         console.log('xMatic: 🚀 AI API -', userPrompt);
         console.log('xMatic: 🚀 AI API - ===== FULL CONTEXT =====');
         console.log('xMatic: 🚀 AI API -', JSON.stringify(context, null, 2));
@@ -130,25 +140,34 @@ Consider the author's influence and the tweet's engagement level when crafting y
     async generateMultipleReplies(context, count) {
         console.log('xMatic: 🚀 AI API - Generating', count, 'replies in single API call for context:', context);
         
-        const systemPrompt = `You are an expert at crafting engaging original Twitter/X posts in the ${this.config.style || 'conversational and helpful'} style. Generate exactly ${count} unique and diverse tweets about the given topic.
+        // Build the complete style instruction by combining base style and custom instructions
+        const baseStyle = this.config.style || 'conversational and helpful';
+        const customInstructions = this.config.customStyleInstructions || '';
+        
+        let styleInstruction = baseStyle;
+        if (customInstructions) {
+            styleInstruction = `${baseStyle}. ${customInstructions}`;
+        }
+        
+        const systemPrompt = `You are an expert at crafting engaging original Twitter/X posts in the ${styleInstruction} style. Generate exactly ${count} unique and diverse tweets about the given topic.
 
 IIMPORTANT: Return your response as a valid JSON array of strings, where each string is a different original tweet.
 
 Each tweet must be:
 1. Under 280 characters
-2. Written in ${this.config.style || 'conversational and helpful'} style
+2. Written in ${styleInstruction} style
 3. Unique and engaging
 4. Original standalone content
 
 Rules:
 - Never use double quotes (") or @ symbols
 - No meta-commentary, just tweet content
-- Vary tone and approach while maintaining ${this.config.style || 'conversational and helpful'} style
-- Use hashtags and emojis when appropriate for ${this.config.style || 'conversational and helpful'} content
+- Vary tone and approach while maintaining ${styleInstruction} style
+- Use hashtags and emojis when appropriate for ${styleInstruction} content
 
 Return ONLY a valid JSON array of ${count} strings.`;
 
-        const userPrompt = `Generate exactly ${count} original tweets in ${this.config.style || 'conversational and helpful'} style about this topic: ${context}
+        const userPrompt = `Generate exactly ${count} original tweets in ${styleInstruction} style about this topic: ${context}
 
 Return ONLY a valid JSON array of ${count} strings, no other text.`;
 
@@ -156,7 +175,9 @@ Return ONLY a valid JSON array of ${count} strings, no other text.`;
         console.log('xMatic: 🚀 AI API - ===== FULL AI REQUEST DETAILS =====');
         console.log('xMatic: 🚀 AI API - Provider:', this.config.selectedProvider || 'openai');
         console.log('xMatic: 🚀 AI API - Model:', this.config.selectedModel || 'gpt-4');
-        console.log('xMatic: 🚀 AI API - Style:', this.config.style || 'conversational and helpful');
+        console.log('xMatic: 🚀 AI API - Base Style:', this.config.style || 'conversational and helpful');
+        console.log('xMatic: 🚀 AI API - Custom Instructions:', this.config.customStyleInstructions || 'none');
+        console.log('xMatic: 🚀 AI API - Combined Style:', styleInstruction);
         console.log('xMatic: 🚀 AI API - Temperature:', 0.8);
         console.log('xMatic: 🚀 AI API - Count Requested:', count);
         console.log('xMatic: 🚀 AI API - Context Length:', context.length, 'characters');

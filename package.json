@@ -1,11 +1,11 @@
 {
   "name": "xmatic",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "AI-powered Twitter/X content creation tool for generating engaging tweets and replies",
   "main": "extension/manifest.json",
   "scripts": {
     "build": "echo 'Extension files are ready in the extension/ folder'",
-    "package": "cd extension && zip -r ../xMatic-v2.0.0.zip . -x '*.DS_Store'",
+    "package": "cd extension && zip -r ../xMatic-v2.1.0.zip . -x '*.DS_Store'",
     "dev": "echo 'Load the extension/ folder in Chrome Developer Mode'",
     "lint": "echo 'No linting configured yet'"
   },

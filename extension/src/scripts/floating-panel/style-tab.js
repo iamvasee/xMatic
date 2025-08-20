@@ -26,16 +26,57 @@ class StyleTab {
                 <!-- Base Style Selection -->
                 <div class="simple-form-group">
                     <label>Base Style</label>
-                    <select id="styleSelect" class="simple-select">
-                        <option value="">Select a base style</option>
-                        <option value="professional">Professional & Formal</option>
-                        <option value="casual">Casual & Friendly</option>
-                        <option value="humorous">Humorous & Witty</option>
-                        <option value="analytical">Analytical & Detailed</option>
-                        <option value="concise">Concise & Direct</option>
-                        <option value="empathetic">Empathetic & Supportive</option>
-                        <option value="creative">Creative & Imaginative</option>
-                    </select>
+                    <div class="style-cards">
+                        <button type="button" class="style-card" data-style="professional">
+                            <div class="style-card-icon">💼</div>
+                            <div class="style-card-content">
+                                <h4>Professional</h4>
+                                <p>Formal, business-like, and authoritative tone</p>
+                            </div>
+                        </button>
+                        <button type="button" class="style-card" data-style="casual">
+                            <div class="style-card-icon">😊</div>
+                            <div class="style-card-content">
+                                <h4>Casual</h4>
+                                <p>Friendly, relaxed, and approachable communication</p>
+                            </div>
+                        </button>
+                        <button type="button" class="style-card" data-style="humorous">
+                            <div class="style-card-icon">😄</div>
+                            <div class="style-card-content">
+                                <h4>Humorous</h4>
+                                <p>Witty, playful, and entertaining responses</p>
+                            </div>
+                        </button>
+                        <button type="button" class="style-card" data-style="analytical">
+                            <div class="style-card-icon">🔍</div>
+                            <div class="style-card-content">
+                                <h4>Analytical</h4>
+                                <p>Detailed, logical, and data-driven approach</p>
+                            </div>
+                        </button>
+                        <button type="button" class="style-card" data-style="concise">
+                            <div class="style-card-icon">⚡</div>
+                            <div class="style-card-content">
+                                <h4>Concise</h4>
+                                <p>Brief, direct, and to-the-point communication</p>
+                            </div>
+                        </button>
+                        <button type="button" class="style-card" data-style="empathetic">
+                            <div class="style-card-icon">🤗</div>
+                            <div class="style-card-content">
+                                <h4>Empathetic</h4>
+                                <p>Understanding, supportive, and caring tone</p>
+                            </div>
+                        </button>
+                        <button type="button" class="style-card" data-style="creative">
+                            <div class="style-card-icon">🎨</div>
+                            <div class="style-card-content">
+                                <h4>Creative</h4>
+                                <p>Imaginative, innovative, and artistic expression</p>
+                            </div>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Custom Instructions -->
@@ -50,6 +91,14 @@ class StyleTab {
                     <small class="help-text">Your custom instructions will be combined with the selected base style.</small>
                 </div>
 
+                <!-- Style Preview -->
+                <div class="simple-form-group">
+                    <label>Style Preview</label>
+                    <div id="stylePreview" class="style-preview">
+                        Select a base style or add custom instructions to see a preview...
+                    </div>
+                </div>
+
                 <!-- Action Buttons -->
                 <div class="simple-form-group">
                     <div class="style-actions">
@@ -57,7 +106,16 @@ class StyleTab {
                             Reset to Default
                         </button>
                         <button type="button" id="saveStyles" class="style-btn primary">
-                            Save Style
+                            <span class="btn-text">Save Style</span>
+                            <span class="btn-loading" style="display: none;">
+                                <svg class="spinner" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                        <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                                        <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                                Saving...
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -80,13 +138,13 @@ class StyleTab {
         // Setup event listeners for the style tab
         const saveBtn = container.querySelector('#saveStyles');
         const resetBtn = container.querySelector('#resetStyles');
-        const styleSelect = container.querySelector('#styleSelect');
+        const styleCards = container.querySelectorAll('.style-card');
         const customStyleInput = container.querySelector('#customStyleInput');
         
         console.log('xMatic: 🎨 Style Tab - Found elements:', {
             saveBtn: !!saveBtn,
             resetBtn: !!resetBtn,
-            styleSelect: !!styleSelect,
+            styleCards: styleCards.length,
             customStyleInput: !!customStyleInput
         });
         
@@ -100,10 +158,11 @@ class StyleTab {
             console.log('xMatic: 🎨 Style Tab - Reset button event listener added');
         }
         
-        if (styleSelect) {
-            styleSelect.addEventListener('change', () => this.handleStyleSelectChange());
-            console.log('xMatic: 🎨 Style Tab - Style select event listener added');
-        }
+        // Add event listeners to style cards
+        styleCards.forEach(card => {
+            card.addEventListener('click', () => this.handleStyleCardClick(card));
+            console.log('xMatic: 🎨 Style Tab - Style card event listener added for:', card.dataset.style);
+        });
         
         if (customStyleInput) {
             customStyleInput.addEventListener('input', () => this.handleCustomStyleChange());
@@ -113,18 +172,72 @@ class StyleTab {
         console.log('xMatic: 🎨 Style Tab - All event listeners set up successfully');
     }
 
-    loadCurrentStyle() {
-        // Load current style configuration
+    async loadCurrentStyle() {
+        // Load current style configuration from storage
         console.log('xMatic: 🎨 Style Tab - Loading current style...');
-        // TODO: Load from storage manager
+        
+        try {
+            if (window.StorageManager) {
+                const storageManager = new window.StorageManager();
+                
+                // Load base style and custom instructions
+                const [baseStyle, customInstructions] = await Promise.all([
+                    storageManager.getResponseStyle(),
+                    storageManager.getCustomStyleInstructions()
+                ]);
+                
+                console.log('xMatic: 🎨 Style Tab - Loaded from storage:', { baseStyle, customInstructions });
+                
+                // Update UI with loaded values
+                this.updateUIWithLoadedStyles(baseStyle, customInstructions);
+                
+                // Update preview
+                this.updateStylePreview();
+                
+            } else {
+                console.warn('xMatic: 🎨 Style Tab - StorageManager not available');
+            }
+        } catch (error) {
+            console.error('xMatic: 🎨 Style Tab - Error loading styles:', error);
+            this.showNotification('Error loading styles', 'error');
+        }
     }
 
+    updateUIWithLoadedStyles(baseStyle, customInstructions) {
+        const styleCards = document.querySelectorAll('.style-card');
+        const customStyleInput = document.querySelector('#customStyleInput');
+        
+        // Update style cards selection
+        if (baseStyle) {
+            styleCards.forEach(card => {
+                if (card.dataset.style === baseStyle) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+        }
+        
+        if (customStyleInput && customInstructions) {
+            customStyleInput.value = customInstructions;
+        }
+    }
 
-
-    handleStyleSelectChange() {
-        // Handle style select dropdown changes
-        console.log('xMatic: 🎨 Style Tab - Style select changed...');
+    handleStyleCardClick(clickedCard) {
+        // Handle style card selection
+        console.log('xMatic: 🎨 Style Tab - Style card clicked:', clickedCard.dataset.style);
+        
+        // Remove selection from all cards
+        document.querySelectorAll('.style-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        // Add selection to clicked card
+        clickedCard.classList.add('selected');
+        
+        // Update preview
         this.updateStylePreview();
+        this.showNotification('Style updated - preview refreshed', 'info');
     }
 
     handleCustomStyleChange() {
@@ -133,29 +246,192 @@ class StyleTab {
         this.updateStylePreview();
     }
 
-
-
-    handleSave() {
-        // Handle saving style configuration
-        console.log('xMatic: Saving styles...');
-        // TODO: Save to storage manager
+    updateStylePreview() {
+        // Update the style preview based on current selections
+        const selectedCard = document.querySelector('.style-card.selected');
+        const customStyleInput = document.querySelector('#customStyleInput');
+        const previewContainer = document.querySelector('#stylePreview');
+        
+        if (!customStyleInput || !previewContainer) return;
+        
+        const baseStyle = selectedCard ? selectedCard.dataset.style : null;
+        const customInstructions = customStyleInput.value;
+        
+        let previewText = '';
+        
+        if (baseStyle) {
+            previewText += `Base Style: ${this.getStyleDescription(baseStyle)}\n\n`;
+        }
+        
+        if (customInstructions) {
+            previewText += `Custom Instructions:\n${customInstructions}\n\n`;
+        }
+        
+        if (previewText) {
+            previewText += `Combined Effect:\nYour AI responses will use the ${baseStyle || 'default'} style combined with your custom instructions to create personalized, engaging content.`;
+        } else {
+            previewText = 'No style selected. AI will use default conversational style.';
+        }
+        
+        previewContainer.textContent = previewText;
     }
 
-    handleReset() {
+    getStyleDescription(style) {
+        const descriptions = {
+            'professional': 'Formal, business-like, and authoritative tone',
+            'casual': 'Friendly, relaxed, and approachable communication',
+            'humorous': 'Witty, playful, and entertaining responses',
+            'analytical': 'Detailed, logical, and data-driven approach',
+            'concise': 'Brief, direct, and to-the-point communication',
+            'empathetic': 'Understanding, supportive, and caring tone',
+            'creative': 'Imaginative, innovative, and artistic expression'
+        };
+        return descriptions[style] || 'Custom style';
+    }
+
+    async handleSave() {
+        // Handle saving style configuration
+        console.log('xMatic: 🎨 Style Tab - Saving styles...');
+        
+        try {
+            const selectedCard = document.querySelector('.style-card.selected');
+            const customStyleInput = document.querySelector('#customStyleInput');
+            
+            if (!customStyleInput) {
+                throw new Error('Custom style input not found');
+            }
+            
+            const baseStyle = selectedCard ? selectedCard.dataset.style : null;
+            const customInstructions = customStyleInput.value;
+            
+            if (!baseStyle && !customInstructions) {
+                this.showNotification('Please select a base style or add custom instructions', 'warning');
+                return;
+            }
+            
+            // Show saving state
+            this.showSavingState(true);
+            
+            if (window.StorageManager) {
+                const storageManager = new window.StorageManager();
+                
+                // Save both base style and custom instructions
+                const [styleSaved, instructionsSaved] = await Promise.all([
+                    baseStyle ? storageManager.saveResponseStyle(baseStyle) : Promise.resolve(true),
+                    customInstructions ? storageManager.saveCustomStyleInstructions(customInstructions) : Promise.resolve(true)
+                ]);
+                
+                if (styleSaved && instructionsSaved) {
+                    this.showNotification('Style configuration saved successfully!', 'success');
+                    console.log('xMatic: 🎨 Style Tab - Styles saved successfully');
+                } else {
+                    throw new Error('Failed to save some style settings');
+                }
+                
+            } else {
+                throw new Error('StorageManager not available');
+            }
+            
+        } catch (error) {
+            console.error('xMatic: 🎨 Style Tab - Error saving styles:', error);
+            this.showNotification(`Error saving styles: ${error.message}`, 'error');
+        } finally {
+            // Hide saving state
+            this.showSavingState(false);
+        }
+    }
+
+    showSavingState(isSaving) {
+        const saveBtn = document.querySelector('#saveStyles');
+        if (!saveBtn) return;
+        
+        const btnText = saveBtn.querySelector('.btn-text');
+        const btnLoading = saveBtn.querySelector('.btn-loading');
+        
+        if (isSaving) {
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-flex';
+            saveBtn.disabled = true;
+            saveBtn.classList.add('loading');
+        } else {
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
+            saveBtn.disabled = false;
+            saveBtn.classList.remove('loading');
+        }
+    }
+
+    async handleReset() {
         // Handle resetting style configuration
         console.log('xMatic: 🎨 Style Tab - Resetting styles...');
         
-        const styleSelect = document.querySelector('#styleSelect');
-        if (styleSelect) {
-            styleSelect.value = '';
+        try {
+            const styleCards = document.querySelectorAll('.style-card');
+            const customStyleInput = document.querySelector('#customStyleInput');
+            
+            // Remove selection from all style cards
+            styleCards.forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            if (customStyleInput) {
+                customStyleInput.value = '';
+            }
+            
+            // Clear from storage
+            if (window.StorageManager) {
+                const storageManager = new window.StorageManager();
+                await Promise.all([
+                    storageManager.saveResponseStyle(''),
+                    storageManager.saveCustomStyleInstructions('')
+                ]);
+            }
+            
+            // Update preview
+            this.updateStylePreview();
+            
+            this.showNotification('Styles reset to default successfully!', 'success');
+            console.log('xMatic: 🎨 Style Tab - Styles reset complete');
+            
+        } catch (error) {
+            console.error('xMatic: 🎨 Style Tab - Error resetting styles:', error);
+            this.showNotification('Error resetting styles', 'error');
         }
+    }
+
+    showNotification(message, type = 'info') {
+        // Create and show a notification
+        const notification = document.createElement('div');
+        notification.className = `style-notification ${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">${this.getNotificationIcon(type)}</span>
+                <span class="notification-text">${message}</span>
+            </div>
+        `;
         
-        const customStyleInput = document.querySelector('#customStyleInput');
-        if (customStyleInput) {
-            customStyleInput.value = '';
+        // Add to the style tab
+        const styleContent = document.querySelector('.style-content');
+        if (styleContent) {
+            styleContent.appendChild(notification);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 4000);
         }
-        
-        console.log('xMatic: 🎨 Style Tab - Styles reset complete');
+    }
+
+    getNotificationIcon(type) {
+        const icons = {
+            'success': '✅',
+            'success': '✅',
+            'warning': '⚠️',
+            'info': 'ℹ️'
+        };
+        return icons[type] || icons.info;
     }
 }
 

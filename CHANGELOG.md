@@ -5,9 +5,109 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2025-01-XX
+## [2.1.0] - 2025-01-XX
 
 ### Added
+- **🎨 Revolutionary Style Tab Redesign** - Complete overhaul from dropdown to card-based selection
+  - **Style Card Interface**: Beautiful card buttons with icons and descriptions for each style
+  - **Visual Selection System**: Selected cards get highlighted with blue border and background
+  - **7 Style Categories**: Professional, Casual, Humorous, Analytical, Concise, Empathetic, Creative
+  - **Custom Instructions Integration**: Seamless combination of base styles with user-defined instructions
+  - **Real-time Style Preview**: Dynamic preview showing combined style effect
+  - **Chrome Web Store Integration**: Direct link to extension rating and review
+
+- **🔄 Enhanced Storage System** - Robust multi-tiered storage with intelligent fallbacks
+  - **Multi-tiered Persistence**: Chrome sync storage → local storage → localStorage fallback
+  - **Data Chunking**: Automatic splitting of large data to overcome storage quotas
+  - **Cross-session Persistence**: Drafts and settings survive browser restarts
+  - **Quota Management**: Intelligent storage strategy for different data types
+  - **Error Recovery**: Graceful fallbacks when storage operations fail
+
+- **🎯 Advanced AI Integration** - Comprehensive style and instruction handling
+  - **Style Combination Engine**: Base style + custom instructions = personalized AI responses
+  - **Enhanced Logging**: Full AI request/response logging for debugging and transparency
+  - **Context-Aware Generation**: AI considers user's exact style preferences
+  - **Multi-Provider Style Support**: Consistent styling across OpenAI and Grok AI
+
+### Changed
+- **🎨 Complete Footer Redesign** - Modern, organized footer with improved social integration
+  - **Social Links Redesign**: Icon-only buttons with hover effects and tooltips
+  - **Unified Version Display**: Combined version and status into single, clean badge
+  - **Visual Consistency**: Removed gradients, simplified styling for professional appearance
+  - **Responsive Layout**: Mobile-optimized footer with adaptive design
+  - **Chrome Store Link**: Direct integration with actual Chrome Web Store listing
+
+- **🔧 Style Selection Interface** - Transformed from basic dropdown to interactive card system
+  - **Card-based Selection**: Replaced dropdown with beautiful, clickable style cards
+  - **Visual Feedback**: Hover effects, selection highlighting, and smooth animations
+  - **Responsive Grid**: Adaptive layout that works on all screen sizes
+  - **Icon Integration**: Emoji icons representing each style category
+  - **Better UX**: Clearer visual hierarchy and easier style selection
+
+- **📱 Enhanced Mobile Experience** - Comprehensive responsive design improvements
+  - **Mobile-optimized Footer**: Vertical layout on small screens with proper spacing
+  - **Responsive Style Cards**: Adaptive grid system for different screen sizes
+  - **Touch-friendly Interface**: Optimized button sizes and spacing for mobile devices
+  - **Performance Optimization**: Efficient rendering and smooth animations
+
+### Improved
+- **🎨 User Interface Design** - Professional, modern appearance with better visual hierarchy
+  - **Shadcn-inspired Design**: Clean, modern aesthetic with proper spacing and typography
+  - **Consistent Styling**: Unified design language across all components
+  - **Better Visual Feedback**: Loading states, notifications, and status indicators
+  - **Accessibility**: Improved tooltips, hover states, and visual cues
+
+- **🔧 Technical Architecture** - Enhanced code organization and performance
+  - **Modular CSS**: Better organized styles with logical grouping
+  - **Performance Optimization**: Efficient DOM manipulation and event handling
+  - **Error Handling**: Robust error handling with user-friendly feedback
+  - **Code Maintainability**: Cleaner, more organized code structure
+
+- **💾 Data Persistence** - Reliable storage across all scenarios
+  - **Storage Reliability**: Multiple fallback mechanisms ensure data persistence
+  - **Cross-device Sync**: Settings and preferences sync across devices
+  - **Quota Management**: Intelligent handling of storage limitations
+  - **Data Recovery**: Automatic reconstruction of chunked data
+
+### Fixed
+- **🐛 Critical Storage Issues** - Resolved data persistence problems
+  - **Draft Saving**: Fixed issues where generated tweets weren't appearing in drafts
+  - **Storage Quotas**: Implemented chunking and fallback strategies for large data
+  - **Cross-session Persistence**: Drafts now survive browser restarts reliably
+  - **API Integration**: Fixed custom instructions not being saved or used by AI
+
+- **🎨 UI/UX Issues** - Resolved interface problems and improved usability
+  - **Close Button**: Fixed floating panel close button functionality
+  - **Style Tab**: Resolved style configuration not saving properly
+  - **Responsive Design**: Fixed layout issues on different screen sizes
+  - **Visual Consistency**: Eliminated styling inconsistencies across components
+
+- **🔧 Technical Bugs** - Fixed underlying code issues
+  - **Event Listeners**: Resolved event handling problems in style selection
+  - **Storage Manager**: Fixed configuration retrieval and storage issues
+  - **AI API Integration**: Resolved style instruction combination problems
+  - **Console Logging**: Enhanced debugging and error tracking
+
+### Technical
+- **🔧 Enhanced Storage Manager** - Comprehensive storage management system
+  - **Multi-tiered Storage**: Intelligent use of sync, local, and localStorage
+  - **Data Chunking**: Automatic handling of large data objects
+  - **Quota Management**: Smart storage strategy for different data types
+  - **Error Recovery**: Robust fallback mechanisms for storage failures
+
+- **🎨 Advanced CSS Architecture** - Modern, responsive styling system
+  - **CSS Grid Layout**: Responsive grid system for style cards
+  - **Flexbox Integration**: Flexible layouts for different screen sizes
+  - **CSS Custom Properties**: Consistent theming and color management
+  - **Dark Mode Support**: Automatic theme detection and styling
+
+- **📱 Responsive Design System** - Mobile-first design approach
+  - **Breakpoint System**: Comprehensive responsive breakpoints
+  - **Mobile Optimization**: Touch-friendly interface elements
+  - **Performance**: Optimized rendering for mobile devices
+  - **Accessibility**: Improved mobile accessibility features
+
+## [2.0.0]
 - **🪟 Complete Floating Panel Interface** - Revolutionary new interface replacing the old popup system
   - **Multi-Tab Design**: AI Configuration, Generation, Drafts, and Style tabs for comprehensive control
   - **Floating Panel System**: Seamless integration within Twitter's interface

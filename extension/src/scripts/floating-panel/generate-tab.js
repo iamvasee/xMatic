@@ -216,7 +216,9 @@ class GenerateTab {
                     'openaiKey',
                     'grokKey',
                     'maxTokens',
-                    'temperature'
+                    'temperature',
+                    'style',
+                    'customStyleInstructions'
                 ], (result) => {
                     console.log('xMatic: 🚀 Retrieved config from storage:', result);
                     

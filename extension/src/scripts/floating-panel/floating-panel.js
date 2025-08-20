@@ -73,9 +73,10 @@ class FloatingPanelManager {
             this.togglePanel();
         });
 
-        // Close button
+        // Close button - use event delegation since button is created dynamically
         document.addEventListener('click', (e) => {
-            if (e.target.id === 'closePanel') {
+            if (e.target.closest('#closePanel') || e.target.id === 'closePanel') {
+                console.log('xMatic: Close button clicked via delegation');
                 this.closePanel();
             }
         });
@@ -116,10 +117,15 @@ class FloatingPanelManager {
     }
 
     openPanel() {
-        if (this.isOpen) return;
+        console.log('xMatic: openPanel() called, isOpen:', this.isOpen);
+        if (this.isOpen) {
+            console.log('xMatic: Panel already open, returning');
+            return;
+        }
 
         // Create panel if it doesn't exist
         if (!this.panel) {
+            console.log('xMatic: Creating new panel...');
             this.createPanel();
         }
 
@@ -127,6 +133,7 @@ class FloatingPanelManager {
         this.panel.style.display = 'block';
         this.panel.style.transform = 'translateX(0)';
         this.isOpen = true;
+        console.log('xMatic: Panel opened, isOpen:', this.isOpen);
 
         // Update floating button
         this.floatingButton.style.transform = 'translateY(-50%) scale(0.95)';
@@ -135,25 +142,34 @@ class FloatingPanelManager {
         
         // Load current tab content
         this.loadTabContent();
+        console.log('xMatic: Panel open complete');
     }
 
     closePanel() {
-        if (!this.isOpen) return;
+        console.log('xMatic: closePanel() called, isOpen:', this.isOpen);
+        if (!this.isOpen) {
+            console.log('xMatic: Panel already closed, returning');
+            return;
+        }
 
+        console.log('xMatic: Closing panel...');
         // Hide panel
         this.panel.style.transform = 'translateX(100%)';
         setTimeout(() => {
             if (this.panel) {
                 this.panel.style.display = 'none';
+                console.log('xMatic: Panel hidden');
             }
         }, 300);
 
         this.isOpen = false;
+        console.log('xMatic: Panel closed, isOpen:', this.isOpen);
 
         // Reset floating button
         this.floatingButton.style.transform = 'translateY(-50%) scale(1)';
         this.floatingButton.style.background = '#ffffff';
         this.floatingButton.style.borderColor = '#e5e7eb';
+        console.log('xMatic: Floating button reset');
     }
 
     createPanel() {
@@ -183,6 +199,28 @@ class FloatingPanelManager {
 
         // Add to page
         document.body.appendChild(this.panel);
+        
+        // Set up close button event listener directly
+        const closeButton = this.panel.querySelector('#closePanel');
+        if (closeButton) {
+            closeButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('xMatic: Close button clicked');
+                this.closePanel();
+            });
+            console.log('xMatic: Close button event listener added');
+            
+            // Also add mousedown event as backup
+            closeButton.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('xMatic: Close button mousedown');
+                this.closePanel();
+            });
+        } else {
+            console.warn('xMatic: Close button not found');
+        }
     }
 
     loadPanelHTML() {
@@ -229,31 +267,37 @@ class FloatingPanelManager {
             <div class="panel-footer">
                 <div class="footer-content">
                     <div class="social-links">
-                        <a href="https://iamvasee.com" target="_blank" rel="noopener noreferrer" class="social-link">
-                            <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <a href="https://iamvasee.com" target="_blank" rel="noopener noreferrer" class="social-link" title="Visit Website">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>
-                            Website
                         </a>
-                        <a href="https://github.com/iamvasee/xMatic" target="_blank" rel="noopener noreferrer" class="social-link">
-                            <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <a href="https://github.com/iamvasee/xMatic" target="_blank" rel="noopener noreferrer" class="social-link" title="View on GitHub">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7a3.37 3.37 0 0 0-.94 2.6V22"></path>
                             </svg>
-                            GitHub
                         </a>
-                        <a href="https://x.com/iamvasee" target="_blank" rel="noopener noreferrer" class="social-link">
-                            <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <a href="https://x.com/iamvasee" target="_blank" rel="noopener noreferrer" class="social-link" title="Follow on X">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
                             </svg>
-                            Twitter
+                        </a>
+                        <a href="https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml" target="_blank" rel="noopener noreferrer" class="social-link" title="Rate on Chrome Web Store">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
                         </a>
                     </div>
+                    
+                    <!-- Center: Divider -->
+                    <div class="footer-divider"></div>
+                    
                     <div class="footer-info">
-                        <div class="version-info">
-                            <span class="version-badge">v2.0.0</span>
-                        </div>
-                        <div class="status-indicator" id="panelStatus">
+                        <div class="info-badge" id="panelStatus">
+                            <span class="info-icon">🚀</span>
+                            <span class="info-text">v2.1.0</span>
+                            <span class="info-separator">•</span>
                             <span class="status-dot"></span>
                             <span class="status-text">Ready</span>
                         </div>

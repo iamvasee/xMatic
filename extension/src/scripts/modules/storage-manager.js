@@ -18,6 +18,7 @@ class StorageManager {
                 'grokKey', 
                 'selectedProvider', 
                 'style', 
+                'customStyleInstructions',
                 'selectedModel', 
                 'extensionEnabled'
             ]);
@@ -178,6 +179,36 @@ class StorageManager {
     async getResponseStyle() {
         const config = await this.getConfig();
         return config.style || 'conversational and helpful';
+    }
+
+    // Save response style configuration
+    async saveResponseStyle(style) {
+        try {
+            await this.setConfigValue('style', style);
+            console.log('xMatic: 🗄️ Style saved successfully:', style);
+            return true;
+        } catch (error) {
+            console.error('xMatic: 🗄️ Error saving style:', error);
+            return false;
+        }
+    }
+
+    // Get custom style instructions
+    async getCustomStyleInstructions() {
+        const config = await this.getConfig();
+        return config.customStyleInstructions || '';
+    }
+
+    // Save custom style instructions
+    async saveCustomStyleInstructions(instructions) {
+        try {
+            await this.setConfigValue('customStyleInstructions', instructions);
+            console.log('xMatic: 🗄️ Custom style instructions saved successfully');
+            return true;
+        } catch (error) {
+            console.error('xMatic: 🗄️ Error saving custom style instructions:', error);
+            return false;
+        }
     }
 
     // Save large data in chunks to avoid quota limits
