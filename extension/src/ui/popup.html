@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>xMatic - AI Twitter Reply Generator</title>
+  <title>xMatic - AI Twitter Content Creation Tool</title>
   <style>
     * {
       margin: 0;
@@ -13,7 +13,7 @@
     }
 
     body {
-      width: 400px;
+      width: 480px;
       background: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       color: #09090b;
@@ -23,26 +23,25 @@
     }
 
     .container {
-      padding: 20px;
+      padding: 24px;
       background: #ffffff;
-      border: 1px solid #e4e4e7;
     }
 
     .header {
-      margin-bottom: 20px;
-      border-bottom: 1px solid #e4e4e7;
-      padding-bottom: 12px;
+      margin-bottom: 24px;
       text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e4e4e7;
     }
 
     .logo-container {
       display: flex;
       justify-content: center;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .logo-image {
-      height: 36px;
+      height: 40px;
       width: auto;
       object-fit: contain;
     }
@@ -50,281 +49,27 @@
     .tagline {
       font-size: 14px;
       color: #71717a;
-      font-weight: 400;
-      margin-top: 4px;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group:last-of-type {
-      margin-bottom: 0;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 13px;
       font-weight: 500;
-      color: #09090b;
+      margin-top: 8px;
     }
 
-    input,
-    textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #e4e4e7;
-      border-radius: 6px;
-      background: #ffffff;
-      color: #09090b;
-      font-size: 14px;
-      font-family: inherit;
-      transition: all 0.2s ease;
-    }
-
-    input:focus,
-    textarea:focus {
-      outline: none;
-      border-color: #09090b;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: #a1a1aa;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 70px;
-      line-height: 1.4;
-    }
-
-
-
-
-
-    .footer {
-      margin-top: 0.5rem;
-      padding-top: 0.75rem;
-      border-top: 1px solid hsl(240 3.7% 15.9%);
+    .main-content {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      font-size: 0.875rem;
-      color: hsl(240 3.8% 46.1%);
-      text-align: center;
-    }
-    
-    .version {
-      color: hsl(240 3.8% 46.1%);
-      font-size: 0.75rem;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
-    
-    /* Dark mode styles */
-    @media (prefers-color-scheme: dark) {
-      .footer {
-        border-top-color: hsl(240 3.7% 15.9%);
-        color: hsl(240 5% 64.9%);
-      }
-      
-      .version {
-        color: hsl(240 5% 64.9%);
-      }
+      gap: 20px;
     }
 
-
-
-    .link {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      color: #71717a;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 500;
-      padding: 6px 10px;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-      background: #f8f9fa;
-      border: 1px solid #e4e4e7;
-    }
-
-    .link:hover {
-      color: #09090b;
-      background: #f1f3f4;
-      border-color: #d1d5db;
-    }
-
-    .link-icon {
-      width: 14px;
-      height: 14px;
-      fill: currentColor;
-    }
-
-    .version {
-      font-size: 12px;
-      color: #a1a1aa;
-      font-weight: 400;
-      text-align: center;
-    }
-
-
-
-
-
-    /* New styles for enhanced popup */
-
-
-
-
-
-
-    /* Toggle Switch Styles */
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 48px;
-      height: 24px;
-      cursor: pointer;
-      z-index: 1;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 48px;
-      height: 24px;
-      position: absolute;
-      z-index: 2;
-      cursor: pointer;
-      margin: 0;
-      padding: 0;
-    }
-
-    .toggle-slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #e4e4e7;
-      transition: 0.3s;
-      border-radius: 24px;
-      border: 1px solid #d1d5db;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .toggle-slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 2px;
-      background-color: white;
-      border-radius: 50%;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      transition: 0.3s;
-    }
-
-    input:checked + .toggle-slider {
-      background-color: #09090b;
-      border-color: #09090b;
-    }
-
-    input:checked + .toggle-slider:before {
-      transform: translateX(24px);
-    }
-    
-    .toggle-switch:hover .toggle-slider {
-      background-color: #d1d5db;
-    }
-    
-    input:checked + .toggle-slider:hover {
-      background-color: #18181b;
-    }
-
-    /* Disabled toggle state */
-    .toggle-switch input:disabled + .toggle-slider {
-      background-color: #f1f3f4;
-      border-color: #d1d5db;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .toggle-switch input:disabled + .toggle-slider:before {
-      background-color: #e4e4e7;
-    }
-
-    .toggle-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #09090b;
-      margin: 0;
-    }
-
-    .help-text {
-      font-size: 12px;
-      color: #71717a;
-      margin-top: 4px;
-      display: block;
-    }
-
-    .extension-status {
-      margin-top: 8px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      background: #f8f9fa;
-      border: 1px solid #e4e4e7;
-    }
-
-    .status-indicator {
-      font-size: 12px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-indicator.enabled {
-      color: #166534;
-    }
-
-    .status-indicator.disabled {
-      color: #dc2626;
-    }
-
-    /* Hidden elements */
-    .grok-section-hidden {
-      display: none;
-    }
-
-    .grok-models-hidden {
-      display: none;
-    }
-
-    /* Section Styles */
     .section {
-      margin-bottom: 20px;
-      padding: 16px;
-      background: #f8f9fa;
+      background: #ffffff;
       border: 1px solid #e4e4e7;
-      border-radius: 8px;
+      border-radius: 12px;
+      overflow: hidden;
     }
 
     .section-header {
-      margin-bottom: 12px;
+      background: #f8f9fa;
+      padding: 16px 20px;
+      border-bottom: 1px solid #e4e4e7;
     }
 
     .section-title {
@@ -332,6 +77,213 @@
       font-weight: 600;
       color: #09090b;
       margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-content {
+      padding: 20px;
+    }
+
+    .instruction-step {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #f1f3f4;
+    }
+
+    .instruction-step:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .step-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #09090b;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-description {
+      font-size: 13px;
+      color: #71717a;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .api-instructions {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .api-provider {
+      background: #f8f9fa;
+      border: 1px solid #e4e4e7;
+      border-radius: 6px;
+      padding: 12px;
+    }
+
+    .api-provider h5 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #09090b;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .api-provider ol {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      counter-reset: step-counter;
+    }
+
+    .api-provider li {
+      font-size: 12px;
+      color: #71717a;
+      padding-left: 28px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .api-provider li::before {
+      content: counter(step-counter);
+      counter-increment: step-counter;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: #09090b;
+      color: white;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .api-provider a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .api-provider a:hover {
+      text-decoration: underline;
+    }
+
+    .instruction-step ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .instruction-step ul li {
+      font-size: 12px;
+      color: #71717a;
+      margin-bottom: 4px;
+    }
+
+    .instruction-step ol {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .instruction-step ol li {
+      font-size: 12px;
+      color: #71717a;
+      margin-bottom: 4px;
+    }
+
+    .footer {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #e4e4e7;
+      text-align: center;
+    }
+
+    .version {
+      color: #71717a;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #0a0a0a;
+        color: #fafafa;
+      }
+
+      .container {
+        background: #0a0a0a;
+      }
+
+      .section {
+        background: #1a1a1a;
+        border-color: #262626;
+      }
+
+      .section-header {
+        background: #262626;
+        border-color: #404040;
+      }
+
+      .section-title {
+        color: #fafafa;
+      }
+
+      .step-title {
+        color: #fafafa;
+      }
+
+      .step-description {
+        color: #a3a3a3;
+      }
+
+      .api-provider {
+        background: #262626;
+        border-color: #404040;
+      }
+
+      .api-provider h5 {
+        color: #fafafa;
+      }
+
+      .api-provider li {
+        color: #a3a3a3;
+      }
+
+      .api-provider li::before {
+        background: #fafafa;
+        color: #0a0a0a;
+        content: counter(step-counter);
+      }
+
+      .instruction-step ul li,
+      .instruction-step ol li {
+        color: #a3a3a3;
+      }
+
+      .footer {
+        border-color: #262626;
+      }
+
+      .version {
+        color: #a3a3a3;
+      }
     }
   </style>
 </head>
@@ -342,31 +294,89 @@
       <div class="logo-container">
         <img src="../assets/xMatic.png" alt="xMatic" class="logo-image">
       </div>
-      <div class="tagline">AI-powered replies for X/Twitter</div>
+      <div class="tagline">AI-powered content creation for X/Twitter</div>
     </div>
 
-    <!-- Extension Toggle Section -->
-    <div class="section">
-      <div class="section-header">
-        <h3 class="section-title">⚡ Extension Status</h3>
-      </div>
-      
-              <div class="form-group">
-          <div class="toggle-row">
-            <span class="toggle-label">Enable xMatic on Twitter</span>
-            <label for="extensionToggle" class="toggle-switch">
-              <input type="checkbox" id="extensionToggle" checked aria-label="Enable xMatic extension on Twitter pages">
-              <span class="toggle-slider"></span>
-            </label>
+    <div class="main-content">
+      <!-- Quick Start Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3 class="section-title">🚀 Quick Start</h3>
+        </div>
+        <div class="section-content">
+          <div class="instruction-step">
+            <h4 class="step-title">1. Go to x.com</h4>
+            <p class="step-description">Navigate to Twitter/X and look for the floating panel button (→) on the right side of your screen.</p>
           </div>
-          <small class="help-text">When disabled, the AI button won't appear on Twitter pages</small>
-          <div id="extensionStatus" class="extension-status">
-            <span class="status-indicator enabled">🟢 Extension is currently active</span>
+          
+          <div class="instruction-step">
+            <h4 class="step-title">2. Get API Keys</h4>
+            <p class="step-description">Choose your AI provider and get your API key:</p>
+            <div class="api-instructions">
+              <div class="api-provider">
+                <h5>🤖 OpenAI</h5>
+                <ol>
+                  <li>Visit <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">OpenAI Platform</a></li>
+                  <li>Sign in or create account</li>
+                  <li>Create new secret key</li>
+                  <li>Copy the API key</li>
+                </ol>
+              </div>
+              <div class="api-provider">
+                <h5>🧠 Grok AI</h5>
+                <ol>
+                  <li>Visit <a href="https://console.x.ai" target="_blank" rel="noopener">xAI Console</a></li>
+                  <li>Sign in with X account</li>
+                  <li>Generate API key</li>
+                  <li>Copy the API key</li>
+                </ol>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- Setup Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3 class="section-title">⚙️ Setup & Configuration</h3>
+        </div>
+        <div class="section-content">
+          <div class="instruction-step">
+            <h4 class="step-title">3. Configure AI Settings</h4>
+            <p class="step-description">In the floating panel, go to the <strong>AI Tab</strong> and paste your API key, select provider, choose model, and test the connection.</p>
+          </div>
+          
+          <div class="instruction-step">
+            <h4 class="step-title">4. Customize Styles</h4>
+            <p class="step-description">Go to the <strong>Style Tab</strong> to choose preset styles (Professional, Casual, Humorous, etc.) and add custom instructions for your personality.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usage Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3 class="section-title">💬 How to Use</h3>
+        </div>
+        <div class="section-content">
+          <div class="instruction-step">
+            <h4 class="step-title">5. Generate Replies</h4>
+            <p class="step-description">Reply to any tweet → Look for the 🤖 robot button in compose toolbar → Click to open floating panel → Use <strong>Generate Tab</strong> to create AI-powered replies.</p>
+          </div>
+          
+          <div class="instruction-step">
+            <h4 class="step-title">6. Create Original Tweets</h4>
+            <p class="step-description">Click "Post" → Click 🤖 robot button → Go to <strong>Generate Tab</strong> → Input context/ideas → AI generates multiple tweet variations.</p>
+          </div>
+          
+          <div class="instruction-step">
+            <h4 class="step-title">7. Manage Drafts</h4>
+            <p class="step-description">Use the <strong>Drafts Tab</strong> to save, edit, organize, and copy AI-generated content to your tweet compose box.</p>
+          </div>
+        </div>
+      </div>
     </div>
-
-
 
     <div class="footer">
       <div class="version">v2.0.0</div>

@@ -31,13 +31,35 @@ class StorageManager {
     // Get specific configuration value
     async getConfigValue(key) {
         try {
-            if (!chrome || !chrome.storage || !chrome.storage.sync) {
+            if (!chrome || !chrome.storage) {
                 console.warn('xMatic: 🗄️ Chrome storage API not available - extension context may be invalid');
                 return null;
             }
             
-            const result = await chrome.storage.sync.get([key]);
-            return result[key];
+            // For drafts, get from local storage (higher quota)
+            if (key === 'drafts') {
+                if (!chrome.storage.local) {
+                    throw new Error('Local storage not available');
+                }
+                
+                const result = await chrome.storage.local.get([key]);
+                const drafts = result[key];
+                
+                // Check if drafts are chunked and reconstruct if needed
+                if (drafts && Array.isArray(drafts) && drafts.length > 0 && drafts[0]._chunked) {
+                    console.log('xMatic: 🗄️ Reconstructing chunked drafts...');
+                    return await this.reconstructChunkedData(key);
+                }
+                
+                return drafts;
+            } else {
+                // For config values, get from sync storage
+                if (!chrome.storage.sync) {
+                    throw new Error('Sync storage not available');
+                }
+                const result = await chrome.storage.sync.get([key]);
+                return result[key];
+            }
         } catch (error) {
             console.error('xMatic: 🗄️ Error getting config value:', error);
             return null;
@@ -47,12 +69,37 @@ class StorageManager {
     // Set configuration value
     async setConfigValue(key, value) {
         try {
-            if (!chrome || !chrome.storage || !chrome.storage.sync) {
+            if (!chrome || !chrome.storage) {
                 console.warn('xMatic: 🗄️ Chrome storage API not available - extension context may be invalid');
                 return false;
             }
             
-            await chrome.storage.sync.set({ [key]: value });
+            // Use local storage for drafts (higher quota) and sync storage for config
+            if (key === 'drafts') {
+                // For drafts, use local storage which has much higher limits
+                if (!chrome.storage.local) {
+                    throw new Error('Local storage not available');
+                }
+                
+                // Check if data is too large and chunk if needed
+                const dataSize = JSON.stringify(value).length;
+                console.log(`xMatic: 🗄️ Saving ${key} with size: ${dataSize} bytes`);
+                
+                if (dataSize > 5000000) { // 5MB limit for local storage
+                    console.warn('xMatic: 🗄️ Data too large, attempting to chunk...');
+                    return await this.saveChunkedData(key, value);
+                }
+                
+                await chrome.storage.local.set({ [key]: value });
+                console.log('xMatic: 🗄️ Drafts saved to local storage successfully');
+            } else {
+                // For config values, use sync storage
+                if (!chrome.storage.sync) {
+                    throw new Error('Sync storage not available');
+                }
+                await chrome.storage.sync.set({ [key]: value });
+            }
+            
             return true;
         } catch (error) {
             console.error('xMatic: 🗄️ Error setting config value:', error);
@@ -131,6 +178,65 @@ class StorageManager {
     async getResponseStyle() {
         const config = await this.getConfig();
         return config.style || 'conversational and helpful';
+    }
+
+    // Save large data in chunks to avoid quota limits
+    async saveChunkedData(key, data) {
+        try {
+            console.log('xMatic: 🗄️ Chunking large data for storage...');
+            
+            // Split data into chunks of 1000 items
+            const chunkSize = 1000;
+            const chunks = [];
+            
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, i + chunkSize);
+                chunks.push({
+                    _chunked: true,
+                    _chunkIndex: i / chunkSize,
+                    _totalChunks: Math.ceil(data.length / chunkSize),
+                    data: chunk
+                });
+            }
+            
+            // Save chunks to local storage
+            await chrome.storage.local.set({ [key]: chunks });
+            console.log(`xMatic: 🗄️ Data chunked into ${chunks.length} pieces and saved successfully`);
+            
+            return true;
+        } catch (error) {
+            console.error('xMatic: 🗄️ Error saving chunked data:', error);
+            return false;
+        }
+    }
+
+    // Reconstruct chunked data
+    async reconstructChunkedData(key) {
+        try {
+            const result = await chrome.storage.local.get([key]);
+            const chunks = result[key];
+            
+            if (!chunks || !Array.isArray(chunks)) {
+                return [];
+            }
+            
+            // Sort chunks by index and reconstruct
+            const sortedChunks = chunks.sort((a, b) => a._chunkIndex - b._chunkIndex);
+            const reconstructedData = [];
+            
+            for (const chunk of sortedChunks) {
+                if (chunk.data && Array.isArray(chunk.data)) {
+                    reconstructedData.push(...chunk.data);
+                }
+            }
+            
+            console.log(`xMatic: 🗄️ Reconstructed ${reconstructedData.length} items from ${chunks.length} chunks`);
+            return reconstructedData;
+            
+        } catch (error) {
+            console.error('xMatic: 🗄️ Error reconstructing chunked data:', error);
+            return [];
+        }
     }
 }
 

@@ -84,23 +84,33 @@ class DraftsTab {
     }
 
     loadDraftsDirectly() {
-        // Try local storage first (for generated content)
-        chrome.storage.local.get(['drafts'], (localResult) => {
-            if (localResult.drafts && localResult.drafts.length > 0) {
-                console.log('xMatic: 📄 Found', localResult.drafts.length, 'drafts in local storage');
-                this.displayDrafts(localResult.drafts);
-                return;
-            }
+        console.log('xMatic: 📄 Loading drafts from all storage sources for maximum persistence...');
+        
+        // Try sync storage first (most persistent across sessions)
+        chrome.storage.sync.get(['drafts'], (syncResult) => {
+            const syncDrafts = syncResult.drafts || [];
+            console.log('xMatic: 📄 Found', syncDrafts.length, 'drafts in sync storage');
             
-            // Fallback to sync storage
-            chrome.storage.sync.get(['drafts'], (syncResult) => {
-                if (syncResult.drafts && syncResult.drafts.length > 0) {
-                    console.log('xMatic: 📄 Found', syncResult.drafts.length, 'drafts in sync storage');
-                    this.displayDrafts(syncResult.drafts);
-                } else {
-                    console.log('xMatic: 📄 No drafts found in any storage');
-                    this.displayDrafts([]);
+            // Also check local storage
+            chrome.storage.local.get(['drafts'], (localResult) => {
+                const localDrafts = localResult.drafts || [];
+                console.log('xMatic: 📄 Found', localDrafts.length, 'drafts in local storage');
+                
+                // Check localStorage as last resort
+                let localStorageDrafts = [];
+                try {
+                    localStorageDrafts = JSON.parse(localStorage.getItem('xMatic_drafts') || '[]');
+                    console.log('xMatic: 📄 Found', localStorageDrafts.length, 'drafts in localStorage');
+                } catch (error) {
+                    console.log('xMatic: 📄 No drafts in localStorage');
                 }
+                
+                // Combine all sources and deduplicate
+                const allDrafts = [...syncDrafts, ...localDrafts, ...localStorageDrafts];
+                const uniqueDrafts = this.deduplicateDrafts(allDrafts);
+                
+                console.log('xMatic: 📄 Combined total drafts from all sources:', uniqueDrafts.length);
+                this.displayDrafts(uniqueDrafts);
             });
         });
     }
@@ -166,6 +176,18 @@ class DraftsTab {
         return groups;
     }
 
+    deduplicateDrafts(drafts) {
+        // Remove duplicate drafts based on ID
+        const seen = new Set();
+        return drafts.filter(draft => {
+            if (seen.has(draft.id)) {
+                return false;
+            }
+            seen.add(draft.id);
+            return true;
+        });
+    }
+
 
 
     deleteDraft(draftId) {
@@ -188,8 +210,11 @@ class DraftsTab {
         // Handle new drafts from generate tab
         console.log('xMatic: 📄 Drafts tab - Handling update with', newDrafts.length, 'new drafts');
         
-        // Reload drafts to show new content
-        this.loadDrafts();
+        // Force reload drafts to show new content
+        setTimeout(() => {
+            console.log('xMatic: 📄 Drafts tab - Forcing reload after update...');
+            this.loadDrafts();
+        }, 100);
         
         // Show notification
         this.showNewDraftsNotification(newDrafts.length);

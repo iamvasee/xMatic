@@ -26,6 +26,19 @@ Tweet Details:
 
 Consider the author's influence and the tweet's engagement level when crafting your response.`;
 
+        // Enhanced logging for reply generation
+        console.log('xMatic: 🚀 AI API - ===== REPLY GENERATION REQUEST =====');
+        console.log('xMatic: 🚀 AI API - Provider:', this.config.selectedProvider || 'openai');
+        console.log('xMatic: 🚀 AI API - Model:', this.config.selectedModel || 'gpt-4');
+        console.log('xMatic: 🚀 AI API - Style:', this.config.style || 'conversational and helpful');
+        console.log('xMatic: 🚀 AI API - ===== SYSTEM PROMPT =====');
+        console.log('xMatic: 🚀 AI API -', systemPrompt);
+        console.log('xMatic: 🚀 AI API - ===== USER PROMPT =====');
+        console.log('xMatic: 🚀 AI API -', userPrompt);
+        console.log('xMatic: 🚀 AI API - ===== FULL CONTEXT =====');
+        console.log('xMatic: 🚀 AI API -', JSON.stringify(context, null, 2));
+        console.log('xMatic: 🚀 AI API - ===== END REPLY REQUEST =====');
+
         const selectedModel = this.config.selectedModel || 'gpt-4';
         const selectedProvider = this.config.selectedProvider || 'openai';
 
@@ -74,6 +87,11 @@ Consider the author's influence and the tweet's engagement level when crafting y
             requestBody.presence_penalty = 0.3;
         }
 
+        console.log('xMatic: 🚀 AI API - ===== REPLY API REQUEST =====');
+        console.log('xMatic: 🚀 AI API - Endpoint:', apiEndpoint);
+        console.log('xMatic: 🚀 AI API - Request Body:', JSON.stringify(requestBody, null, 2));
+        console.log('xMatic: 🚀 AI API - ===== END REPLY API REQUEST =====');
+
         const response = await fetch(apiEndpoint, {
             method: 'POST',
             headers: headers,
@@ -92,7 +110,15 @@ Consider the author's influence and the tweet's engagement level when crafting y
             throw new Error(`${providerName} Error: ${data.error.message}`);
         }
 
-        return data.choices?.[0]?.message?.content || '';
+        const content = data.choices?.[0]?.message?.content || '';
+        
+        console.log('xMatic: 🚀 AI API - ===== REPLY AI RESPONSE =====');
+        console.log('xMatic: 🚀 AI API - Response Status:', response.status);
+        console.log('xMatic: 🚀 AI API - Full AI Response:', content);
+        console.log('xMatic: 🚀 AI API - Response Length:', content.length, 'characters');
+        console.log('xMatic: 🚀 AI API - ===== END REPLY RESPONSE =====');
+
+        return content;
     }
 
     // Method to update configuration
@@ -104,33 +130,43 @@ Consider the author's influence and the tweet's engagement level when crafting y
     async generateMultipleReplies(context, count) {
         console.log('xMatic: 🚀 AI API - Generating', count, 'replies in single API call for context:', context);
         
-        const systemPrompt = `You are an expert at crafting engaging Twitter/X replies. Generate exactly ${count} unique and diverse replies to the given context.
+        const systemPrompt = `You are an expert at crafting engaging original Twitter/X posts in the ${this.config.style || 'conversational and helpful'} style. Generate exactly ${count} unique and diverse tweets about the given topic.
 
-IMPORTANT: Return your response as a valid JSON array of strings, where each string is a different reply. Each reply must be:
+IIMPORTANT: Return your response as a valid JSON array of strings, where each string is a different original tweet.
+
+Each tweet must be:
 1. Under 280 characters
-2. Unique and different from the others
-3. Engaging and relevant to the context
-4. Following Twitter best practices
+2. Written in ${this.config.style || 'conversational and helpful'} style
+3. Unique and engaging
+4. Original standalone content
 
-Example response format:
-["First unique reply here", "Second unique reply here", "Third unique reply here"]
+Rules:
+- Never use double quotes (") or @ symbols
+- No meta-commentary, just tweet content
+- Vary tone and approach while maintaining ${this.config.style || 'conversational and helpful'} style
+- Use hashtags and emojis when appropriate for ${this.config.style || 'conversational and helpful'} content
 
-Rules for each reply:
-1. Keep responses under 280 characters - be concise and to the point
-2. Never use double quotes (") in your response.
-3. Never use (—) in your response.
-4. NEVER use @ symbols (@) in your response - this could accidentally tag other users
-5. Match the user's requested style: ${this.config.style || 'conversational and helpful'}
-6. Use proper Twitter etiquette - mentions, hashtags, and emojis when appropriate
-7. Never include any meta-commentary like "Here's a reply:" or "I would say:" - just provide the reply
+Return ONLY a valid JSON array of ${count} strings.`;
 
-Make each reply genuinely different - vary the tone, approach, hashtags, and emojis used.`;
-
-        const userPrompt = `Generate exactly ${count} unique Twitter replies to this context:
-
-${context}
+        const userPrompt = `Generate exactly ${count} original tweets in ${this.config.style || 'conversational and helpful'} style about this topic: ${context}
 
 Return ONLY a valid JSON array of ${count} strings, no other text.`;
+
+        // Enhanced logging to show exactly what goes to the AI
+        console.log('xMatic: 🚀 AI API - ===== FULL AI REQUEST DETAILS =====');
+        console.log('xMatic: 🚀 AI API - Provider:', this.config.selectedProvider || 'openai');
+        console.log('xMatic: 🚀 AI API - Model:', this.config.selectedModel || 'gpt-4');
+        console.log('xMatic: 🚀 AI API - Style:', this.config.style || 'conversational and helpful');
+        console.log('xMatic: 🚀 AI API - Temperature:', 0.8);
+        console.log('xMatic: 🚀 AI API - Count Requested:', count);
+        console.log('xMatic: 🚀 AI API - Context Length:', context.length, 'characters');
+        console.log('xMatic: 🚀 AI API - ===== SYSTEM PROMPT =====');
+        console.log('xMatic: 🚀 AI API -', systemPrompt);
+        console.log('xMatic: 🚀 AI API - ===== USER PROMPT =====');
+        console.log('xMatic: 🚀 AI API -', userPrompt);
+        console.log('xMatic: 🚀 AI API - ===== FULL CONTEXT =====');
+        console.log('xMatic: 🚀 AI API -', context);
+        console.log('xMatic: 🚀 AI API - ===== END REQUEST DETAILS =====');
 
         const selectedModel = this.config.selectedModel || 'gpt-4';
         const selectedProvider = this.config.selectedProvider || 'openai';
@@ -180,6 +216,12 @@ Return ONLY a valid JSON array of ${count} strings, no other text.`;
             requestBody.presence_penalty = 0.6;
         }
 
+        console.log('xMatic: 🚀 AI API - ===== API REQUEST DETAILS =====');
+        console.log('xMatic: 🚀 AI API - Endpoint:', apiEndpoint);
+        console.log('xMatic: 🚀 AI API - Headers:', JSON.stringify(headers, null, 2));
+        console.log('xMatic: 🚀 AI API - Request Body:', JSON.stringify(requestBody, null, 2));
+        console.log('xMatic: 🚀 AI API - ===== END API REQUEST =====');
+        
         console.log('xMatic: 🚀 AI API - Making single API call for', count, 'replies...');
         
         const response = await fetch(apiEndpoint, {
@@ -201,7 +243,13 @@ Return ONLY a valid JSON array of ${count} strings, no other text.`;
         }
 
         const content = data.choices?.[0]?.message?.content || '';
-        console.log('xMatic: 🚀 AI API - Raw response received:', content.substring(0, 100) + '...');
+        
+        console.log('xMatic: 🚀 AI API - ===== AI RESPONSE DETAILS =====');
+        console.log('xMatic: 🚀 AI API - Response Status:', response.status);
+        console.log('xMtic: 🚀 AI API - Response Headers:', JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2));
+        console.log('xMatic: 🚀 AI API - Full AI Response:', content);
+        console.log('xMatic: 🚀 AI API - Response Length:', content.length, 'characters');
+        console.log('xMatic: 🚀 AI API - ===== END AI RESPONSE =====');
         
         // Parse JSON response
         try {
@@ -221,7 +269,14 @@ Return ONLY a valid JSON array of ${count} strings, no other text.`;
                 .map(reply => reply.trim())
                 .slice(0, count);
             
+            console.log('xMatic: 🚀 AI API - ===== PARSED RESULTS =====');
             console.log('xMatic: 🚀 AI API - Successfully parsed', validReplies.length, 'unique replies');
+            validReplies.forEach((reply, index) => {
+                console.log(`xMatic: 🚀 AI API - Reply ${index + 1}:`, reply);
+                console.log(`xMatic: 🚀 AI API - Reply ${index + 1} Length:`, reply.length, 'characters');
+            });
+            console.log('xMatic: 🚀 AI API - ===== END PARSED RESULTS =====');
+            
             return validReplies;
             
         } catch (parseError) {

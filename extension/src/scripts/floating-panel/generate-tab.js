@@ -184,7 +184,7 @@ class GenerateTab {
             console.log('xMatic: 🚀 Generated tweets:', tweets);
             
             // Save to drafts tab
-            this.saveToDrafts(tweets, context);
+            await this.saveToDrafts(tweets, context);
             
             // Clear context and show success
             this.clearContext();
@@ -300,7 +300,7 @@ class GenerateTab {
         }, 8000);
     }
 
-    saveToDrafts(tweets, context) {
+    async saveToDrafts(tweets, context) {
         // Save generated tweets to drafts
         console.log('xMatic: 🚀 Saving', tweets.length, 'tweets to drafts...');
         
@@ -313,66 +313,109 @@ class GenerateTab {
             type: 'generated'
         }));
         
-        // Try to use StorageManager if available
-        if (window.StorageManager) {
+        // Try to use StorageManager if available, but skip it if we know it has quota issues
+        if (window.StorageManager && !this.storageManagerQuotaExceeded) {
             try {
                 const storageManager = new window.StorageManager();
-                this.saveDraftsWithStorageManager(storageManager, drafts);
+                await this.saveDraftsWithStorageManager(storageManager, drafts);
             } catch (error) {
-                console.warn('xMatic: 🚀 StorageManager failed, falling back to direct storage:', error);
-                this.saveDraftsDirectly(drafts);
+                console.warn('xMatic: 🚀 StorageManager failed, marking as quota exceeded and using direct storage:', error);
+                this.storageManagerQuotaExceeded = true; // Remember this for future calls
+                await this.saveDraftsDirectly(drafts);
             }
         } else {
-            // Fallback to direct storage
-            this.saveDraftsDirectly(drafts);
+            // Use direct storage (either no StorageManager or quota exceeded)
+            if (this.storageManagerQuotaExceeded) {
+                console.log('xMatic: 🚀 Skipping StorageManager due to previous quota issues, using direct storage');
+            }
+            await this.saveDraftsDirectly(drafts);
         }
     }
 
     async saveDraftsWithStorageManager(storageManager, drafts) {
-        try {
-            console.log('xMatic: 🚀 Using StorageManager to save drafts...');
-            
-            // Get existing drafts
-            const existingDrafts = await storageManager.getConfigValue('drafts') || [];
-            const updatedDrafts = [...drafts, ...existingDrafts];
-            
-            // Save using StorageManager
-            await storageManager.setConfigValue('drafts', updatedDrafts);
-            
-            console.log('xMatic: 🚀 Drafts saved successfully using StorageManager');
-            
-            // Trigger custom event to refresh drafts tab
-            window.dispatchEvent(new CustomEvent('draftsUpdated', { 
-                detail: { newDrafts: drafts } 
-            }));
-            
-        } catch (error) {
-            console.error('xMatic: 🚀 StorageManager save failed:', error);
-            // Fallback to direct storage
-            this.saveDraftsDirectly(drafts);
-        }
+        console.log('xMatic: 🚀 Using StorageManager to save drafts...');
+        
+        // Get existing drafts
+        const existingDrafts = await storageManager.getConfigValue('drafts') || [];
+        const updatedDrafts = [...drafts, ...existingDrafts];
+        
+        // Save using StorageManager
+        await storageManager.setConfigValue('drafts', updatedDrafts);
+        
+        console.log('xMatic: 🚀 Drafts saved successfully using StorageManager');
+        
+        // Trigger custom event to refresh drafts tab
+        window.dispatchEvent(new CustomEvent('draftsUpdated', { 
+            detail: { newDrafts: drafts } 
+        }));
     }
 
     saveDraftsDirectly(drafts) {
-        // Use local storage for large content to avoid quota issues
-        chrome.storage.local.get(['drafts'], (result) => {
-            const existingDrafts = result.drafts || [];
-            const updatedDrafts = [...drafts, ...existingDrafts];
+        return new Promise((resolve) => {
+            console.log('xMatic: 🚀 Direct storage fallback - saving', drafts.length, 'drafts...');
             
-            chrome.storage.local.set({ drafts: updatedDrafts }, (storageResult) => {
+            // Try sync storage first for maximum persistence across sessions
+            chrome.storage.sync.get(['drafts'], (syncResult) => {
+                const existingSyncDrafts = syncResult.drafts || [];
+                const updatedSyncDrafts = [...drafts, ...existingSyncDrafts];
+                
+                console.log('xMatic: 🚀 Trying sync storage first for persistence across sessions...');
+                
+                chrome.storage.sync.set({ drafts: updatedSyncDrafts }, (syncStorageResult) => {
+                    if (chrome.runtime.lastError) {
+                        console.warn('xMatic: 🚀 Sync storage failed, falling back to local storage:', chrome.runtime.lastError);
+                        this.saveToLocalStorage(drafts, resolve);
+                    } else {
+                        console.log('xMatic: 🚀 Drafts saved to sync storage successfully! Will persist across browser sessions. Total drafts now:', updatedSyncDrafts.length);
+                        
+                        // Also save to local storage as backup
+                        this.saveToLocalStorage(drafts, () => {
+                            // Trigger custom event to refresh drafts tab
+                            window.dispatchEvent(new CustomEvent('draftsUpdated', { 
+                                detail: { newDrafts: drafts } 
+                            }));
+                            resolve(true);
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    saveToLocalStorage(drafts, callback) {
+        // Use local storage as backup for large content
+        chrome.storage.local.get(['drafts'], (result) => {
+            const existingLocalDrafts = result.drafts || [];
+            const updatedLocalDrafts = [...drafts, ...existingLocalDrafts];
+            
+            console.log('xMatic: 🚀 Saving backup to local storage with', existingLocalDrafts.length, 'existing drafts');
+            
+            chrome.storage.local.set({ drafts: updatedLocalDrafts }, (storageResult) => {
                 if (chrome.runtime.lastError) {
-                    console.warn('xMatic: 🚀 Local storage failed, trying sync storage:', chrome.runtime.lastError);
-                    this.saveMinimalDrafts(drafts, 'Generated content');
+                    console.warn('xMatic: 🚀 Local storage failed, trying localStorage as last resort:', chrome.runtime.lastError);
+                    this.saveToLocalStorageFallback(drafts, callback);
                 } else {
-                    console.log('xMatic: 🚀 Drafts saved to local storage successfully');
-                    
-                    // Trigger custom event to refresh drafts tab
-                    window.dispatchEvent(new CustomEvent('draftsUpdated', { 
-                        detail: { newDrafts: drafts } 
-                    }));
+                    console.log('xMatic: 🚀 Backup saved to local storage successfully. Total local drafts now:', updatedLocalDrafts.length);
+                    callback();
                 }
             });
         });
+    }
+
+    saveToLocalStorageFallback(drafts, callback) {
+        // Last resort: use browser's localStorage
+        try {
+            const existingDrafts = JSON.parse(localStorage.getItem('xMatic_drafts') || '[]');
+            const updatedDrafts = [...drafts, ...existingDrafts];
+            
+            localStorage.setItem('xMatic_drafts', JSON.stringify(updatedDrafts));
+            console.log('xMatic: 🚀 Drafts saved to localStorage as last resort. Total drafts now:', updatedDrafts.length);
+            
+            callback();
+        } catch (error) {
+            console.error('xMatic: 🚀 All storage methods failed:', error);
+            callback();
+        }
     }
 
     saveMinimalDrafts(tweets, context) {
