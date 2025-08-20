@@ -23,7 +23,6 @@ class StorageManager {
                 'extensionEnabled'
             ]);
         } catch (error) {
-            console.error('xMatic: 🗄️ Error accessing storage:', error);
             // Return empty config to prevent crashes
             return {};
         }

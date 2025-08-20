@@ -371,41 +371,60 @@
     color: #9ca3af;
 }
 
-/* Panel Footer */
+/* Panel Footer - Simple Implementation */
 .panel-footer {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 20px 32px;
+    padding: 16px 24px;
     border-top: 1px solid #e5e7eb;
     background: #ffffff;
 }
 
 .footer-content {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 24px;
+    justify-content: space-between;
+    gap: 16px;
 }
 
-.footer-divider {
-    width: 1px;
+.social-links {
+    display: flex;
+    gap: 8px;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
     height: 32px;
-    background: #e5e7eb;
-    margin: 0 8px;
+    color: #6b7280;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
-.info-badge {
+.social-link:hover {
+    color: #374151;
+    background: #f3f4f6;
+}
+
+.social-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.footer-info {
     display: flex;
     align-items: center;
     gap: 8px;
     background: #f3f4f6;
-    color: #374151;
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 6px 12px;
+    border-radius: 16px;
     font-size: 12px;
-    font-weight: 500;
+    color: #374151;
     border: 1px solid #e5e7eb;
 }
 
@@ -419,12 +438,11 @@
 
 .info-separator {
     color: #9ca3af;
-    font-weight: 400;
 }
 
 .status-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: #10b981;
 }
@@ -439,53 +457,6 @@
 
 .status-text {
     font-size: 12px;
-    color: #374151;
-}
-
-/* Social Links */
-.social-links {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
-    text-decoration: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-    position: relative;
-}
-
-.social-link:hover {
-    color: #374151;
-    background: #f9fafb;
-    border-color: #e5e7eb;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.social-link .social-icon {
-    width: 20px;
-    height: 20px;
-    color: #6b7280;
-    transition: color 0.2s ease;
-}
-
-.social-link:hover .social-icon {
-    color: #374151;
-}
-
-.footer-info {
-    display: flex;
-    align-items: center;
-    gap: 16px;
 }
 
 /* Style Tab Specific Styles */
@@ -731,35 +702,31 @@
     }
     
     .panel-footer {
-        padding: 16px 20px;
+        padding: 12px 16px;
     }
     
     .footer-content {
         flex-direction: column;
-        gap: 16px;
+        gap: 12px;
         align-items: center;
     }
     
     .social-links {
-        gap: 8px;
+        gap: 6px;
     }
     
     .social-link {
-        width: 36px;
-        height: 36px;
+        width: 28px;
+        height: 28px;
     }
     
-    .social-link .social-icon {
-        width: 18px;
-        height: 18px;
+    .social-icon {
+        width: 14px;
+        height: 14px;
     }
     
-    .footer-divider {
-        display: none;
-    }
-    
-    .info-badge {
-        padding: 6px 12px;
+    .footer-info {
+        padding: 4px 10px;
         font-size: 11px;
         gap: 6px;
     }
@@ -767,10 +734,68 @@
     .info-icon {
         font-size: 12px;
     }
-    
-    .info-separator {
-        margin: 0 2px;
-    }
+}
+
+/* Tweet Action Buttons - Shadcn Style */
+.tweet-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    background: transparent;
+    color: inherit;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+.action-btn.primary {
+    background: #0f172a;
+    color: white;
+    border-color: #0f172a;
+}
+
+.action-btn.primary:hover {
+    background: #1e293b;
+    border-color: #1e293b;
+}
+
+.action-btn.danger {
+    background: #dc2626;
+    color: white;
+    border-color: #dc2626;
+}
+
+.action-btn.danger:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+}
+
+.btn-text {
+    font-weight: 500;
 }
 
 /* Dark Mode Support */
@@ -787,5 +812,19 @@
     
     .status-text {
         color: #e4e4e7;
+    }
+    
+    .tweet-actions {
+        border-top-color: #3f3f46;
+    }
+    
+    .action-btn.primary {
+        background: #3b82f6;
+        border-color: #3b82f6;
+    }
+    
+    .action-btn.primary:hover {
+        background: #2563eb;
+        border-color: #2563eb;
     }
 }

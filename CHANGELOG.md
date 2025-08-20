@@ -5,7 +5,28 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.1.0] - 2025-01-XX
+## [2.2.0] - 2025-08-20
+
+### Added
+- **🚀 Publish Button System** - Complete tweet publishing workflow with Twitter intents
+- **🤖 Interface Injection** - Robot button and interface fixes for compose pages
+- **🔧 Enhanced Error Handling** - Multiple fallback methods and comprehensive debugging
+
+### Changed
+- **📱 Publish Workflow** - 5 different methods to ensure reliable Twitter access
+- **⏱️ Extended Timeout** - Increased from 5 to 30 seconds for better usability
+- **🎯 Smart Auto-Close** - Only auto-close intent URLs, keep compose pages open
+
+### Improved
+- **🔒 Privacy** - Removed forced "via @xMatic" attribution from tweets
+- **🛡️ Reliability** - Multiple fallback methods for popup blockers and browser compatibility
+
+### Fixed
+- **🐛 Vanishing Buttons** - Post button and bottom row now stay visible
+- **🔧 Double Tab Opening** - Eliminated duplicate tab creation
+- **🎨 Interface Stability** - Elements no longer disappear after page load
+
+## [2.1.0]
 
 ### Added
 - **🎨 Revolutionary Style Tab Redesign** - Complete overhaul from dropdown to card-based selection

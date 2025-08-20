@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jhgjeaklmjohgmnephiaeiefejdhfnml?color=4285F4&label=Chrome%20Web%20Store&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
-[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/iamvasee/xMatic/releases)
+[![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)](https://github.com/iamvasee/xMatic/releases)
 [![GitHub stars](https://img.shields.io/badge/GitHub-stars-yellow.svg?style=social&logo=github)](https://github.com/iamvasee/xMatic/stargazers)
 
 xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/X**. **Version 2.0.0 introduces a revolutionary floating panel interface** that integrates seamlessly within Twitter's interface. Generate multiple original tweets from context, create engaging replies, manage drafts, and customize AI styles all from a beautiful multi-tab floating panel.
@@ -12,6 +12,7 @@ xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/
 ## ✨ Features
 
 - **🪟 Revolutionary Floating Panel Interface** - **NEW in v2.0.0** - Multi-tab interface integrated directly within Twitter
+- **🚀 Smart Publish Button System** - **NEW in v2.2.0** - One-click publishing with Twitter intents and interface injection
 - **🐦 Multiple AI Tweet Generation** - Generate multiple original tweets from context in a single API call
 - **💬 AI Reply Generation** - Generate contextual, engaging replies to existing tweets
 - **📝 Draft Management System** - Save, edit, and manage multiple AI-generated tweets and replies
@@ -20,6 +21,13 @@ xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/
 - **🧠 Smart Context Analysis** - Extracts tweet content, author info, and engagement metrics
 - **🔒 Privacy-First** - Uses your own API keys, no data collection
 - **🔄 Extension Toggle Control** - Enable/disable the extension with a beautiful toggle switch
+
+## 🆕 What's New in v2.2.0
+
+- **🚀 Smart Publish Button System** - One-click publishing with Twitter intents and interface injection
+- **🤖 Interface Injection** - Automatically adds robot button and fixes vanishing Post buttons
+- **⏱️ Extended Timeout** - 30-second auto-close for better user experience
+- **🔧 Multiple Fallback Methods** - 5 different approaches to ensure reliable Twitter access
 
 ## 🆕 What's New in v2.0.0
 
@@ -78,7 +86,8 @@ xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/
 4. **For original tweets**: Input context/ideas and AI generates multiple tweet variations
 5. **For replies**: AI analyzes context including tweet content, author, and engagement
 6. **Generates contextual content** based on your selected style and content type
-7. **Edit if needed** and post your tweets or replies
+7. **Edit if needed** and save to drafts for later use
+8. **Publish with one click** - Use the Publish button to open Twitter with your tweet pre-filled
 
 ## 🎨 Content Styles
 
@@ -125,7 +134,7 @@ xMatic/
 │   │   │       ├── floating-panel.js   # Main floating panel controller (382 lines)
 │   │   │       ├── ai-tab.js          # AI configuration and settings (520 lines)
 │   │   │       ├── generate-tab.js    # Multiple tweet generation and reply interface (498 lines)
-│   │   │       ├── drafts-tab.js      # Draft management system (207 lines)
+│   │   │       ├── drafts-tab.js      # Draft management and publishing system (698 lines)
 │   │   │       └── style-tab.js       # Style customization panel (165 lines)
 │   │   ├── styles/
 │   │   │   ├── styles.css             # Core extension styling (108 lines)
@@ -149,7 +158,7 @@ xMatic/
 └── LICENSE                           # MIT License
 ```
 
-**Total Lines of Code:** 5,770+ lines across all JavaScript and CSS files
+**Total Lines of Code:** 6,200+ lines across all JavaScript and CSS files
 
 ## 🔒 Privacy & Security
 

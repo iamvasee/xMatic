@@ -290,17 +290,11 @@ class FloatingPanelManager {
                         </a>
                     </div>
                     
-                    <!-- Center: Divider -->
-                    <div class="footer-divider"></div>
-                    
-                    <div class="footer-info">
-                        <div class="info-badge" id="panelStatus">
-                            <span class="info-icon">🚀</span>
-                            <span class="info-text">v2.1.0</span>
-                            <span class="info-separator">•</span>
-                            <span class="status-dot"></span>
-                            <span class="status-text">Ready</span>
-                        </div>
+                    <div class="footer-info" id="panelStatus">
+                        <span class="info-icon">🚀</span>
+                        <span class="info-text">v2.2.0</span>
+                        <span class="info-separator">•</span>
+                        <span class="status-dot"></span>
                     </div>
                 </div>
             </div>
