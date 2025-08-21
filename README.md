@@ -46,12 +46,20 @@ xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/
 ## 📸 Screenshots
 
 <div align="center">
-  <img src="assets/screenshots/App_Store_(iOS) 5.png" alt="Main Interface" width="30%">
-  <img src="assets/screenshots/App_Store_(iOS) 6.png" alt="Dark Mode" width="30%">
-  <img src="assets/screenshots/App_Store_(iOS) 10.png" alt="Customization" width="30%">
+  <img src="assets/screenshots/App_Store_(iOS) 5.png" alt="Main Interface" width="25%">
+  <img src="assets/screenshots/App_Store_(iOS) 6.png" alt="Dark Mode" width="25%">
+  <img src="assets/screenshots/App_Store_(iOS) 10.png" alt="Customization" width="25%">
+  <img src="assets/screenshots/App_Store_(iOS) 11.png" alt="AI Configuration" width="25%">
 </div>
 
-*Light and dark mode support with seamless Twitter/X integration*
+<div align="center">
+  <img src="assets/screenshots/App_Store_(iOS) 12.png" alt="Tweet Generation" width="25%">
+  <img src="assets/screenshots/App_Store_(iOS) 13.png" alt="Draft Management" width="25%">
+  <img src="assets/screenshots/App_Store_(iOS) 14.png" alt="Style Customization" width="25%">
+  <img src="assets/screenshots/App_Store_(iOS) 15.png" alt="Floating Panel Interface" width="25%">
+</div>
+
+*Comprehensive showcase of xMatic's floating panel interface, AI configuration, tweet generation, draft management, and style customization features*
 
 ## 🚀 Quick Start
 
