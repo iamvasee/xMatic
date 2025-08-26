@@ -229,6 +229,7 @@ class FloatingPanelManager {
             <div class="panel-header">
                 <div class="panel-logo">
                     <img src="${chrome.runtime.getURL('src/assets/xMatic.png')}" alt="xMatic" class="logo-image">
+                    <div class="own-key-chip">Own Key</div>
                 </div>
                 <button class="close-button" id="closePanel" aria-label="Close panel">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
