@@ -103,7 +103,16 @@ class StyleTab {
                 <div class="simple-form-group">
                     <div class="style-actions">
                         <button type="button" id="resetStyles" class="style-btn secondary">
-                            Reset to Default
+                            <span class="btn-text">Reset to Default</span>
+                            <span class="btn-loading" style="display: none;">
+                                <svg class="spinner" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                        <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                                        <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                                Resetting...
+                            </span>
                         </button>
                         <button type="button" id="saveStyles" class="style-btn primary">
                             <span class="btn-text">Save Style</span>
@@ -118,6 +127,7 @@ class StyleTab {
                             </span>
                         </button>
                     </div>
+                    <div id="styleStatus" class="style-status"></div>
                 </div>
                 
                 <!-- Bottom Spacing for Footer -->
@@ -199,7 +209,7 @@ class StyleTab {
             }
         } catch (error) {
             console.error('xMatic: 🎨 Style Tab - Error loading styles:', error);
-            this.showNotification('Error loading styles', 'error');
+            this.showStyleStatus('Error loading styles', 'error');
         }
     }
 
@@ -237,7 +247,7 @@ class StyleTab {
         
         // Update preview
         this.updateStylePreview();
-        this.showNotification('Style updated - preview refreshed', 'info');
+        this.showStyleStatus('Style updated - preview refreshed', 'info');
     }
 
     handleCustomStyleChange() {
@@ -293,6 +303,17 @@ class StyleTab {
         // Handle saving style configuration
         console.log('xMatic: 🎨 Style Tab - Saving styles...');
         
+        const saveBtn = document.querySelector('#saveStyles');
+        const saveBtnText = saveBtn?.querySelector('.btn-text');
+        const saveBtnLoading = saveBtn?.querySelector('.btn-loading');
+        
+        // Show loading state
+        if (saveBtn && saveBtnText && saveBtnLoading) {
+            saveBtn.disabled = true;
+            saveBtnText.style.display = 'none';
+            saveBtnLoading.style.display = 'inline-flex';
+        }
+        
         try {
             const selectedCard = document.querySelector('.style-card.selected');
             const customStyleInput = document.querySelector('#customStyleInput');
@@ -305,12 +326,10 @@ class StyleTab {
             const customInstructions = customStyleInput.value;
             
             if (!baseStyle && !customInstructions) {
-                this.showNotification('Please select a base style or add custom instructions', 'warning');
+                this.showStyleStatus('Please select a base style or add custom instructions', 'warning');
+                this.resetSaveButton(saveBtn, saveBtnText, saveBtnLoading);
                 return;
             }
-            
-            // Show saving state
-            this.showSavingState(true);
             
             if (window.StorageManager) {
                 const storageManager = new window.StorageManager();
@@ -322,7 +341,7 @@ class StyleTab {
                 ]);
                 
                 if (styleSaved && instructionsSaved) {
-                    this.showNotification('Style configuration saved successfully!', 'success');
+                    this.showStyleStatus('Style configuration saved successfully!', 'success');
                     console.log('xMatic: 🎨 Style Tab - Styles saved successfully');
                 } else {
                     throw new Error('Failed to save some style settings');
@@ -334,36 +353,35 @@ class StyleTab {
             
         } catch (error) {
             console.error('xMatic: 🎨 Style Tab - Error saving styles:', error);
-            this.showNotification(`Error saving styles: ${error.message}`, 'error');
+            this.showStyleStatus(`Error saving styles: ${error.message}`, 'error');
         } finally {
-            // Hide saving state
-            this.showSavingState(false);
+            // Reset button state
+            this.resetSaveButton(saveBtn, saveBtnText, saveBtnLoading);
         }
     }
-
-    showSavingState(isSaving) {
-        const saveBtn = document.querySelector('#saveStyles');
-        if (!saveBtn) return;
-        
-        const btnText = saveBtn.querySelector('.btn-text');
-        const btnLoading = saveBtn.querySelector('.btn-loading');
-        
-        if (isSaving) {
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline-flex';
-            saveBtn.disabled = true;
-            saveBtn.classList.add('loading');
-        } else {
-            btnText.style.display = 'inline';
-            btnLoading.style.display = 'none';
+    
+    resetSaveButton(saveBtn, saveBtnText, saveBtnLoading) {
+        if (saveBtn && saveBtnText && saveBtnLoading) {
             saveBtn.disabled = false;
-            saveBtn.classList.remove('loading');
+            saveBtnText.style.display = 'inline';
+            saveBtnLoading.style.display = 'none';
         }
     }
 
     async handleReset() {
         // Handle resetting style configuration
         console.log('xMatic: 🎨 Style Tab - Resetting styles...');
+        
+        const resetBtn = document.querySelector('#resetStyles');
+        const resetBtnText = resetBtn?.querySelector('.btn-text');
+        const resetBtnLoading = resetBtn?.querySelector('.btn-loading');
+        
+        // Show loading state
+        if (resetBtn && resetBtnText && resetBtnLoading) {
+            resetBtn.disabled = true;
+            resetBtnText.style.display = 'none';
+            resetBtnLoading.style.display = 'inline-flex';
+        }
         
         try {
             const styleCards = document.querySelectorAll('.style-card');
@@ -390,48 +408,35 @@ class StyleTab {
             // Update preview
             this.updateStylePreview();
             
-            this.showNotification('Styles reset to default successfully!', 'success');
+            this.showStyleStatus('Styles reset to default successfully!', 'success');
             console.log('xMatic: 🎨 Style Tab - Styles reset complete');
             
         } catch (error) {
             console.error('xMatic: 🎨 Style Tab - Error resetting styles:', error);
-            this.showNotification('Error resetting styles', 'error');
+            this.showStyleStatus('Error resetting styles', 'error');
+        } finally {
+            // Reset button state
+            this.resetResetButton(resetBtn, resetBtnText, resetBtnLoading);
+        }
+    }
+    
+    resetResetButton(resetBtn, resetBtnText, resetBtnLoading) {
+        if (resetBtn && resetBtnText && resetBtnLoading) {
+            resetBtn.disabled = false;
+            resetBtnText.style.display = 'inline';
+            resetBtnLoading.style.display = 'none';
         }
     }
 
-    showNotification(message, type = 'info') {
-        // Create and show a notification
-        const notification = document.createElement('div');
-        notification.className = `style-notification ${type}`;
-        notification.innerHTML = `
-            <div class="notification-content">
-                <span class="notification-icon">${this.getNotificationIcon(type)}</span>
-                <span class="notification-text">${message}</span>
-            </div>
-        `;
-        
-        // Add to the style tab
-        const styleContent = document.querySelector('.style-content');
-        if (styleContent) {
-            styleContent.appendChild(notification);
-            
-            // Remove after 4 seconds
+    showStyleStatus(message, type = 'info') {
+        const styleStatus = document.querySelector('#styleStatus');
+        if (styleStatus) {
+            styleStatus.textContent = message;
+            styleStatus.className = `style-status show ${type}`;
             setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 4000);
+                styleStatus.className = 'style-status';
+            }, 3000); // Hide after 3 seconds
         }
-    }
-
-    getNotificationIcon(type) {
-        const icons = {
-            'success': '✅',
-            'success': '✅',
-            'warning': '⚠️',
-            'info': 'ℹ️'
-        };
-        return icons[type] || icons.info;
     }
 }
 

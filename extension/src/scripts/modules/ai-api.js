@@ -39,6 +39,8 @@ Consider the author's influence and the tweet's engagement level when crafting y
         console.log('xMatic: 🚀 AI API - ===== REPLY GENERATION REQUEST =====');
         console.log('xMatic: 🚀 AI API - Provider:', this.config.selectedProvider || 'openai');
         console.log('xMatic: 🚀 AI API - Model:', this.config.selectedModel || 'gpt-4');
+        console.log('xMatic: 🚀 AI API - Temperature:', this.config.temperature || '0.7 (default)');
+        console.log('xMatic: 🚀 AI API - Max Tokens:', this.config.maxTokens || '100 (default)');
         console.log('xMatic: 🚀 AI API - Base Style:', this.config.style || 'conversational and helpful');
         console.log('xMatic: 🚀 AI API - Custom Instructions:', this.config.customStyleInstructions || 'none');
         console.log('xMatic: 🚀 AI API - Combined Style:', styleInstruction);
@@ -86,12 +88,12 @@ Consider the author's influence and the tweet's engagement level when crafting y
                 { role: 'user', content: userPrompt }
             ],
             stream: false,
-            temperature: 0.7
+            temperature: parseFloat(this.config.temperature) || 0.7
         };
         
         // Add OpenAI-specific parameters only for OpenAI
         if (selectedProvider === 'openai') {
-            requestBody.max_tokens = 100;
+            requestBody.max_tokens = parseInt(this.config.maxTokens) || 100;
             requestBody.top_p = 0.9;
             requestBody.frequency_penalty = 0.5;
             requestBody.presence_penalty = 0.3;
@@ -99,6 +101,8 @@ Consider the author's influence and the tweet's engagement level when crafting y
 
         console.log('xMatic: 🚀 AI API - ===== REPLY API REQUEST =====');
         console.log('xMatic: 🚀 AI API - Endpoint:', apiEndpoint);
+        console.log('xMatic: 🚀 AI API - Temperature Used:', requestBody.temperature);
+        console.log('xMatic: 🚀 AI API - Max Tokens Used:', requestBody.max_tokens || 'Not applicable for this provider');
         console.log('xMatic: 🚀 AI API - Request Body:', JSON.stringify(requestBody, null, 2));
         console.log('xMatic: 🚀 AI API - ===== END REPLY API REQUEST =====');
 
@@ -175,10 +179,11 @@ Return ONLY a valid JSON array of ${count} strings, no other text.`;
         console.log('xMatic: 🚀 AI API - ===== FULL AI REQUEST DETAILS =====');
         console.log('xMatic: 🚀 AI API - Provider:', this.config.selectedProvider || 'openai');
         console.log('xMatic: 🚀 AI API - Model:', this.config.selectedModel || 'gpt-4');
+        console.log('xMatic: 🚀 AI API - Temperature:', this.config.temperature || '0.8 (default)');
+        console.log('xMatic: 🚀 AI API - Max Tokens:', this.config.maxTokens || '150 * count (default)');
         console.log('xMatic: 🚀 AI API - Base Style:', this.config.style || 'conversational and helpful');
         console.log('xMatic: 🚀 AI API - Custom Instructions:', this.config.customStyleInstructions || 'none');
         console.log('xMatic: 🚀 AI API - Combined Style:', styleInstruction);
-        console.log('xMatic: 🚀 AI API - Temperature:', 0.8);
         console.log('xMatic: 🚀 AI API - Count Requested:', count);
         console.log('xMatic: 🚀 AI API - Context Length:', context.length, 'characters');
         console.log('xMatic: 🚀 AI API - ===== SYSTEM PROMPT =====');
@@ -226,12 +231,12 @@ Return ONLY a valid JSON array of ${count} strings, no other text.`;
                 { role: 'user', content: userPrompt }
             ],
             stream: false,
-            temperature: 0.8 // Higher temperature for more variety
+            temperature: parseFloat(this.config.temperature) || 0.8 // Higher temperature for more variety
         };
         
         // Add OpenAI-specific parameters only for OpenAI
         if (selectedProvider === 'openai') {
-            requestBody.max_tokens = 150 * count; // Allocate tokens for all replies
+            requestBody.max_tokens = parseInt(this.config.maxTokens) || (150 * count); // Allocate tokens for all replies
             requestBody.top_p = 0.9;
             requestBody.frequency_penalty = 0.8; // Increase variety
             requestBody.presence_penalty = 0.6;
@@ -239,6 +244,8 @@ Return ONLY a valid JSON array of ${count} strings, no other text.`;
 
         console.log('xMatic: 🚀 AI API - ===== API REQUEST DETAILS =====');
         console.log('xMatic: 🚀 AI API - Endpoint:', apiEndpoint);
+        console.log('xMatic: 🚀 AI API - Temperature Used:', requestBody.temperature);
+        console.log('xMatic: 🚀 AI API - Max Tokens Used:', requestBody.max_tokens || 'Not applicable for this provider');
         console.log('xMatic: 🚀 AI API - Headers:', JSON.stringify(headers, null, 2));
         console.log('xMatic: 🚀 AI API - Request Body:', JSON.stringify(requestBody, null, 2));
         console.log('xMatic: 🚀 AI API - ===== END API REQUEST =====');

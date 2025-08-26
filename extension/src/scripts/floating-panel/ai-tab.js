@@ -105,9 +105,33 @@ class AITab {
 
                 <!-- Save Button -->
                 <div class="simple-form-group">
-                    <button type="button" id="saveConfig" class="ai-save-btn">
-                        Save Configuration
-                    </button>
+                    <div class="button-group">
+                        <button type="button" id="saveConfig" class="ai-save-btn">
+                            <span class="btn-text">Save Configuration</span>
+                            <span class="btn-loading" style="display: none;">
+                                <svg class="spinner" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                        <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                                        <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                                Saving...
+                            </span>
+                        </button>
+                        <button type="button" id="resetConfig" class="ai-reset-btn">
+                            <span class="btn-text">Reset to Defaults</span>
+                            <span class="btn-loading" style="display: none;">
+                                <svg class="spinner" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                                        <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                                        <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                                Resetting...
+                            </span>
+                        </button>
+                    </div>
+                    <div id="configStatus" class="config-status"></div>
                 </div>
                 
                 <!-- Bottom Spacing for Footer -->
@@ -127,6 +151,7 @@ class AITab {
         
         // Setup event listeners for the AI tab
         const saveBtn = container.querySelector('#saveConfig');
+        const resetBtn = container.querySelector('#resetConfig');
         const providerBtns = container.querySelectorAll('.provider-btn');
         const temperatureRange = container.querySelector('#temperature');
         const apiKeyInput = container.querySelector('#openaiKey');
@@ -140,6 +165,7 @@ class AITab {
         
         console.log('xMatic: 🎯 AI Tab - Found elements:', {
             saveBtn: !!saveBtn,
+            resetBtn: !!resetBtn,
             providerBtns: providerBtns.length,
             temperatureRange: !!temperatureRange,
             apiKeyInput: !!apiKeyInput,
@@ -153,6 +179,11 @@ class AITab {
         if (saveBtn) {
             saveBtn.addEventListener('click', () => this.handleSave());
             console.log('xMatic: 🎯 AI Tab - Save button event listener added');
+        }
+        
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.handleReset());
+            console.log('xMatic: 🎯 AI Tab - Reset button event listener added');
         }
         
         if (temperatureRange) {
@@ -363,6 +394,54 @@ class AITab {
         console.log('xMatic: Max tokens changed...');
     }
 
+    handleReset() {
+        // Handle resetting AI configuration to defaults
+        console.log('xMatic: �� AI Tab - Resetting AI config to defaults...');
+        chrome.storage.sync.get([
+            'selectedProvider',
+            'selectedModel',
+            'openaiKey',
+            'grokKey',
+            'maxTokens',
+            'temperature'
+        ], (result) => {
+            if (result.selectedProvider) {
+                const providerButton = document.querySelector(`[data-provider="${result.selectedProvider}"]`);
+                if (providerButton) {
+                    this.handleProviderSelection(providerButton);
+                }
+            }
+            if (result.openaiKey) {
+                const openaiKeyInput = document.querySelector('#openaiKey');
+                if (openaiKeyInput) openaiKeyInput.value = '';
+            }
+            if (result.grokKey) {
+                const grokKeyInput = document.querySelector('#grokKey');
+                if (grokKeyInput) grokKeyInput.value = '';
+            }
+            if (result.selectedModel) {
+                const modelSelect = document.querySelector('#modelSelect');
+                if (modelSelect) {
+                    setTimeout(() => {
+                        modelSelect.value = 'gpt-4'; // Default OpenAI model
+                    }, 100);
+                }
+            }
+            if (result.maxTokens) {
+                const maxTokensInput = document.querySelector('#maxTokens');
+                if (maxTokensInput) maxTokensInput.value = '150'; // Default max tokens
+            }
+            if (result.temperature) {
+                const temperatureRange = document.querySelector('#temperature');
+                const tempValue = document.querySelector('#tempValue');
+                if (temperatureRange) temperatureRange.value = '0.7'; // Default temperature
+                if (tempValue) tempValue.textContent = '0.7';
+            }
+            this.updateModelOptions();
+            this.showConfigStatus('Configuration reset to defaults.', 'success');
+            console.log('xMatic: 🎯 AI Tab - Configuration reset to defaults.');
+        });
+    }
 
 
     async testOpenAIConnection() {
@@ -487,9 +566,20 @@ class AITab {
         }, 5000);
     }
 
-    handleSave() {
+    async handleSave() {
         // Handle saving AI configuration
         console.log('xMatic: 🎯 AI Tab - Saving AI config...');
+        
+        const saveBtn = document.querySelector('#saveConfig');
+        const saveBtnText = saveBtn?.querySelector('.btn-text');
+        const saveBtnLoading = saveBtn?.querySelector('.btn-loading');
+        
+        // Show loading state
+        if (saveBtn && saveBtnText && saveBtnLoading) {
+            saveBtn.disabled = true;
+            saveBtnText.style.display = 'none';
+            saveBtnLoading.style.display = 'inline-flex';
+        }
         
         const config = {
             selectedProvider: document.querySelector('.provider-btn.active')?.getAttribute('data-provider'),
@@ -500,17 +590,59 @@ class AITab {
             temperature: document.querySelector('#temperature')?.value
         };
         
+        // Validate required fields
+        if (!config.selectedProvider) {
+            this.showConfigStatus('Please select an AI provider.', 'error');
+            this.resetSaveButton(saveBtn, saveBtnText, saveBtnLoading);
+            return;
+        }
+        
+        if (config.selectedProvider === 'openai' && !config.openaiKey) {
+            this.showConfigStatus('Please enter your OpenAI API key.', 'error');
+            this.resetSaveButton(saveBtn, saveBtnText, saveBtnLoading);
+            return;
+        }
+        
+        if (config.selectedProvider === 'grok' && !config.grokKey) {
+            this.showConfigStatus('Please enter your Grok API key.', 'error');
+            this.resetSaveButton(saveBtn, saveBtnText, saveBtnLoading);
+            return;
+        }
+        
         // Save to storage
         chrome.storage.sync.set(config, () => {
             if (chrome.runtime.lastError) {
                 console.error('xMatic: 🎯 AI Tab - Error saving config:', chrome.runtime.lastError);
+                this.showConfigStatus('Failed to save configuration. Please try again.', 'error');
                 console.log('xMatic: 🎯 AI Tab - Configuration save failed');
             } else {
                 console.log('xMatic: 🎯 AI Tab - Configuration saved successfully!');
+                this.showConfigStatus('Configuration saved successfully!', 'success');
             }
+            
+            // Reset button state
+            this.resetSaveButton(saveBtn, saveBtnText, saveBtnLoading);
         });
     }
+    
+    resetSaveButton(saveBtn, saveBtnText, saveBtnLoading) {
+        if (saveBtn && saveBtnText && saveBtnLoading) {
+            saveBtn.disabled = false;
+            saveBtnText.style.display = 'inline';
+            saveBtnLoading.style.display = 'none';
+        }
+    }
 
+    showConfigStatus(message, type) {
+        const configStatus = document.querySelector('#configStatus');
+        if (configStatus) {
+            configStatus.textContent = message;
+            configStatus.className = `config-status show ${type}`;
+            setTimeout(() => {
+                configStatus.className = 'config-status';
+            }, 3000); // Hide after 3 seconds
+        }
+    }
 
 }
 

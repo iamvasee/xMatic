@@ -5,6 +5,29 @@ All notable changes to xMatic will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2025-08-20
+
+### Fixed
+- **🎯 Temperature & Max Tokens Settings** - AI tab settings now properly applied to AI API calls
+  - **Dynamic Temperature Control**: User-configured temperature (0.0-2.0) now affects AI response creativity
+  - **Configurable Max Tokens**: User-set maxTokens now controls AI response length instead of hardcoded values
+  - **Enhanced Logging**: Clear visibility into which temperature and maxTokens values are being used
+  - **Fallback Protection**: Sensible defaults used when settings are missing
+
+### Improved
+- **🔧 AI API Handler** - Enhanced configuration usage and debugging
+  - **Config Integration**: AIAPIHandler now properly uses saved temperature and maxTokens from user settings
+  - **Request Transparency**: Detailed logging shows exact values being sent to AI APIs
+  - **Provider Optimization**: OpenAI-specific parameters now respect user preferences
+  - **Better User Control**: Users can now fine-tune AI response creativity and length
+
+### Technical
+- **🎛️ Configuration System** - Fixed configuration flow from AI tab to AI API
+  - **Storage Integration**: Temperature and maxTokens properly saved and retrieved from chrome.storage.sync
+  - **API Request Building**: Dynamic request body construction using user preferences
+  - **Parameter Validation**: Proper parsing of numeric values with fallback defaults
+  - **Cross-Method Consistency**: Both generateReply and generateMultipleReplies now use user settings
+
 ## [2.2.0] - 2025-08-20
 
 ### Added

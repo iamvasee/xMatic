@@ -292,7 +292,7 @@ class FloatingPanelManager {
                     
                     <div class="footer-info" id="panelStatus">
                         <span class="info-icon">🚀</span>
-                        <span class="info-text">v2.2.0</span>
+                        <span class="info-text">v2.2.1</span>
                         <span class="info-separator">•</span>
                         <span class="status-dot"></span>
                     </div>
