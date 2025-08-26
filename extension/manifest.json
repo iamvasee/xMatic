@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "xMatic",
+  "name": "xMatic - Own Key",
   "version": "2.2.1",
-  "description": "Unleash AI chaos on X/Twitter - BYOK AI-powered tweet and reply generator",
+  "description": "AI-powered Twitter content creation - Use your own API keys for complete privacy",
   "permissions": [
     "storage"
   ],

@@ -1,13 +1,13 @@
-# xMatic 🚀
+# xMatic - Own Key 🚀
 
-> **AI-Powered Twitter/X Content Creation Tool** - Generate multiple original tweets and engaging replies instantly with OpenAI GPT or Grok AI
+> **AI-Powered Twitter/X Content Creation Tool - Use Your Own API Keys for Complete Privacy** - Generate multiple original tweets and engaging replies instantly with OpenAI GPT or Grok AI
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jhgjeaklmjohgmnephiaeiefejdhfnml?color=4285F4&label=Chrome%20Web%20Store&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
 [![Version](https://img.shields.io/badge/version-2.2.1-blue.svg)](https://github.com/iamvasee/xMatic/releases)
 [![GitHub stars](https://img.shields.io/badge/GitHub-stars-yellow.svg?style=social&logo=github)](https://github.com/iamvasee/xMatic/stargazers)
 
-xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/X**. **Version 2.2.1 introduces full temperature and maxTokens control** for fine-tuning AI responses, along with a revolutionary floating panel interface that integrates seamlessly within Twitter's interface. Generate multiple original tweets from context, create engaging replies, manage drafts, and customize AI styles all from a beautiful multi-tab floating panel.
+**xMatic - Own Key** is a Chrome extension that adds **AI-powered content creation to Twitter/X** with a key difference: **you use your own API keys for complete privacy and control**. **Version 2.2.1 introduces full temperature and maxTokens control** for fine-tuning AI responses, along with a revolutionary floating panel interface that integrates seamlessly within Twitter's interface. Generate multiple original tweets from context, create engaging replies, manage drafts, and customize AI styles all from a beautiful multi-tab floating panel.
 
 ## ✨ Features
 
@@ -20,7 +20,7 @@ xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/
 - **🤖 Dual AI Provider Support** - Use OpenAI GPT or Grok AI (xAI) for content creation
 - **🎨 Advanced Style Customization** - Combine preset styles with custom instructions
 - **🧠 Smart Context Analysis** - Extracts tweet content, author info, and engagement metrics
-- **🔒 Privacy-First** - Uses your own API keys, no data collection
+- **🔑 Own Key Approach** - Use your own OpenAI/Grok API keys for complete privacy
 - **🔄 Extension Toggle Control** - Enable/disable the extension with a beautiful toggle switch
 
 ## 🆕 What's New in v2.2.1
@@ -74,7 +74,7 @@ xMatic is a Chrome extension that adds **AI-powered content creation to Twitter/
 ### Installation
 
 **Option 1: Chrome Web Store** 
-1. Visit Chrome Web Store → Search "xMatic" → Add to Chrome
+1. Visit Chrome Web Store → Search "xMatic - Own Key" → Add to Chrome
 
 **Option 2: Manual Installation**
 1. Download: `git clone https://github.com/iamvasee/xMatic.git`
@@ -180,7 +180,7 @@ xMatic/
 
 - **🔐 Zero Data Collection** - No personal data stored or transmitted
 - **🏠 Local Storage Only** - All data stays on your device
-- **🔑 BYOK** - Uses your personal API keys for both providers
+- **🔑 Own Key Approach** - Use your own OpenAI/Grok API keys for complete privacy
 - **📖 Open Source** - Full code transparency
 - **🛡️ No Accidental Tagging** - Smart @ symbol prevention
 

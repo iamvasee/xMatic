@@ -1,11 +1,11 @@
 {
-  "name": "xmatic",
+  "name": "xmatic-own-key",
   "version": "2.2.1",
-  "description": "AI-powered Twitter/X content creation tool for generating engaging tweets and replies",
+  "description": "AI-powered Twitter/X content creation tool - Use your own API keys for complete privacy",
   "main": "extension/manifest.json",
   "scripts": {
     "build": "echo 'Extension files are ready in the extension/ folder'",
-    "package": "cd extension && zip -r ../xMatic-v2.2.1.zip . -x '*.DS_Store'",
+    "package": "cd extension && zip -r ../xMatic-Own-Key-v2.2.1.zip . -x '*.DS_Store'",
     "dev": "echo 'Load the extension/ folder in Chrome Developer Mode'",
     "lint": "echo 'No linting configured yet'"
   },
