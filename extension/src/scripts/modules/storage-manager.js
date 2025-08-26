@@ -20,6 +20,8 @@ class StorageManager {
                 'style', 
                 'customStyleInstructions',
                 'selectedModel', 
+                'maxTokens',
+                'temperature',
                 'extensionEnabled'
             ]);
         } catch (error) {
@@ -115,8 +117,18 @@ class StorageManager {
     // Setup storage change listener
     setupStorageListener(callback) {
         const listener = (changes, namespace) => {
-            if (namespace === 'sync' && changes.extensionEnabled) {
-                callback(changes.extensionEnabled);
+            if (namespace === 'sync') {
+                // Check for extension enabled/disabled changes
+                if (changes.extensionEnabled) {
+                    callback({ extensionEnabled: changes.extensionEnabled });
+                }
+                
+                // Check for AI configuration changes
+                if (changes.temperature || changes.maxTokens || changes.selectedProvider || 
+                    changes.selectedModel || changes.openaiKey || changes.grokKey || 
+                    changes.style || changes.customStyleInstructions) {
+                    callback(changes);
+                }
             }
         };
 

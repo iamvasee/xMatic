@@ -244,6 +244,15 @@ class AITab {
         ], (result) => {
             console.log('xMatic: 🎯 AI Tab - Storage result:', result);
             
+            // Enhanced logging to debug what's being loaded
+            console.log('xMatic: 🎯 AI Tab - ===== LOADING CONFIGURATION =====');
+            console.log('xMatic: 🎯 AI Tab - Full config loaded:', result);
+            console.log('xMatic: 🎯 AI Tab - Temperature loaded:', result.temperature, '(type:', typeof result.temperature, ')');
+            console.log('xMatic: 🎯 AI Tab - Max Tokens loaded:', result.maxTokens, '(type:', typeof result.maxTokens, ')');
+            console.log('xMatic: 🎯 AI Tab - Provider loaded:', result.selectedProvider);
+            console.log('xMatic: 🎯 AI Tab - Model loaded:', result.selectedModel);
+            console.log('xMatic: 🎯 AI Tab - ===== END LOAD DEBUG =====');
+            
             // Set provider selection
             if (result.selectedProvider) {
                 console.log('xMatic: 🎯 AI Tab - Setting selected provider:', result.selectedProvider);
@@ -589,6 +598,15 @@ class AITab {
             maxTokens: document.querySelector('#maxTokens')?.value,
             temperature: document.querySelector('#temperature')?.value
         };
+        
+        // Enhanced logging to debug what's being saved
+        console.log('xMatic: 🎯 AI Tab - ===== SAVING CONFIGURATION =====');
+        console.log('xMatic: 🎯 AI Tab - Full config to save:', config);
+        console.log('xMatic: 🎯 AI Tab - Temperature value:', config.temperature, '(type:', typeof config.temperature, ')');
+        console.log('xMatic: 🎯 AI Tab - Max Tokens value:', config.maxTokens, '(type:', typeof config.maxTokens, ')');
+        console.log('xMatic: 🎯 AI Tab - Provider:', config.selectedProvider);
+        console.log('xMatic: 🎯 AI Tab - Model:', config.selectedModel);
+        console.log('xMatic: 🎯 AI Tab - ===== END SAVE DEBUG =====');
         
         // Validate required fields
         if (!config.selectedProvider) {

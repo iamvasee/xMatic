@@ -174,6 +174,15 @@ class GenerateTab {
         if (!config) {
             throw new Error('Please configure your AI settings in the AI tab first. You need to select a provider, add an API key, and choose a model.');
         }
+        
+        // Enhanced logging to debug configuration flow
+        console.log('xMatic: 🚀 Generate Tab - ===== CONFIGURATION DEBUG =====');
+        console.log('xMatic: 🚀 Generate Tab - Full config retrieved:', config);
+        console.log('xMatic: 🚀 Generate Tab - Temperature:', config.temperature, '(type:', typeof config.temperature, ')');
+        console.log('xMatic: 🚀 Generate Tab - Max Tokens:', config.maxTokens, '(type:', typeof config.maxTokens, ')');
+        console.log('xMatic: 🚀 Generate Tab - Provider:', config.selectedProvider);
+        console.log('xMatic: 🚀 Generate Tab - Model:', config.selectedModel);
+        console.log('xMatic: 🚀 Generate Tab - ===== END CONFIG DEBUG =====');
             
             // Create AI handler instance
             const aiHandler = new window.AIAPIHandler(config);

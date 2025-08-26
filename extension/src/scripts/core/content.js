@@ -126,16 +126,39 @@ class XMatic {
     }
 
     setupStorageListener() {
-        this.storageManager.setupStorageListener((extensionEnabled) => {
-            if (extensionEnabled.newValue === false) {
+        this.storageManager.setupStorageListener(async (changes) => {
+            // Check if extension enabled/disabled
+            if (changes.extensionEnabled) {
+                if (changes.extensionEnabled.newValue === false) {
                     // Extension disabled - remove all AI buttons and floating button
-                this.uiManager.removeAllAIButtons();
-                this.uiManager.removeFloatingButton();
+                    this.uiManager.removeAllAIButtons();
+                    this.uiManager.removeFloatingButton();
                 } else {
                     // Extension enabled - add AI buttons and floating button back
                     this.addAIButtons();
                     this.addFloatingButton();
                 }
+            }
+            
+            // Check if AI configuration changed (temperature, maxTokens, provider, model, etc.)
+            if (changes.temperature || changes.maxTokens || changes.selectedProvider || 
+                changes.selectedModel || changes.openaiKey || changes.grokKey) {
+                console.log('xMatic: 🔄 AI configuration changed, updating AI handler...');
+                
+                // Update the config in content.js
+                this.config = await this.storageManager.getConfig();
+                
+                // Update the AI handler with new configuration
+                if (this.aiHandler) {
+                    this.aiHandler.updateConfig(this.config);
+                    console.log('xMatic: 🔄 AI handler configuration updated with:', {
+                        temperature: this.config.temperature,
+                        maxTokens: this.config.maxTokens,
+                        provider: this.config.selectedProvider,
+                        model: this.config.selectedModel
+                    });
+                }
+            }
         });
     }
 
