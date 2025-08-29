@@ -4,6 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jhgjeaklmjohgmnephiaeiefejdhfnml?color=4285F4&label=Chrome%20Web%20Store&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
+[![Product Hunt](https://img.shields.io/badge/Product%20Hunt-FF6154?style=for-the-badge&logo=product-hunt&logoColor=white)](https://www.producthunt.com/products/xmatic)
 [![Version](https://img.shields.io/badge/version-2.2.1-blue.svg)](https://github.com/iamvasee/xMatic/releases)
 [![GitHub stars](https://img.shields.io/badge/GitHub-stars-yellow.svg?style=social&logo=github)](https://github.com/iamvasee/xMatic/stargazers)
 
@@ -212,7 +213,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 <div align="center">
 
-**Made with ❤️ by [Vasee](https://iamvasee.com)**
+**Made with ❤️ by [Vasee](https://iamvasee.com) • [Follow on X](https://x.com/iamvasee)**
 
 [⭐ Star this repo](https://github.com/iamvasee/xMatic/stargazers) • [🐛 Report Bug](https://github.com/iamvasee/xMatic/issues) • [💡 Request Feature](https://github.com/iamvasee/xMatic/issues)
 
