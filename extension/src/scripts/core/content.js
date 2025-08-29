@@ -35,6 +35,9 @@ class XMatic {
         
         // Initialize floating panel interface using the proper manager
         this.initializeFloatingPanel();
+        
+        // Replace X logo with robot icon
+        this.replaceXLogo();
     }
 
     nuclearCleanup() {
@@ -51,6 +54,9 @@ class XMatic {
         if (this.storageManager) {
             this.storageManager.cleanup();
         }
+
+        // Restore original X logo if it was replaced
+        this.restoreXLogo();
     }
 
     async loadSvgIcons() {
@@ -102,6 +108,8 @@ class XMatic {
                 this.addButtonsTimeout = setTimeout(async () => {
                     await this.addAIButtons();
                     this.addFloatingButton();
+                    // Also ensure logo is replaced after navigation
+                    this.replaceXLogo();
                 }, 200);
             }
         });
@@ -275,6 +283,91 @@ class XMatic {
             console.log('xMatic: Floating panel CSS injected successfully');
         } catch (error) {
             console.error('xMatic: Failed to inject floating panel CSS:', error);
+        }
+    }
+
+    replaceXLogo() {
+        try {
+            // Function to replace the X logo with robot icon
+            const replaceLogo = () => {
+                // Look for the X logo element using the selector from the console
+                const xLogoSelector = 'a[href="/home"][aria-label="X"]';
+                const xLogoElement = document.querySelector(xLogoSelector);
+                
+                if (xLogoElement && this.robotSvg) {
+                    // Find the SVG element inside the logo
+                    const svgElement = xLogoElement.querySelector('svg');
+                    if (svgElement) {
+                        // Replace the SVG content with our robot icon
+                        svgElement.outerHTML = this.robotSvg;
+                        
+                        // Add some styling to make it fit properly
+                        const robotIcon = xLogoElement.querySelector('svg');
+                        if (robotIcon) {
+                            robotIcon.style.width = '32px';
+                            robotIcon.style.height = '32px';
+                            robotIcon.style.color = 'rgb(15, 20, 25)'; // Match X's color
+                        }
+                        
+                        console.log('xMatic: X logo replaced with robot icon');
+                    }
+                }
+            };
+
+            // Try to replace immediately
+            replaceLogo();
+
+            // Also observe for dynamic changes (in case the logo is added later)
+            const logoObserver = new MutationObserver((mutations) => {
+                mutations.forEach(mutation => {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType === 1 && node.querySelector) {
+                                const logo = node.querySelector('a[href="/home"][aria-label="X"]');
+                                if (logo) {
+                                    replaceLogo();
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Observe the entire document for logo changes
+            logoObserver.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            console.log('xMatic: X logo replacement initialized');
+        } catch (error) {
+            console.error('xMatic: Failed to replace X logo:', error);
+        }
+    }
+
+    restoreXLogo() {
+        try {
+            // Store the original X logo SVG for restoration
+            if (!this.originalXLogoSvg) {
+                const xLogoElement = document.querySelector('a[href="/home"][aria-label="X"] svg');
+                if (xLogoElement) {
+                    this.originalXLogoSvg = xLogoElement.outerHTML;
+                }
+            }
+
+            // Restore the original X logo if we have it
+            if (this.originalXLogoSvg) {
+                const xLogoElement = document.querySelector('a[href="/home"][aria-label="X"]');
+                if (xLogoElement) {
+                    const svgElement = xLogoElement.querySelector('svg');
+                    if (svgElement) {
+                        svgElement.outerHTML = this.originalXLogoSvg;
+                        console.log('xMatic: Original X logo restored');
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('xMatic: Failed to restore X logo:', error);
         }
     }
 }

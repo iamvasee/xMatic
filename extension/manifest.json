@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "xMatic - Own Key",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "AI-powered Twitter content creation - Use your own API keys for complete privacy",
   "permissions": [
     "storage"
