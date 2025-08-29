@@ -213,7 +213,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 <div align="center">
 
-**Made with ❤️ by [Vasee](https://iamvasee.com) • [Follow on X](https://x.com/iamvasee)**
+**Made with ❤️ by [Vasee](https://iamvasee.com) • [Follow on X](https://x.com/iamvasee) • [Landing Page](https://xmatic.app/)**
 
 [⭐ Star this repo](https://github.com/iamvasee/xMatic/stargazers) • [🐛 Report Bug](https://github.com/iamvasee/xMatic/issues) • [💡 Request Feature](https://github.com/iamvasee/xMatic/issues)
 

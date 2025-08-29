@@ -268,7 +268,7 @@ class FloatingPanelManager {
             <div class="panel-footer">
                 <div class="footer-content">
                     <div class="social-links">
-                        <a href="https://iamvasee.com" target="_blank" rel="noopener noreferrer" class="social-link" title="Visit Website">
+                        <a href="https://xmatic.app/" target="_blank" rel="noopener noreferrer" class="social-link" title="Visit Landing Page">
                             <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
