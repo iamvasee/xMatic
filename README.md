@@ -5,10 +5,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jhgjeaklmjohgmnephiaeiefejdhfnml?color=4285F4&label=Chrome%20Web%20Store&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
 [![Product Hunt](https://img.shields.io/badge/Product%20Hunt-FF6154?style=for-the-badge&logo=product-hunt&logoColor=white)](https://www.producthunt.com/products/xmatic)
-[![Version](https://img.shields.io/badge/version-2.2.2-blue.svg)](https://github.com/iamvasee/xMatic/releases)
+[![Version](https://img.shields.io/badge/version-2.2.3-blue.svg)](https://github.com/iamvasee/xMatic/releases)
 [![GitHub stars](https://img.shields.io/badge/GitHub-stars-yellow.svg?style=social&logo=github)](https://github.com/iamvasee/xMatic/stargazers)
 
-**xMatic - Own Key** is a Chrome extension that adds **AI-powered content creation to Twitter/X** with a key difference: **you use your own API keys for complete privacy and control**. **Version 2.2.2 introduces full temperature and maxTokens control** for fine-tuning AI responses, along with a revolutionary floating panel interface that integrates seamlessly within Twitter's interface. Generate multiple original tweets from context, create engaging replies, manage drafts, and customize AI styles all from a beautiful multi-tab floating panel.
+**xMatic - Own Key** is a Chrome extension that adds **AI-powered content creation to Twitter/X** with a key difference: **you use your own API keys for complete privacy and control**. **Version 2.2.3 introduces full temperature and maxTokens control** for fine-tuning AI responses, along with a revolutionary floating panel interface that integrates seamlessly within Twitter's interface. Generate multiple original tweets from context, create engaging replies, manage drafts, and customize AI styles all from a beautiful multi-tab floating panel.
 
 ## ✨ Features
 
@@ -116,6 +116,8 @@
 - **⚡ Concise** - Direct, to-the-point
 - **🤗 Empathetic** - Encouraging, supportive tone
 - **🎨 Creative** - Imaginative, memorable content
+- **🔥 Enthusiastic** - Energetic, passionate, motivational
+- **😏 Sarcastic** - Witty, ironic, cleverly humorous
 
 ### **Custom Instructions:**
 Add your own personality traits, requirements, or specific instructions that get combined with the selected base style for truly personalized AI content creation.

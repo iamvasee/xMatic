@@ -13,13 +13,6 @@
     <!-- Single Compact Section -->
     <main class="main-container">
         <div class="content-section">
-            <!-- Product Hunt Badge -->
-            <div class="producthunt-badge">
-                <a href="https://www.producthunt.com/products/xmatic?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-xmatic" target="_blank" rel="noopener noreferrer">
-                    <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1003826&theme=dark&t=1756470018258" alt="xMatic - An auto reply extension to tweets on X using your own key | Product Hunt" class="producthunt-image" />
-                </a>
-            </div>
-
     <!-- Hero Section -->
             <div class="hero-section">
                 <div class="logo-container">
@@ -35,9 +28,21 @@
                     AI-powered Twitter content generation using your own API keys. 
                     No data mining. No corporate BS. Just better tweets.
                 </p>
-
-                <div class="version-badge">
-                    Version 2.2.2 - Latest Release
+                
+                <!-- Product Hunt Badge and Install Button -->
+                <div class="hero-actions">
+                    <div class="producthunt-badge">
+                        <a href="https://www.producthunt.com/products/xmatic?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-xmatic" target="_blank" rel="noopener noreferrer">
+                            <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1003826&theme=dark&t=1756470018258" alt="xMatic - An auto reply extension to tweets on X using your own key | Product Hunt" class="producthunt-image" />
+                        </a>
+                    </div>
+                    
+                    <a href="https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml" class="install-button" target="_blank" rel="noopener noreferrer">
+                        <svg class="chrome-logo" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zM12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2zm0 2c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 2c2.206 0 4 1.794 4 4s-1.794 4-4 4-4-1.794-4-4 1.794-4 4-4z"/>
+                        </svg>
+                        <span>Install on Chromium</span>
+                    </a>
                 </div>
             </div>
             
@@ -87,14 +92,14 @@
             <div class="screenshots-section">
                 <h2 class="section-title">📸 See It In Action</h2>
                 <div class="screenshots-grid">
-                    <img src="screenshots/App_Store_(iOS) 5.png" alt="Main Interface" class="screenshot" onclick="openModal(this)">
-                    <img src="screenshots/App_Store_(iOS) 6.png" alt="Dark Mode" class="screenshot" onclick="openModal(this)">
-                    <img src="screenshots/App_Store_(iOS) 10.png" alt="Customization" class="screenshot" onclick="openModal(this)">
-                    <img src="screenshots/App_Store_(iOS) 11.png" alt="AI Configuration" class="screenshot" onclick="openModal(this)">
-                    <img src="screenshots/App_Store_(iOS) 12.png" alt="Tweet Generation" class="screenshot" onclick="openModal(this)">
-                    <img src="screenshots/App_Store_(iOS) 13.png" alt="Draft Management" class="screenshot" onclick="openModal(this)">
-                    <img src="screenshots/App_Store_(iOS) 14.png" alt="Style Customization" class="screenshot" onclick="openModal(this)">
-                    <img src="screenshots/App_Store_(iOS) 15.png" alt="Floating Panel Interface" class="screenshot" onclick="openModal(this)">
+                    <img src="screenshots/App_Store_(iOS) 5.png" alt="Main Interface" class="screenshot">
+                    <img src="screenshots/App_Store_(iOS) 6.png" alt="Dark Mode" class="screenshot">
+                    <img src="screenshots/App_Store_(iOS) 10.png" alt="Customization" class="screenshot">
+                    <img src="screenshots/App_Store_(iOS) 11.png" alt="AI Configuration" class="screenshot">
+                    <img src="screenshots/App_Store_(iOS) 12.png" alt="Tweet Generation" class="screenshot">
+                    <img src="screenshots/App_Store_(iOS) 13.png" alt="Draft Management" class="screenshot">
+                    <img src="screenshots/App_Store_(iOS) 14.png" alt="Style Customization" class="screenshot">
+                    <img src="screenshots/App_Store_(iOS) 15.png" alt="Floating Panel Interface" class="screenshot">
                 </div>
             </div>
 
@@ -103,7 +108,7 @@
                 <span class="close" onclick="closeModal()">&times;</span>
                 <img class="modal-content" id="modalImage" title="Screenshot">
                 <div id="modalCaption"></div>
-            </div>
+        </div>
 
             <!-- Content Styles Section -->
             <div class="styles-section">
@@ -137,6 +142,14 @@
                         <h3>🎨 Creative</h3>
                         <p>Imaginative, memorable content</p>
                     </div>
+                    <div class="style-card">
+                        <h3>🔥 Enthusiastic</h3>
+                        <p>Energetic, passionate, motivational</p>
+                    </div>
+                    <div class="style-card">
+                        <h3>😏 Sarcastic</h3>
+                        <p>Witty, ironic, cleverly humorous</p>
+                    </div>
                 </div>
                     </div>
 
@@ -165,7 +178,7 @@
                         <p>Create multiple tweets or replies, then publish with one click</p>
                     </div>
                 </div>
-            </div>
+                    </div>
 
             <!-- Tech Stack Section -->
             <div class="tech-section">

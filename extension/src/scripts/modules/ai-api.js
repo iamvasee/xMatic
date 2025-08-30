@@ -2,16 +2,33 @@
 class AIAPIHandler {
     constructor(config) {
         this.config = config;
+        // Style instruction mapping for precise AI guidance
+        this.styleInstructions = {
+            'professional': 'Write in a formal, business-like, and authoritative tone. Use professional language, avoid slang, and maintain a serious, credible voice.',
+            'casual': 'Write in a friendly, relaxed, and approachable manner. Use conversational language, feel free to use contractions and friendly expressions.',
+            'humorous': 'Write with wit, playfulness, and entertainment. Include clever jokes, puns, or humorous observations while staying engaging.',
+            'analytical': 'Write with detailed, logical, and data-driven approach. Present facts clearly, use structured thinking, and provide thorough analysis.',
+            'concise': 'Write briefly, directly, and to-the-point. Keep sentences short, avoid unnecessary words, and get straight to the core message.',
+            'empathetic': 'Write with understanding, support, and care. Show emotional intelligence, acknowledge feelings, and provide encouraging responses.',
+            'creative': 'Write with imagination, innovation, and artistic expression. Use vivid language, creative metaphors, and unique perspectives.',
+            'enthusiastic': 'Write with energy, passion, and motivation. Use exclamation marks, positive language, and inspiring expressions.',
+            'sarcastic': 'Write with wit, irony, and clever humor. Use subtle sarcasm, clever commentary, and witty observations.'
+        };
     }
 
     async generateReply(context) {
-        // Build the complete style instruction by combining base style and custom instructions
-        const baseStyle = this.config.style || 'conversational and helpful';
+        // Get the specific style instruction for the selected style
+        const selectedStyle = this.config.style;
         const customInstructions = this.config.customStyleInstructions || '';
         
-        let styleInstruction = baseStyle;
-        if (customInstructions) {
-            styleInstruction = `${baseStyle}. ${customInstructions}`;
+        let styleInstruction = 'Write in a conversational and helpful tone.';
+        if (selectedStyle && this.styleInstructions[selectedStyle]) {
+            styleInstruction = this.styleInstructions[selectedStyle];
+            if (customInstructions) {
+                styleInstruction = `${styleInstruction} Additionally: ${customInstructions}`;
+            }
+        } else if (customInstructions) {
+            styleInstruction = `Write in a conversational and helpful tone. Additionally: ${customInstructions}`;
         }
         
         const systemPrompt = `You are an expert at crafting engaging Twitter/X replies. Follow these rules strictly:
@@ -19,7 +36,7 @@ class AIAPIHandler {
 2. Never use double quotes (") in your response.
 3. Never use (—) in your response.
 4. NEVER use @ symbols (@) in your response - this could accidentally tag other users
-5. Match the user's requested style: ${styleInstruction}
+5. Style Instruction: ${styleInstruction}
 6. Use proper Twitter etiquette - mentions, hashtags, and emojis when appropriate
 7. Never include any meta-commentary like "Here's a reply:" or "I would say:" - just provide the reply
 8. If the tweet is a question, directly answer it
@@ -144,30 +161,35 @@ Consider the author's influence and the tweet's engagement level when crafting y
     async generateMultipleReplies(context, count) {
         console.log('xMatic: 🚀 AI API - Generating', count, 'replies in single API call for context:', context);
         
-        // Build the complete style instruction by combining base style and custom instructions
-        const baseStyle = this.config.style || 'conversational and helpful';
+        // Get the specific style instruction for the selected style
+        const selectedStyle = this.config.style;
         const customInstructions = this.config.customStyleInstructions || '';
         
-        let styleInstruction = baseStyle;
-        if (customInstructions) {
-            styleInstruction = `${baseStyle}. ${customInstructions}`;
+        let styleInstruction = 'Write in a conversational and helpful tone.';
+        if (selectedStyle && this.styleInstructions[selectedStyle]) {
+            styleInstruction = this.styleInstructions[selectedStyle];
+            if (customInstructions) {
+                styleInstruction = `${styleInstruction} Additionally: ${customInstructions}`;
+            }
+        } else if (customInstructions) {
+            styleInstruction = `Write in a conversational and helpful tone. Additionally: ${customInstructions}`;
         }
         
-        const systemPrompt = `You are an expert at crafting engaging original Twitter/X posts in the ${styleInstruction} style. Generate exactly ${count} unique and diverse tweets about the given topic.
+        const systemPrompt = `You are an expert at crafting engaging original Twitter/X posts. Generate exactly ${count} unique and diverse tweets about the given topic.
 
 IIMPORTANT: Return your response as a valid JSON array of strings, where each string is a different original tweet.
 
 Each tweet must be:
 1. Under 280 characters
-2. Written in ${styleInstruction} style
+2. Written following this style instruction: ${styleInstruction}
 3. Unique and engaging
 4. Original standalone content
 
 Rules:
 - Never use double quotes (") or @ symbols
 - No meta-commentary, just tweet content
-- Vary tone and approach while maintaining ${styleInstruction} style
-- Use hashtags and emojis when appropriate for ${styleInstruction} content
+- Vary tone and approach while maintaining the specified style
+- Use hashtags and emojis when appropriate for the style
 
 Return ONLY a valid JSON array of ${count} strings.`;
 

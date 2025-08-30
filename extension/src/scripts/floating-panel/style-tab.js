@@ -76,6 +76,20 @@ class StyleTab {
                                 <p>Imaginative, innovative, and artistic expression</p>
                             </div>
                         </button>
+                        <button type="button" class="style-card" data-style="enthusiastic">
+                            <div class="style-card-icon">🔥</div>
+                            <div class="style-card-content">
+                                <h4>Enthusiastic</h4>
+                                <p>Energetic, passionate, and motivational tone</p>
+                            </div>
+                        </button>
+                        <button type="button" class="style-card" data-style="sarcastic">
+                            <div class="style-card-icon">😏</div>
+                            <div class="style-card-content">
+                                <h4>Sarcastic</h4>
+                                <p>Witty, ironic, and cleverly humorous</p>
+                            </div>
+                        </button>
                     </div>
                 </div>
 
@@ -294,7 +308,9 @@ class StyleTab {
             'analytical': 'Detailed, logical, and data-driven approach',
             'concise': 'Brief, direct, and to-the-point communication',
             'empathetic': 'Understanding, supportive, and caring tone',
-            'creative': 'Imaginative, innovative, and artistic expression'
+            'creative': 'Imaginative, innovative, and artistic expression',
+            'enthusiastic': 'Energetic, passionate, and motivational tone',
+            'sarcastic': 'Witty, ironic, and cleverly humorous'
         };
         return descriptions[style] || 'Custom style';
     }

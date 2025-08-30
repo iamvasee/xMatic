@@ -5,6 +5,25 @@ All notable changes to xMatic - Own Key will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.3] - 2025-08-20
+
+### Added
+- **🎨 Two New Content Styles** - Added "Enthusiastic" and "Sarcastic" styles to complete the 3x3 grid
+- **🔥 Enthusiastic Style** - Energetic, passionate, and motivational tone for engaging content
+- **😏 Sarcastic Style** - Witty, ironic, and cleverly humorous responses
+
+### Improved
+- **⚡ AI API Optimization** - Enhanced style instruction handling for better AI responses
+- **🎯 Style-Specific Instructions** - AI now receives only the selected style's instruction instead of all styles
+- **🔧 Performance Enhancement** - Reduced API payload size by sending targeted style instructions
+- **📝 Dual Method Support** - Both generateReply and generateMultipleReplies now use optimized style handling
+
+### Technical
+- **🎨 Style Instructions Map** - Comprehensive mapping of all 9 content styles with detailed instructions
+- **🔧 Dynamic Style Construction** - Smart combination of base style + custom instructions
+- **📊 Enhanced Logging** - Better visibility into which style instructions are being sent to AI
+- **🎯 Provider Consistency** - Optimized style handling works across OpenAI and Grok AI providers
+
 ## [2.2.2] - 2025-08-20
 
 ### Added
