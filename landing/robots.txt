@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://github.com/iamvasee/xMatic/blob/main/landing/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Disallow specific paths if needed
+# Disallow: /admin/
+# Disallow: /private/
+
+# Allow all important content
+Allow: /index.html
+Allow: /styles.css
+Allow: /script.js
+Allow: /social-test.html
+Allow: /xMatic.png
+Allow: /xmaticicon.png
+Allow: /screenshots/
+
+# Block common bot patterns
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10

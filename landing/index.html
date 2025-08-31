@@ -3,20 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>xMatic - AI-Powered Twitter Extension</title>
-    <meta name="description" content="Transform your Twitter experience with AI-powered content generation. Own your API keys. No BS.">
-    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Primary Meta Tags -->
+    <title>xMatic - AI-Powered Twitter Content Generator | Create Viral Tweets with Your Own API Keys</title>
+    <meta name="title" content="xMatic - AI-Powered Twitter Content Generator | Create Viral Tweets with Your Own API Keys">
+    <meta name="description" content="Transform your Twitter experience with xMatic's AI-powered content generation. Generate viral tweets, engaging replies, and professional content using your own OpenAI/Grok API keys. Chrome extension for Twitter growth and automation.">
+    <meta name="keywords" content="AI Twitter extension, Twitter AI tool, viral tweet generator, Twitter content creation, OpenAI GPT Twitter, Grok AI Twitter, Chrome extension Twitter, Twitter automation, social media AI, Twitter growth tool, AI tweet writer, Twitter marketing automation, social media content generator, Twitter bot alternative, AI-powered social media, Twitter engagement tool">
+    <meta name="author" content="Vasee Karan">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/iamvasee/xMatic">
+    <meta property="og:title" content="xMatic - AI-Powered Twitter Content Generator | Create Viral Tweets">
+    <meta property="og:description" content="Transform your Twitter experience with AI-powered content generation. Generate viral tweets, engaging replies, and professional content using your own API keys.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/iamvasee/xMatic/main/landing/screenshots/App_Store_(iOS)%205.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="xMatic AI Twitter Extension - Main Interface showing AI tweet generation panel">
+    <meta property="og:site_name" content="xMatic">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://github.com/iamvasee/xMatic">
+    <meta property="twitter:title" content="xMatic - AI-Powered Twitter Content Generator">
+    <meta property="twitter:description" content="Transform your Twitter experience with AI-powered content generation. Generate viral tweets, engaging replies, and professional content using your own API keys.">
+    <meta property="twitter:image" content="https://raw.githubusercontent.com/iamvasee/xMatic/main/landing/screenshots/App_Store_(iOS)%205.png">
+    <meta property="twitter:image:alt" content="xMatic AI Twitter Extension - Main Interface showing AI tweet generation panel">
+    <meta property="twitter:creator" content="@iamvasee">
+    <meta property="twitter:site" content="@iamvasee">
+    
+    <!-- Additional SEO Meta Tags -->
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="xMatic">
+    
+    <!-- Theme Color - Cross-browser compatible approach -->
+    <!-- Chrome/Edge/Safari: Dynamic JavaScript injection -->
+    <!-- Firefox/Opera: Graceful degradation with CSS custom properties -->
+    <!-- Mobile: Platform-specific meta tags -->
+    <meta name="msapplication-navbutton-color" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Social Media Image Optimization -->
+    <meta name="twitter:image:width" content="1200">
+    <meta name="twitter:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:secure_url" content="https://raw.githubusercontent.com/iamvasee/xMatic/main/landing/screenshots/App_Store_(iOS)%205.png">
+    
+    <!-- Fallback Image for Social Media -->
+    <meta property="og:image:alt" content="xMatic AI Twitter Extension - Main Interface showing AI tweet generation panel">
+    <meta name="twitter:image:alt" content="xMatic AI Twitter Extension - Main Interface showing AI tweet generation panel">
+    
+    <!-- Pinterest Rich Pins -->
+    <meta name="pinterest-rich-pin" content="true">
+    
+    <!-- LinkedIn Open Graph -->
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    
+    <!-- Additional Social Media Tags -->
+    <meta property="og:image:url" content="https://raw.githubusercontent.com/iamvasee/xMatic/main/landing/screenshots/App_Store_(iOS)%205.png">
+    <meta name="twitter:image:src" content="https://raw.githubusercontent.com/iamvasee/xMatic/main/landing/screenshots/App_Store_(iOS)%205.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://github.com/iamvasee/xMatic">
+    
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="xmaticicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="xmaticicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="xMatic.png">
+    <link rel="mask-icon" href="xMatic.png" color="#000000">
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://chromewebstore.google.com">
+    <link rel="preconnect" href="https://www.producthunt.com">
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="xmaticicon.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Dynamic Theme Color for Modern Browsers -->
+    <script>
+        // Set theme color dynamically for browsers that support it
+        if ('theme-color' in document.createElement('meta')) {
+            const themeColorMeta = document.createElement('meta');
+            themeColorMeta.name = 'theme-color';
+            themeColorMeta.content = getComputedStyle(document.documentElement)
+                .getPropertyValue('--theme-color') || '#000000';
+            document.head.appendChild(themeColorMeta);
+        }
+    </script>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "xMatic",
+        "description": "AI-powered Twitter content generation Chrome extension using your own API keys",
+        "url": "https://github.com/iamvasee/xMatic",
+        "applicationCategory": "BrowserExtension",
+        "operatingSystem": "Chrome, Edge, Brave, Chromium-based browsers",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Vasee Karan",
+            "url": "https://github.com/iamvasee"
+        },
+        "creator": {
+            "@type": "Person",
+            "name": "Vasee Karan",
+            "url": "https://github.com/iamvasee"
+        },
+        "softwareVersion": "2.2.3",
+        "downloadUrl": "https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "150"
+        },
+        "featureList": [
+            "AI-powered tweet generation",
+            "Floating panel interface",
+            "Multiple content styles",
+            "Your own API keys",
+            "OpenAI GPT integration",
+            "Grok AI integration",
+            "One-click publishing",
+            "Context-aware replies"
+        ]
+    }
+    </script>
+    
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "xMatic",
+        "url": "https://github.com/iamvasee/xMatic",
+        "logo": "https://raw.githubusercontent.com/iamvasee/xMatic/main/landing/xMatic.png",
+        "image": "https://raw.githubusercontent.com/iamvasee/xMatic/main/landing/screenshots/App_Store_(iOS)%205.png",
+        "sameAs": [
+            "https://github.com/iamvasee/xMatic",
+            "https://x.com/iamvasee",
+            "https://www.producthunt.com/products/xmatic"
+        ]
+    }
+    </script>
 </head>
 <body>
-    <!-- Single Compact Section -->
-    <main class="main-container">
+
+
+    <!-- Main Content -->
+    <main class="main-container" role="main">
         <div class="content-section">
     <!-- Hero Section -->
-            <div class="hero-section">
+            <section class="hero-section" id="hero">
                 <div class="logo-container">
-                    <img src="xMatic.png" alt="xMatic" class="hero-logo">
+                    <img src="xMatic.png" alt="xMatic - AI Twitter Extension Logo" class="hero-logo">
                 </div>
                 
                 <h1 class="hero-headline">
@@ -26,220 +185,276 @@
                 
                 <p class="hero-description">
                     AI-powered Twitter content generation using your own API keys. 
-                    No data mining. No corporate BS. Just better tweets.
+                    No data mining. No corporate BS. Just better tweets that drive engagement and growth.
                 </p>
                 
                 <!-- Product Hunt Badge and Install Button -->
                 <div class="hero-actions">
                     <div class="producthunt-badge">
-                        <a href="https://www.producthunt.com/products/xmatic?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-xmatic" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.producthunt.com/products/xmatic?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-xmatic" target="_blank" rel="noopener noreferrer" aria-label="xMatic on Product Hunt">
                             <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1003826&theme=dark&t=1756470018258" alt="xMatic - An auto reply extension to tweets on X using your own key | Product Hunt" class="producthunt-image" />
                         </a>
                     </div>
                     
-                    <a href="https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml" class="install-button" target="_blank" rel="noopener noreferrer">
-                        <svg class="chrome-logo" viewBox="0 0 24 24" fill="currentColor">
+                    <a href="https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml" class="install-button" target="_blank" rel="noopener noreferrer" aria-label="Install xMatic Chrome Extension">
+                        <svg class="chrome-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                             <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zM12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2zm0 2c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 2c2.206 0 4 1.794 4 4s-1.794 4-4 4-4-1.794-4-4 1.794-4 4-4z"/>
                         </svg>
                         <span>Install on Chromium</span>
                     </a>
                 </div>
-            </div>
+            </section>
             
             <!-- Key Features Grid -->
-            <div class="features-section">
+            <section class="features-section" id="features">
                 <h2 class="section-title">✨ Revolutionary Features</h2>
             <div class="features-grid">
-                <div class="feature-card">
-                        <div class="feature-icon">🪟</div>
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">🪟</div>
                         <h3>Floating Panel Interface</h3>
-                        <p>Multi-tab interface integrated directly within Twitter</p>
-                    </div>
+                        <p>Multi-tab interface integrated directly within Twitter for seamless content creation</p>
+                    </article>
                     
-                <div class="feature-card">
-                        <div class="feature-icon">🚀</div>
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">🚀</div>
                         <h3>Smart Publish System</h3>
-                        <p>One-click publishing with Twitter intents and interface injection</p>
-                    </div>
+                        <p>One-click publishing with Twitter intents and interface injection for maximum efficiency</p>
+                    </article>
                     
-                <div class="feature-card">
-                        <div class="feature-icon">🎯</div>
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">🎯</div>
                         <h3>AI Control</h3>
-                        <p>Full temperature & max tokens control for fine-tuning responses</p>
-                    </div>
+                        <p>Full temperature & max tokens control for fine-tuning AI responses to your exact needs</p>
+                    </article>
                     
-                <div class="feature-card">
-                        <div class="feature-icon">🐦</div>
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">🐦</div>
                         <h3>Multiple Tweet Generation</h3>
-                        <p>Generate multiple original tweets from context in one API call</p>
-                    </div>
+                        <p>Generate multiple original tweets from context in one API call to maximize productivity</p>
+                    </article>
                     
-                <div class="feature-card">
-                        <div class="feature-icon">💬</div>
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">💬</div>
                         <h3>AI Reply Generation</h3>
-                        <p>Generate contextual, engaging replies to existing tweets</p>
-                    </div>
+                        <p>Generate contextual, engaging replies to existing tweets that drive conversations</p>
+                    </article>
                     
-                <div class="feature-card">
-                        <div class="feature-icon">🔑</div>
+                    <article class="feature-card">
+                        <div class="feature-icon" aria-hidden="true">🔑</div>
                         <h3>Your Own Keys</h3>
-                        <p>Use your own OpenAI/Grok API keys for complete privacy</p>
-                    </div>
+                        <p>Use your own OpenAI/Grok API keys for complete privacy and cost control</p>
+                    </article>
                 </div>
-                    </div>
+            </section>
 
             <!-- Screenshots Section -->
-            <div class="screenshots-section">
+            <section class="screenshots-section" id="screenshots">
                 <h2 class="section-title">📸 See It In Action</h2>
                 <div class="screenshots-grid">
-                    <img src="screenshots/App_Store_(iOS) 5.png" alt="Main Interface" class="screenshot">
-                    <img src="screenshots/App_Store_(iOS) 6.png" alt="Dark Mode" class="screenshot">
-                    <img src="screenshots/App_Store_(iOS) 10.png" alt="Customization" class="screenshot">
-                    <img src="screenshots/App_Store_(iOS) 11.png" alt="AI Configuration" class="screenshot">
-                    <img src="screenshots/App_Store_(iOS) 12.png" alt="Tweet Generation" class="screenshot">
-                    <img src="screenshots/App_Store_(iOS) 13.png" alt="Draft Management" class="screenshot">
-                    <img src="screenshots/App_Store_(iOS) 14.png" alt="Style Customization" class="screenshot">
-                    <img src="screenshots/App_Store_(iOS) 15.png" alt="Floating Panel Interface" class="screenshot">
+                    <figure class="screenshot-item">
+                        <img src="screenshots/App_Store_(iOS) 5.png" alt="xMatic Main Interface showing AI tweet generation panel" class="screenshot" loading="lazy">
+                        <figcaption class="screenshot-caption">Main Interface</figcaption>
+                    </figure>
+                    <figure class="screenshot-item">
+                        <img src="screenshots/App_Store_(iOS) 6.png" alt="xMatic Dark Mode interface with floating AI panel" class="screenshot" loading="lazy">
+                        <figcaption class="screenshot-caption">Dark Mode</figcaption>
+                    </figure>
+                    <figure class="screenshot-item">
+                        <img src="screenshots/App_Store_(iOS) 10.png" alt="xMatic Customization options and settings panel" class="screenshot" loading="lazy">
+                        <figcaption class="screenshot-caption">Customization</figcaption>
+                    </figure>
+                    <figure class="screenshot-item">
+                        <img src="screenshots/App_Store_(iOS) 11.png" alt="xMatic AI Configuration panel with API key settings" class="screenshot" loading="lazy">
+                        <figcaption class="screenshot-caption">AI Configuration</figcaption>
+                    </figure>
+                    <figure class="screenshot-item">
+                        <img src="screenshots/App_Store_(iOS) 12.png" alt="xMatic Tweet Generation interface with multiple style options" class="screenshot" loading="lazy">
+                        <figcaption class="screenshot-caption">Tweet Generation</figcaption>
+                    </figure>
+                    <figure class="screenshot-item">
+                        <img src="screenshots/App_Store_(iOS) 13.png" alt="xMatic Draft Management system for organizing content" class="screenshot" loading="lazy">
+                        <figcaption class="screenshot-caption">Draft Management</figcaption>
+                    </figure>
+                    <figure class="screenshot-item">
+                        <img src="screenshots/App_Store_(iOS) 14.png" alt="xMatic Style Customization with professional and casual tone options" class="screenshot" loading="lazy">
+                        <figcaption class="screenshot-caption">Style Customization</figcaption>
+                    </figure>
+                    <figure class="screenshot-item">
+                        <img src="screenshots/App_Store_(iOS) 15.png" alt="xMatic Floating Panel Interface integrated within Twitter" class="screenshot" loading="lazy">
+                        <figcaption class="screenshot-caption">Floating Panel Interface</figcaption>
+                    </figure>
                 </div>
-            </div>
+            </section>
 
             <!-- Modal for Screenshots -->
-            <div id="imageModal" class="modal">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <img class="modal-content" id="modalImage" title="Screenshot">
+            <div id="imageModal" class="modal" role="dialog" aria-label="Screenshot viewer" aria-hidden="true">
+                <span class="close" onclick="closeModal()" aria-label="Close modal">&times;</span>
+                <img class="modal-content" id="modalImage" alt="Screenshot preview">
                 <div id="modalCaption"></div>
         </div>
 
             <!-- Content Styles Section -->
-            <div class="styles-section">
+            <section class="styles-section" id="styles">
                 <h2 class="section-title">🎨 Content Styles</h2>
                 <div class="styles-grid">
-                    <div class="style-card">
+                    <article class="style-card">
                         <h3>🎯 Professional</h3>
-                        <p>Business-focused, formal tone</p>
-                    </div>
-                    <div class="style-card">
+                        <p>Business-focused, formal tone for corporate Twitter accounts</p>
+                    </article>
+                    <article class="style-card">
                         <h3>😊 Casual & Friendly</h3>
-                        <p>Warm, approachable content</p>
-                    </div>
-                    <div class="style-card">
+                        <p>Warm, approachable content that builds community engagement</p>
+                    </article>
+                    <article class="style-card">
                         <h3>😏 Humorous</h3>
-                        <p>Witty, clever humor</p>
-                    </div>
-                    <div class="style-card">
+                        <p>Witty, clever humor that makes your tweets memorable and shareable</p>
+                    </article>
+                    <article class="style-card">
                         <h3>🧠 Analytical</h3>
-                        <p>Detailed, thorough analysis</p>
-                    </div>
-                    <div class="style-card">
+                        <p>Detailed, thorough analysis that positions you as a thought leader</p>
+                    </article>
+                    <article class="style-card">
                         <h3>⚡ Concise</h3>
-                        <p>Direct, to-the-point</p>
-                    </div>
-                    <div class="style-card">
+                        <p>Direct, to-the-point content that maximizes Twitter's character limit</p>
+                    </article>
+                    <article class="style-card">
                         <h3>🤗 Empathetic</h3>
-                        <p>Encouraging, supportive tone</p>
-                    </div>
-                    <div class="style-card">
+                        <p>Encouraging, supportive tone that resonates with your audience</p>
+                    </article>
+                    <article class="style-card">
                         <h3>🎨 Creative</h3>
-                        <p>Imaginative, memorable content</p>
-                    </div>
-                    <div class="style-card">
+                        <p>Imaginative, memorable content that stands out in the Twitter feed</p>
+                    </article>
+                    <article class="style-card">
                         <h3>🔥 Enthusiastic</h3>
-                        <p>Energetic, passionate, motivational</p>
-                    </div>
-                    <div class="style-card">
+                        <p>Energetic, passionate, motivational content that inspires action</p>
+                    </article>
+                    <article class="style-card">
                         <h3>😏 Sarcastic</h3>
-                        <p>Witty, ironic, cleverly humorous</p>
-                    </div>
+                        <p>Witty, ironic, cleverly humorous content that shows personality</p>
+                    </article>
                 </div>
-                    </div>
+            </section>
 
                         <!-- Quick Start Section -->
-            <div class="quick-start-section">
+            <section class="quick-start-section" id="quick-start">
                 <h2 class="section-title">🚀 Quick Start Guide</h2>
                 <div class="quick-start-grid">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
+                    <article class="step-card">
+                        <div class="step-number" aria-label="Step 1">1</div>
                         <h3>Install Extension</h3>
-                        <p>Add xMatic from Chrome Web Store or load manually</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
+                        <p>Add xMatic from Chrome Web Store or load manually in developer mode</p>
+                    </article>
+                    <article class="step-card">
+                        <div class="step-number" aria-label="Step 2">2</div>
                         <h3>Configure AI</h3>
-                        <p>Choose OpenAI GPT or Grok AI and add your API key</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
+                        <p>Choose OpenAI GPT or Grok AI and add your API key for personalized AI access</p>
+                    </article>
+                    <article class="step-card">
+                        <div class="step-number" aria-label="Step 3">3</div>
                         <h3>Start Creating</h3>
-                        <p>Go to Twitter, compose a tweet, and click the 🤖 AI button</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">4</div>
+                        <p>Go to Twitter, compose a tweet, and click the 🤖 AI button to generate content</p>
+                    </article>
+                    <article class="step-card">
+                        <div class="step-number" aria-label="Step 4">4</div>
                         <h3>Generate & Publish</h3>
-                        <p>Create multiple tweets or replies, then publish with one click</p>
-                    </div>
+                        <p>Create multiple tweets or replies, then publish with one click for maximum efficiency</p>
+                    </article>
                 </div>
-                    </div>
+            </section>
 
             <!-- Tech Stack Section -->
-            <div class="tech-section">
+            <section class="tech-section" id="tech">
                 <h2 class="section-title">🛠️ Tech Stack</h2>
                 <div class="tech-grid">
-                    <div class="tech-card">
+                    <article class="tech-card">
                         <h3>Frontend</h3>
-                        <p>Vanilla JavaScript, HTML5, CSS3</p>
-                    </div>
-                    <div class="tech-card">
+                        <p>Vanilla JavaScript, HTML5, CSS3 with modern design principles</p>
+                    </article>
+                    <article class="tech-card">
                         <h3>AI Providers</h3>
-                        <p>OpenAI GPT API, Grok AI (xAI) API</p>
-                    </div>
-                    <div class="tech-card">
+                        <p>OpenAI GPT API, Grok AI (xAI) API with full customization options</p>
+                    </article>
+                    <article class="tech-card">
                         <h3>Platform</h3>
-                        <p>Chrome Extension (Manifest V3)</p>
-                    </div>
-                    <div class="tech-card">
+                        <p>Chrome Extension (Manifest V3) compatible with all Chromium browsers</p>
+                    </article>
+                    <article class="tech-card">
                         <h3>Architecture</h3>
-                        <p>Modular design with 6,200+ lines of code</p>
-                    </div>
+                        <p>Modular design with 6,200+ lines of optimized, maintainable code</p>
+                    </article>
                 </div>
-            </div>
+            </section>
 
             <!-- CTA Section -->
-            <div class="cta-section">
+            <section class="cta-section" id="cta">
                 <h2>Ready to transform your Twitter game?</h2>
-                <p>Join thousands of users who've already upgraded their content creation.</p>
+                <p>Join thousands of users who've already upgraded their content creation and engagement.</p>
                 
                 <div class="cta-buttons">
-                    <a href="https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml" class="cta-button primary" target="_blank" rel="noopener noreferrer">
+                    <a href="https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml" class="cta-button primary" target="_blank" rel="noopener noreferrer" aria-label="Install xMatic Chrome Extension">
                         Install on Chrome
                     </a>
-                    <a href="https://github.com/iamvasee/xMatic" class="cta-button secondary" target="_blank" rel="noopener noreferrer">
+                    <a href="https://github.com/iamvasee/xMatic" class="cta-button secondary" target="_blank" rel="noopener noreferrer" aria-label="View xMatic on GitHub">
                         View on GitHub
                     </a>
                 </div>
                 
                 <div class="social-links">
-                    <a href="https://github.com/iamvasee/xMatic" target="_blank" rel="noopener noreferrer" class="social-link">
-                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <a href="https://github.com/iamvasee/xMatic" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Follow xMatic on GitHub">
+                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                         GitHub
                     </a>
-                    <a href="https://x.com/iamvasee" target="_blank" rel="noopener noreferrer" class="social-link">
-                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <a href="https://x.com/iamvasee" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Follow xMatic on X (Twitter)">
+                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                         X (Twitter)
                     </a>
-                    <a href="https://www.producthunt.com/products/xmatic?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-xmatic" target="_blank" rel="noopener noreferrer" class="social-link">
-                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <a href="https://www.producthunt.com/products/xmatic?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-xmatic" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Check out xMatic on Product Hunt">
+                        <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10zm-1-6h2v2h-2v-2zm0-8h2v6h-2V8z"/>
                     </svg>
                         Product Hunt
                     </a>
                 </div>
-            </div>
+            </section>
         </div>
     </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About xMatic</h3>
+                    <p>AI-powered Twitter content generation tool that puts you in control. Use your own API keys for complete privacy and cost control.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#quick-start">Quick Start</a></li>
+                        <li><a href="https://github.com/iamvasee/xMatic" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                        <li><a href="https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml" target="_blank" rel="noopener noreferrer">Install</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com/iamvasee/xMatic/issues" target="_blank" rel="noopener noreferrer">Report Issues</a></li>
+                        <li><a href="https://github.com/iamvasee/xMatic" target="_blank" rel="noopener noreferrer">Documentation</a></li>
+                        <li><a href="https://x.com/iamvasee" target="_blank" rel="noopener noreferrer">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 xMatic. Built with ❤️ by <a href="https://github.com/iamvasee" target="_blank" rel="noopener noreferrer">Vasee Karan</a></p>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>

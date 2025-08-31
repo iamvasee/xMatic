@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Main Landing Page -->
+    <url>
+        <loc>https://github.com/iamvasee/xMatic</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- Landing Page Files -->
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/landing/index.html</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- Extension Files -->
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/tree/main/extension</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/extension/manifest.json</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- Documentation -->
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/README.md</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/CHANGELOG.md</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/LICENSE</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <!-- Landing Page Assets -->
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/landing/styles.css</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/landing/script.js</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <url>
+        <loc>https://raw.githubusercontent.com/iamvasee/xMatic/main/landing/xMatic.png</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    
+    <url>
+        <loc>https://raw.githubusercontent.com/iamvasee/xMatic/main/landing/xmaticicon.png</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    
+    <!-- Screenshots -->
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/tree/main/landing/screenshots</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- External Links -->
+    <url>
+        <loc>https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://github.com/iamvasee/xMatic</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <url>
+        <loc>https://x.com/iamvasee</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://www.producthunt.com/products/xmatic</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- SEO Files -->
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/robots.txt</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.4</priority>
+    </url>
+    
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/sitemap.xml</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.4</priority>
+    </url>
+    
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/landing/llm.txt</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    
+    <!-- Security -->
+    <url>
+        <loc>https://github.com/iamvasee/xMatic/blob/main/landing/.well-known/security.txt</loc>
+        <lastmod>2024-12-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+</urlset>

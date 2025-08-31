@@ -1,0 +1,119 @@
+User-agent: *
+Allow: /
+
+# Main Landing Page
+Allow: /index.html
+Allow: /styles.css
+Allow: /script.js
+Allow: /xMatic.png
+Allow: /xmaticicon.png
+Allow: /screenshots/
+
+# Extension Files
+Allow: /extension/
+Allow: /extension/manifest.json
+Allow: /extension/src/
+Allow: /extension/src/scripts/
+Allow: /extension/src/styles/
+Allow: /extension/src/ui/
+
+# Documentation
+Allow: /README.md
+Allow: /CHANGELOG.md
+Allow: /LICENSE
+Allow: /package.json
+
+# SEO Files
+Allow: /robots.txt
+Allow: /sitemap.xml
+Allow: /llm.txt
+
+# Security
+Allow: /.well-known/security.txt
+
+# Landing Page
+Allow: /landing/
+Allow: /landing/index.html
+Allow: /landing/styles.css
+Allow: /landing/script.js
+Allow: /landing/robots.txt
+Allow: /landing/sitemap.xml
+Allow: /landing/llm.txt
+Allow: /landing/README.md
+
+# Sitemap
+Sitemap: https://github.com/iamvasee/xMatic/blob/main/sitemap.xml
+Sitemap: https://github.com/iamvasee/xMatic/blob/main/landing/sitemap.xml
+
+# Crawl delay for all bots
+Crawl-delay: 1
+
+# Block aggressive bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+User-agent: BLEXBot
+Crawl-delay: 10
+
+# Block archive bots
+User-agent: ia_archiver
+Disallow: /
+
+User-agent: archive.org_bot
+Disallow: /
+
+# Block social media bots (optional)
+User-agent: facebookexternalhit
+Crawl-delay: 5
+
+User-agent: Twitterbot
+Crawl-delay: 5
+
+User-agent: LinkedInBot
+Crawl-delay: 5
+
+# Block AI training bots (optional)
+User-agent: GPTBot
+Crawl-delay: 5
+
+User-agent: ChatGPT-User
+Crawl-delay: 5
+
+User-agent: CCBot
+Crawl-delay: 5
+
+# Block common scrapers
+User-agent: Scrapy
+Disallow: /
+
+User-agent: Nutch
+Disallow: /
+
+User-agent: Wget
+Disallow: /
+
+# Allow important search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1

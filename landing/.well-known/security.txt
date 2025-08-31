@@ -1,0 +1,6 @@
+Contact: mailto:hi@iamvasee.com
+Contact: https://github.com/iamvasee/xMatic/security/advisories
+Expires: 2025-12-31T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://github.com/iamvasee/xMatic/blob/main/landing/.well-known/security.txt
+Policy: https://github.com/iamvasee/xMatic/security/policy
