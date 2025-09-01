@@ -4,6 +4,20 @@ Transform your Twitter experience with AI-powered content generation using your 
 
 [![Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1003826&theme=dark&t=1756470018258)](https://www.producthunt.com/products/xmatic?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-xmatic)
 
+## 🔗 Quick Links
+
+- **🌐 [Landing Page](https://iamvasee.github.io/xMatic/)** - SEO-optimized landing page
+- **🛒 [Chrome Web Store](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)** - Install xMatic extension
+- **🐦 [Twitter](https://x.com/iamvasee)** - Follow for updates and support
+- **📚 [GitHub Repository](https://github.com/iamvasee/xMatic)** - Source code and documentation
+
+## 📦 Version Information
+
+- **Current Version**: v1.0.0
+- **Last Updated**: December 2024
+- **Chrome Web Store**: [Latest Release](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
+- **GitHub**: [Main Branch](https://github.com/iamvasee/xMatic)
+
 ## 🚀 Features
 
 ### ✨ Revolutionary Features
@@ -85,10 +99,10 @@ landing/
 
 ## 📱 Installation
 
-### Chrome Web Store (Recommended)
-[Install xMatic from Chrome Web Store](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
+### 🛒 Chrome Web Store (Recommended)
+**[Install xMatic from Chrome Web Store](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)**
 
-### Manual Installation
+### 🔧 Manual Installation
 1. Clone this repository
 2. Open Chrome and go to `chrome://extensions/`
 3. Enable "Developer mode"
@@ -150,4 +164,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Ready to transform your Twitter game?** [Install xMatic now](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml) and start creating viral content! 🚀
+**Ready to transform your Twitter game?** 
+
+**[🛒 Install xMatic from Chrome Web Store](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)** 
+
+**[🌐 Visit Landing Page](https://iamvasee.github.io/xMatic/)** | **[🐦 Follow on Twitter](https://x.com/iamvasee)**
+
+Start creating viral content! 🚀
