@@ -6,17 +6,11 @@ Transform your Twitter experience with AI-powered content generation using your 
 
 ## 🔗 Quick Links
 
-- **🌐 [Landing Page](https://iamvasee.github.io/xMatic/)** - SEO-optimized landing page
-- **🛒 [Chrome Web Store](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)** - Install xMatic extension
-- **🐦 [Twitter](https://x.com/iamvasee)** - Follow for updates and support
-- **📚 [GitHub Repository](https://github.com/iamvasee/xMatic)** - Source code and documentation
-
-## 📦 Version Information
-
-- **Current Version**: v1.0.0
-- **Last Updated**: December 2024
-- **Chrome Web Store**: [Latest Release](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
-- **GitHub**: [Main Branch](https://github.com/iamvasee/xMatic)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Install%20xMatic-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
+[![Version](https://img.shields.io/badge/Version-1.0.0-green?style=for-the-badge)](https://github.com/iamvasee/xMatic/releases)
+[![GitHub](https://img.shields.io/badge/GitHub-View%20Source-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/iamvasee/xMatic)
+[![Landing Page](https://img.shields.io/badge/Landing%20Page-View%20Site-orange?style=for-the-badge)](https://github.com/iamvasee/xMatic/blob/main/landing/index.html)
+[![Twitter](https://img.shields.io/badge/Twitter-%40iamvasee-blue?style=for-the-badge&logo=twitter&logoColor=white)](https://x.com/iamvasee)
 
 ## 🚀 Features
 
@@ -99,10 +93,10 @@ landing/
 
 ## 📱 Installation
 
-### 🛒 Chrome Web Store (Recommended)
-**[Install xMatic from Chrome Web Store](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)**
+### Chrome Web Store (Recommended)
+[Install xMatic from Chrome Web Store](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
 
-### 🔧 Manual Installation
+### Manual Installation
 1. Clone this repository
 2. Open Chrome and go to `chrome://extensions/`
 3. Enable "Developer mode"
@@ -164,10 +158,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Ready to transform your Twitter game?** 
-
-**[🛒 Install xMatic from Chrome Web Store](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)** 
-
-**[🌐 Visit Landing Page](https://iamvasee.github.io/xMatic/)** | **[🐦 Follow on Twitter](https://x.com/iamvasee)**
-
-Start creating viral content! 🚀
+**Ready to transform your Twitter game?** [Install xMatic now](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml) and start creating viral content! 🚀
