@@ -7,9 +7,10 @@ Transform your Twitter experience with AI-powered content generation using your 
 ## 🔗 Quick Links
 
 [![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Install%20xMatic-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
-[![Version](https://img.shields.io/badge/Version-1.0.0-green?style=for-the-badge)](https://github.com/iamvasee/xMatic/releases)
+[![Current Version](https://img.shields.io/badge/Current%20Version-2.2.3-green?style=for-the-badge)](https://github.com/iamvasee/xMatic/releases)
+[![Chrome Store Version](https://img.shields.io/badge/Chrome%20Store%20Version-2.2.3-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/xmatic/jhgjeaklmjohgmnephiaeiefejdhfnml)
 [![GitHub](https://img.shields.io/badge/GitHub-View%20Source-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/iamvasee/xMatic)
-[![Landing Page](https://img.shields.io/badge/Landing%20Page-View%20Site-orange?style=for-the-badge)](https://github.com/iamvasee/xMatic/blob/main/landing/index.html)
+[![Landing Page](https://img.shields.io/badge/Landing%20Page-xmatic.app-orange?style=for-the-badge)](https://xmatic.app)
 [![Twitter](https://img.shields.io/badge/Twitter-%40iamvasee-blue?style=for-the-badge&logo=twitter&logoColor=white)](https://x.com/iamvasee)
 
 ## 🚀 Features
